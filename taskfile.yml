@@ -1,0 +1,10 @@
+version: '3'
+
+tasks:
+  up:
+    cmds:
+      - sudo docker compose  --env-file .env up
+  down: 
+    cmds:
+      - sudo docker compose  --env-file .env down
+      - sudo docker image rm eventtom-prestart eventtom-backend
