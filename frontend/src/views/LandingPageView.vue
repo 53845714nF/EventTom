@@ -1,13 +1,17 @@
 <template>
     <div>
-        <h1 class="h1land">Landing Page</h1>
+        <h1>Ich bin eine h1</h1>
+        <h2>Ich bin eine h2</h2>
+        <h3>Ich bin eine h3</h3>
+        <h4>Ich bin eine h4</h4>
+        <p>Ich bin ein normaler Text</p>
+        <p class="p-large">Ich bin ein großer Text</p>
+        <RouterLink to="/dashboard">Go to AppDashboard</RouterLink>
     </div>
 </template>
 
 <style scoped>
-.h1land {
-    font-size: 50px;
-    color: var(--vt-c-indigo);
-    text-align: center;
+div{
+    justify-content: center;
 }
 </style>

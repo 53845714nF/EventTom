@@ -14,8 +14,9 @@
 - Active Container should now appear in Docker Desktop and is running on **localhost://8080**
 
 ## Design Best Practices
-- Create your Views and Components according to the [Design Guideline]()
+- Create your Views and Components according to the [Design Guideline](/frontend/src/assets/Design_Guideline.pdf)
 - Use the [Color Variables](/frontend/src/assets/base.css) 
+- Basic styling classes which can be reused all accross the page are implemented inside the [main.css](/frontend/src/assets/main.css)
 
 ## Coding Best Practices
 
