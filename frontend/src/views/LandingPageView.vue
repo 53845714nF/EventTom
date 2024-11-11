@@ -6,7 +6,7 @@
         <h4>Ich bin eine h4</h4>
         <p>Ich bin ein normaler Text</p>
         <p class="p-large">Ich bin ein großer Text</p>
-        <RouterLink to="/dashboard">Go to AppDashboard</RouterLink>
+        <RouterLink to="/dashboard">Go to AppDashboard</RouterLink> <!-- This is a link to a View. the to="" parameter must reference a valid path from /router/index.js -->
     </div>
 </template>
 
