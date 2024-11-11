@@ -5,10 +5,12 @@
   src: url("./fonts/FunnelDisplay.ttf");
 }
 
+/* Text */
+
 #app {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 20px;
   font-weight: normal;
 }
 
@@ -50,6 +52,14 @@ p {
 .p-large {
   font-size: 16px;
   font-weight: 500;
+}
+
+.light {
+  color: var(--color-text-light)
+}
+
+.no-margin {
+  margin: 0
 }
 
 a {

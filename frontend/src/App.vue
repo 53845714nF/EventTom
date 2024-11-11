@@ -1,8 +1,15 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import EvenTomHeader from './components/EvenTomHeader.vue';
+import EvenTomFooter from './components/EvenTomFooter.vue';
 </script>
 
 <template>
+  <div class="container">
+    <EvenTomHeader />
+    <RouterView /> <!-- This is where the view for the current route will be rendered -->
+    <EvenTomFooter />
+  </div>
   <!-- <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
@@ -16,7 +23,6 @@ import { RouterLink, RouterView } from 'vue-router'
     </div>
   </header> -->
 
-  <RouterView /> <!-- This is where the view for the current route will be rendered -->
 </template>
 
 <style scoped>

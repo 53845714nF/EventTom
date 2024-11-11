@@ -38,7 +38,7 @@
 body {
   min-height: 100vh;
   color: var(--cp-black);
-  background: var(--color-user);
+  background: linear-gradient(45deg, var(--cp-gradient1), var(--cp-gradient2));
   font-family:
     Inter,
     -apple-system,
@@ -55,4 +55,14 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 15px 40px;
+  background-color: var(--cp-white);
+  border-radius: 15px;
+  min-height: calc(100vh - 80px);
+  position: relative;
 }
