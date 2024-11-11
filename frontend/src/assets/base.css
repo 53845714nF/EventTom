@@ -1,61 +1,38 @@
-/* color palette from <https://github.com/vuejs/theme> */
+/* color palette */
 :root {
-  --vt-c-white: #ffffff;
-  --vt-c-white-soft: #f8f8f8;
-  --vt-c-white-mute: #f2f2f2;
+  --cp-white: #fff;
+  --cp-black: #181A1B;
+  --cp-light-grey: #DDDDDD; 
+  --cp-dark-grey: #696A6A;
+  --cp-bright-green: #54EA55;
 
-  --vt-c-black: #181818;
-  --vt-c-black-soft: #222222;
-  --vt-c-black-mute: #282828;
+  --cp-pastel-green: #BBF99E;
+  --cp-pastel-blue: #A5E4F9;
+  --cp-pastel-purple: #CCBAFE;
 
-  --vt-c-indigo: #2c3e50;
+  --cp-action-green: #23B610;
+  --cp-action-red: #D71212;
 
-  --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
-  --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
-  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
-  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
-
-  --vt-c-text-light-1: var(--vt-c-indigo);
-  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
-  --vt-c-text-dark-1: var(--vt-c-white);
-  --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
+  --cp-gradient1: #A6F6A4;
+  --cp-gradient2: #F4F3CE;
 }
 
 /* semantic color variables for this project */
 :root {
-  --color-background: var(--vt-c-white);
-  --color-background-soft: var(--vt-c-white-soft);
-  --color-background-mute: var(--vt-c-white-mute);
+  --color-background: var(--cp-white);
 
-  --color-border: var(--vt-c-divider-light-2);
-  --color-border-hover: var(--vt-c-divider-light-1);
+  --color-user: var(--cp-pastel-green);
+  --color-event-creator: var(--cp-pastel-blue);
+  --color-event-manager: var(--cp-pastel-purple);
 
-  --color-heading: var(--vt-c-text-light-1);
-  --color-text: var(--vt-c-text-light-1);
+  --color-text-dark: var(--cp-black);
+  --color-text-light: var(--cp-dark-grey);
+  --color-text-white: var(--cp-white);
+
+  --color-primary-button: var(--cp-bright-green);
+  --color-secondary-button: var(--cp-black);
 
   --section-gap: 160px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: var(--vt-c-black);
-    --color-background-soft: var(--vt-c-black-soft);
-    --color-background-mute: var(--vt-c-black-mute);
-
-    --color-border: var(--vt-c-divider-dark-2);
-    --color-border-hover: var(--vt-c-divider-dark-1);
-
-    --color-heading: var(--vt-c-text-dark-1);
-    --color-text: var(--vt-c-text-dark-2);
-  }
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  font-weight: normal;
 }
 
 body {
