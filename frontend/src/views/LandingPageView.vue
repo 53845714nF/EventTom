@@ -5,7 +5,7 @@ import SecondaryButton from '@/components/SecondaryButton.vue';
 
 <template>
     <div class="main-container">
-        <div class="content-wrapper">
+        <div class="main-wrapper">
             <h1>Das ist der Slogan von EvenTom</h1>
             <p class="white margin-top-bottom">Hier stehen ein paar coole Sachen bezuüglich EvenTom. Also was die App so kann und warum du sie nutzen solltest.</p>
             <div class="button-container">
@@ -14,7 +14,9 @@ import SecondaryButton from '@/components/SecondaryButton.vue';
             </div>
         </div>
     </div>
-    <RouterLink to="/dashboard">Go to AppDashboard</RouterLink> <!-- This is a link to a View. the to="" parameter must reference a valid path from /router/index.js -->
+    <div class="content-container">
+        <h2>Das ist ein weiterer Abschnitt</h2>
+    </div>
 </template>
 
 <style scoped>
@@ -25,14 +27,14 @@ import SecondaryButton from '@/components/SecondaryButton.vue';
     align-items: flex-start;
     background-color: var(--cp-black);
     border-radius: 40px;
+    padding: 70px 0 150px 70px;
 }
 
-.content-wrapper {
+.main-wrapper {
     max-width: 40%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    padding: 50px 0 150px 50px;
 }
 
 .margin-top-bottom {
@@ -44,5 +46,9 @@ import SecondaryButton from '@/components/SecondaryButton.vue';
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
+}
+
+.content-container {
+    padding: 20px 20px;
 }
 </style>
