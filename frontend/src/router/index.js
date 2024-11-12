@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LandingPageView from '@/views/LandingPageView.vue'
 import AppDashboardView from '@/views/AppDashboardView.vue'
+import AuthView from '@/views/AuthView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,6 +15,11 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dashboard',
       component: AppDashboardView
+    },
+    {
+      path: '/auth/:type',
+      name: 'auth',
+      component: AuthView
     }
   ]
 })

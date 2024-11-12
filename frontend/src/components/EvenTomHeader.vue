@@ -11,7 +11,7 @@ import { RouterLink } from 'vue-router';
             <RouterLink to="/" class="p-large header-item">About</RouterLink>
             <RouterLink to="/dashboard" class="p-large header-item">Dashboard</RouterLink>
         </nav>
-        <PrimaryButton text="Login" to="/" type="green" class="header-item"/>
+        <PrimaryButton text="Login" to="/auth/signin" type="green" class="header-item"/>
     </header>
 </template>
 
