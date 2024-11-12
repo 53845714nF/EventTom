@@ -5,6 +5,7 @@
   --cp-light-grey: #DDDDDD; 
   --cp-dark-grey: #696A6A;
   --cp-bright-green: #54EA55;
+  --cp-dark-green: #16B917;
 
   --cp-pastel-green: #BBF99E;
   --cp-pastel-blue: #A5E4F9;
@@ -28,9 +29,12 @@
   --color-text-dark: var(--cp-black);
   --color-text-light: var(--cp-dark-grey);
   --color-text-white: var(--cp-white);
+  --color-text-green: var(--cp-bright-green);
 
-  --color-primary-button: var(--cp-bright-green);
-  --color-secondary-button: var(--cp-black);
+  --color-primary-button-green: var(--cp-bright-green);
+  --color-primary-button-green-hover: var(--cp-dark-green);
+  --color-primary-button-black: var(--cp-black);
+  --color-primary-button-black-hover: var(--cp-dark-grey);
 
   --section-gap: 160px;
 }

@@ -1,17 +1,48 @@
+<script setup>
+import PrimaryButton from '@/components/PrimaryButton.vue';
+import SecondaryButton from '@/components/SecondaryButton.vue';
+</script>
+
 <template>
-    <div>
-        <h1>Ich bin eine h1</h1>
-        <h2>Ich bin eine h2</h2>
-        <h3>Ich bin eine h3</h3>
-        <h4>Ich bin eine h4</h4>
-        <p>Ich bin ein normaler Text</p>
-        <p class="p-large">Ich bin ein großer Text</p>
-        <RouterLink to="/dashboard">Go to AppDashboard</RouterLink> <!-- This is a link to a View. the to="" parameter must reference a valid path from /router/index.js -->
+    <div class="main-container">
+        <div class="content-wrapper">
+            <h1>Das ist der Slogan von EvenTom</h1>
+            <p class="white margin-top-bottom">Hier stehen ein paar coole Sachen bezuüglich EvenTom. Also was die App so kann und warum du sie nutzen solltest.</p>
+            <div class="button-container">
+                <PrimaryButton to="/" text="Login" type="green"/>
+                <SecondaryButton to="/dashboard" text="Dashboard" type="white"/>
+            </div>
+        </div>
     </div>
+    <RouterLink to="/dashboard">Go to AppDashboard</RouterLink> <!-- This is a link to a View. the to="" parameter must reference a valid path from /router/index.js -->
 </template>
 
 <style scoped>
-div{
-    justify-content: center;
+.main-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    background-color: var(--cp-black);
+    border-radius: 40px;
+}
+
+.content-wrapper {
+    max-width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 50px 0 150px 50px;
+}
+
+.margin-top-bottom {
+    margin: 25px 0;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
 }
 </style>
