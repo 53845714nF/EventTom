@@ -1,21 +1,83 @@
 @import './base.css';
 
+@font-face {
+  font-family: FunnelDisplay;
+  src: url("./fonts/FunnelDisplay.ttf");
+}
+
+/* Text */
+
 #app {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 20px;
   font-weight: normal;
 }
 
-a,
-.green {
+h1{
+  font-family: FunnelDisplay;
+  font-size: 48px;
+  margin: 0;
+  font-weight: 700;
+  color: var(--color-text-white);
+}
+
+h2{
+  font-family: FunnelDisplay;
+  font-size: 40px;
+  margin: 0;
+  font-weight: 600;
+  color: var(--color-text-dark);
+}
+
+h3{
+  font-family: FunnelDisplay;
+  font-size: 36px;
+  margin: 0;
+  font-weight: 600;
+  color: var(--color-text-dark);
+}
+
+h4{
+  font-family: FunnelDisplay;
+  font-size: 24px;
+  margin: 0;
+  font-weight: 600;
+  color: var(--color-text-dark);
+}
+
+p {
+  font-family: FunnelDisplay;
+  font-size: 14px;
+  color: var(--color-text-dark);
+  font-weight: 300;
+}
+
+.p-large {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.light {
+  color: var(--color-text-light)
+}
+
+.white {
+  color: var(--color-text-white)
+}
+
+.no-margin {
+  margin: 0
+}
+
+a {
   text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
+  color: var(--cp-bright-green);
   transition: 0.4s;
   padding: 3px;
 }
 
-@media (hover: hover) {
+/* @media (hover: hover) {
   a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);
   }
@@ -32,4 +94,4 @@ a,
     grid-template-columns: 1fr 1fr;
     padding: 0 2rem;
   }
-}
+} */
