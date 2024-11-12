@@ -1,6 +1,6 @@
 <script setup>
-import PrimaryButton from '@/components/PrimaryButton.vue';
-import SecondaryButton from '@/components/SecondaryButton.vue';
+import PrimaryButton from '@/components/Basic/PrimaryButton.vue';
+import SecondaryButton from '@/components/Basic/SecondaryButton.vue';
 </script>
 
 <template>

@@ -1,9 +1,9 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import FormInput from '../FormInput.vue';
-import PrimaryButton from '../PrimaryButton.vue';
-import SecondaryButton from '../SecondaryButton.vue';
+import FormInput from '../Basic/FormInput.vue';
+import PrimaryButton from '../Basic/PrimaryButton.vue';
+import SecondaryButton from '../Basic/SecondaryButton.vue';
 
 // use the route to get the type parameter
 const route = useRoute();

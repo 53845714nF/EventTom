@@ -1,5 +1,5 @@
 <script setup>
-import PageTitleContainer from '@/components/PageTitleContainer.vue';
+import PageTitleContainer from '@/components/Basic/PageTitleContainer.vue';
 import SignUpForm from '@/components/AuthView/AuthForm.vue';
 import { useRoute } from 'vue-router';
 

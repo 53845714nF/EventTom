@@ -1,7 +1,7 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import EvenTomHeader from './components/EvenTomHeader.vue';
-import EvenTomFooter from './components/EvenTomFooter.vue';
+import EvenTomHeader from './components/Basic/EvenTomHeader.vue';
+import EvenTomFooter from './components/Basic/EvenTomFooter.vue';
 </script>
 
 <template>
