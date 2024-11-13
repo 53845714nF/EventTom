@@ -1,13 +1,15 @@
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, defineModel } from 'vue';
 import { useRoute } from 'vue-router';
 import FormInput from '../Basic/FormInput.vue';
 import PrimaryButton from '../Basic/PrimaryButton.vue';
 import SecondaryButton from '../Basic/SecondaryButton.vue';
+import AuthService from '@/services/AuthService';
 
 // use the route to get the type parameter
 const route = useRoute();
 const type = ref(route.params.type);
+const user = AuthService.provideEmptyUser();
 
 // watch for changes in route.params.type
 watch(
@@ -24,49 +26,27 @@ watch(
 const signUp = computed(() => type.value === 'signup');
 const secondaryButtonRedirect = computed(() => (signUp.value ? 'signin' : 'signup'));
 
-// Textwerte für die Buttons basierend auf `signUp`
-const signUpText = {
-  primary: 'Registrieren',
-  secondary: 'Ich habe schon ein Konto',
-};
-const signInText = {
-  primary: 'Anmelden',
-  secondary: 'Ich habe noch kein Konto',
-};
-const buttonText = computed(() => (signUp.value ? signUpText : signInText));
+// get text for title, PrimaryButton, SecondaryButton based on whether the user is logged in or not
+const dynamicAuthText = computed(() => (AuthService.provideDynamicAuthText(signUp.value)));
+
+const postUser = () => AuthService.postUser(user, signUp.value);
 </script>
 
 <template>
     <div class="form-background">
-        <h3 class="heading-margin">Willkommen bei EvenTom!</h3>
+        <h3 class="heading-margin">{{dynamicAuthText.title}}</h3>
         <div class="form-container">
-            <FormInput title="Name" placeholder="Arne123"/>
-            <FormInput v-if="signUp" title="E-Mail" placeholder="feet.lover@gmail.com"/>
-            <FormInput title="Passwort" placeholder="Passwort"/>
-            <FormInput v-if="signUp" title="Passwort wiederholen" placeholder="Passwort"/>
+            <FormInput v-model="user.username" title="Name" placeholder="Arne123" type="text"/>
+            <FormInput v-if="signUp" v-model="user.email" title="E-Mail" placeholder="feet.lover@gmail.com" type="text"/>
+            <FormInput v-model="user.password" title="Passwort" placeholder="Passwort" type="password"/>
+            <FormInput v-if="signUp" v-model="user.passwordRepeat" title="Passwort wiederholen" placeholder="Passwort" type="password"/>
         </div>
         <div class="button-container">
-            <PrimaryButton to="/" :text="buttonText.primary" type="green"/>
-            <SecondaryButton :to="`/auth/${secondaryButtonRedirect}`" :text="buttonText.secondary" type="black"/>
+            <PrimaryButton @click="postUser" to="/" :text="dynamicAuthText.primaryButtonText" type="green"/>
+            <SecondaryButton :to="`/auth/${secondaryButtonRedirect}`" :text="dynamicAuthText.secondaryButtonText" type="black"/>
         </div>
     </div>
 </template>
-
-<!-- <template>
-    <div class="form-background">
-        <h3 class="heading-margin">Willkommen bei EvenTom!</h3>
-        <div class="form-container">
-            <div class="form-part">
-                <FormInput title="Name" placeholder="Arne123"/>
-                <FormInput title="E-Mail" placeholder="feet.lover@gmail.com"/>
-            </div>
-            <div class="form-part">
-                <FormInput title="Passwort" placeholder="Passwort"/>
-                <FormInput title="Passwort wiederholen" placeholder="Passwort"/>
-            </div>
-        </div>
-    </div>
-</template> -->
 
 <style scoped>
 .form-background {
