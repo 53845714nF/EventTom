@@ -11,6 +11,9 @@ const route = useRoute();
 const type = ref(route.params.type);
 const user = AuthService.provideEmptyUser();
 
+// redirect path after successful login / signup -> change this to the path you want to redirect to
+const redirectPath = "/dashboard";
+
 // watch for changes in route.params.type
 watch(
   () => route.params.type,
@@ -29,7 +32,7 @@ const secondaryButtonRedirect = computed(() => (signUp.value ? 'signin' : 'signu
 // get text for title, PrimaryButton, SecondaryButton based on whether the user is logged in or not
 const dynamicAuthText = computed(() => (AuthService.provideDynamicAuthText(signUp.value)));
 
-const postUser = () => AuthService.postUser(user, signUp.value);
+const postUser = () => AuthService.postUser(user, signUp.value, redirectPath);
 </script>
 
 <template>
@@ -42,7 +45,7 @@ const postUser = () => AuthService.postUser(user, signUp.value);
             <FormInput v-if="signUp" v-model="user.passwordRepeat" title="Passwort wiederholen" placeholder="Passwort" type="password"/>
         </div>
         <div class="button-container">
-            <PrimaryButton @click="postUser" to="/" :text="dynamicAuthText.primaryButtonText" type="green"/>
+            <PrimaryButton @click="postUser" :text="dynamicAuthText.primaryButtonText" type="green"/>
             <SecondaryButton :to="`/auth/${secondaryButtonRedirect}`" :text="dynamicAuthText.secondaryButtonText" type="black"/>
         </div>
     </div>
