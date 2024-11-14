@@ -11,13 +11,13 @@ export default class AuthService {
         primaryButtonText: 'Registrieren',
         secondaryButtonText: 'Ich habe schon ein Konto',
     };
-
     static _signInText = {
         title: "Willkommen zurück!",
         primaryButtonText: 'Login',
         secondaryButtonText: 'Ich habe noch kein Konto',
     };
 
+    // provides the text values for buttons in the AuthForm depending on whether the user is signing up or logging in
     static provideDynamicAuthText(signUp){
         if (signUp) {
             return this._signUpText;
@@ -26,6 +26,7 @@ export default class AuthService {
         }
     }
 
+    // provides an empty user object to bind to the AuthForm
     static provideEmptyUser(){
         return ref({
             username: "",
@@ -35,6 +36,8 @@ export default class AuthService {
         })
     }
 
+    // checks if input values from AuthForm are correct
+    // logic depends on if user is signing up (signUp = true) or logging in (signUp = false)
     static _checkIfInputValuesCorrect(user, signUp){
     
         if (!(user.value.username && user.value.password)){
@@ -58,29 +61,29 @@ export default class AuthService {
         return {isValid: true, message: ""};
     }
 
+    // sends a POST request to the backend with the user data
+    // Either logs in user (signUp = false) or signs up user (signUp = true)
     static postUser(user, signUp, redirectPath){
 
         const validationResult = this._checkIfInputValuesCorrect(user, signUp);
 
-        // Check if input values are correct
         if (!validationResult.isValid) {
             ToasterService.createToasterPopUp('error', validationResult.message);
             return;
         }
 
-        console.log("postLogin");
-
         if (signUp) {
-            console.log("not implemented yet")
-            ToasterService.createToasterPopUp('error', 'Sign up not implemented yet.');
+            this._postSignUpData(user, redirectPath);
         } else {
             console.log("postLogin");
-            this.postLogin(user, redirectPath);
+            this._postLoginData(user, redirectPath);
         }
     }
 
-    static postLogin(user, redirectPath){
-        console.log("postLogin");
+    // sends a POST request to the backend to log in the user
+    // if successful, saves the access token to the local storage and redirects to the provided redirectPath
+    static _postLoginData(user, redirectPath){
+        
         const data = new URLSearchParams();
         data.append('grant_type', 'password');
         data.append('username', user.value.username); // beachte die URL-kodierte Form
@@ -97,7 +100,7 @@ export default class AuthService {
             }
         })
         .then(response => {
-            console.log(response);
+            this._saveTokenToLocalStorage(response.data.access_token);
             router.push(redirectPath);
             ToasterService.createToasterPopUp('success', 'Login erfolgreich!');
         })
@@ -105,5 +108,22 @@ export default class AuthService {
             console.log(error);
             ToasterService.createToasterPopUp('error', 'Falscher Username oder Passwort.');
         });
+    }
+
+    static _postSignUpData(user, redirectPath){
+        console.log("not implemented yet")
+        ToasterService.createToasterPopUp('error', 'Sign up not implemented yet.');
+    }
+
+    static _saveTokenToLocalStorage(token){
+        localStorage.setItem('access_token', token);
+    }
+
+    static _removeTokenFromLocalStorage(){
+        localStorage.removeItem('access_token');
+    }
+
+    static userLoggedIn(){
+        return localStorage.getItem('access_token') ? true : false;
     }
 }
