@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { ref } from 'vue';
 
 export default class AuthService {
@@ -60,8 +61,35 @@ export default class AuthService {
     }
 
     static postUser(user, signUp){
+        // Check if input values are correct
         if (!AuthService.inputValuesCorrect(user, signUp)) {
             return "Input not correct";
+        }
+
+        if (signUp) {
+            console.log("Not implemented yet.")
+        } else {
+            const data = new URLSearchParams();
+            data.append('grant_type', 'password');
+            data.append('username', user.value.username); // beachte die URL-kodierte Form
+            data.append('password', user.value.password);
+            data.append('scope', '');
+            data.append('client_id', 'string');
+            data.append('client_secret', 'string');
+            
+            // send api request of type application/x-www-form-urlencoded
+            axios.post('/api/v1/login/access-token', data, {
+                headers: {
+                    'accept': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            .then(response => {
+                console.log(response);
+            })
+            .catch(error => {
+                console.log(error);
+            });
         }
     }
 }
