@@ -7,8 +7,6 @@ const props = defineProps({
     type: String,
 })
 
-console.log(props.type)
-
 </script>
 
 <template>

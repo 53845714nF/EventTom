@@ -1,6 +1,6 @@
 <script setup>
-import PrimaryButton from '@/components/PrimaryButton.vue';
-import SecondaryButton from '@/components/SecondaryButton.vue';
+import PrimaryButton from '@/components/Basic/PrimaryButton.vue';
+import SecondaryButton from '@/components/Basic/SecondaryButton.vue';
 </script>
 
 <template>
@@ -9,8 +9,8 @@ import SecondaryButton from '@/components/SecondaryButton.vue';
             <h1>Das ist der Slogan von EvenTom</h1>
             <p class="white margin-top-bottom">Hier stehen ein paar coole Sachen bezuüglich EvenTom. Also was die App so kann und warum du sie nutzen solltest.</p>
             <div class="button-container">
-                <PrimaryButton to="/" text="Login" type="green"/>
-                <SecondaryButton to="/dashboard" text="Dashboard" type="white"/>
+                <PrimaryButton to="/auth/signup" text="Registrieren" type="green"/>
+                <SecondaryButton to="/auth/signin" text="Login" type="white"/>
             </div>
         </div>
     </div>
@@ -31,7 +31,7 @@ import SecondaryButton from '@/components/SecondaryButton.vue';
 }
 
 .main-wrapper {
-    max-width: 40%;
+    max-width: 50%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -46,9 +46,5 @@ import SecondaryButton from '@/components/SecondaryButton.vue';
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-}
-
-.content-container {
-    padding: 20px 20px;
 }
 </style>

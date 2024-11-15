@@ -10,11 +10,16 @@ const props = defineProps({
 </script>
 
 <template>
-    <RouterLink :to="props.to">
+    <!-- If the button has a to prop, it will be a router link, otherwise it will be a normal div -->
+    <RouterLink v-if="props.to" :to="props.to">
         <div :class="['primary-button', { 'button-black': props.type === 'black', 'button-green': props.type === 'green' }]">
             <p :class="['p-large no-margin', { 'p-white': props.type === 'black', 'p-black': props.type === 'green' }]">{{ props.text }}</p>
         </div>
     </RouterLink>
+
+    <div v-else :class="['primary-button', { 'button-black': props.type === 'black', 'button-green': props.type === 'green' }]">
+        <p :class="['p-large no-margin', { 'p-white': props.type === 'black', 'p-black': props.type === 'green' }]">{{ props.text }}</p>
+    </div>
 </template>
 
 <style scoped>
