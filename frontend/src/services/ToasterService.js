@@ -2,6 +2,7 @@ import { createToaster } from "@meforma/vue-toaster";
 
 export default class ToasterService {
     static toaster = createToaster({
+        duration: 2000,
         position: "bottom",
         maxToasts: 3,
     });

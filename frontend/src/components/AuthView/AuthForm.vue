@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, defineModel } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import FormInput from '../Basic/FormInput.vue';
 import PrimaryButton from '../Basic/PrimaryButton.vue';

@@ -101,6 +101,7 @@ export default class AuthService {
         })
         .then(response => {
             this._saveTokenToLocalStorage(response.data.access_token);
+            this._saveRoleToLocalStorage('user');
             router.push(redirectPath);
             ToasterService.createToasterPopUp('success', 'Login erfolgreich!');
         })
@@ -110,10 +111,30 @@ export default class AuthService {
         });
     }
 
+    // logs out the user by removing the access token and role from the local storage
+    // no redirect is needed, because it is implemented by giving path to the logout button in the header
+    static logoutUser(){
+        console.log("Logging out user");
+        this._removeTokenFromLocalStorage();
+        this._removeRoleFromLocalStorage();
+        ToasterService.createToasterPopUp('success', 'Logout erfolgreich!');
+    }
+
     static _postSignUpData(user, redirectPath){
         console.log("not implemented yet")
         ToasterService.createToasterPopUp('error', 'Sign up not implemented yet.');
     }
+
+    static userLoggedIn(){
+        return localStorage.getItem('access_token') ? true : false;
+    }
+
+    static getUserRole(){
+        return localStorage.getItem('role');
+    }
+
+
+    // LoacalStorage functions
 
     static _saveTokenToLocalStorage(token){
         localStorage.setItem('access_token', token);
@@ -122,8 +143,12 @@ export default class AuthService {
     static _removeTokenFromLocalStorage(){
         localStorage.removeItem('access_token');
     }
+    
+    static _saveRoleToLocalStorage(role){
+        localStorage.setItem('role', role);
+    }
 
-    static userLoggedIn(){
-        return localStorage.getItem('access_token') ? true : false;
+    static _removeRoleFromLocalStorage(){
+        localStorage.removeItem('role');
     }
 }

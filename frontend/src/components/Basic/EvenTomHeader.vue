@@ -1,17 +1,44 @@
 <script setup>
+import { ref, watch } from 'vue';
 import PrimaryButton from './PrimaryButton.vue';
-import { RouterLink } from 'vue-router';
+import { RouterLink, useRouter } from 'vue-router';
+import HeaderService from '@/services/HeaderService';
+import AuthService from '@/services/AuthService';
+
+const navItems = ref(HeaderService.getNavItems());
+const primaryButtonAttributes = ref(HeaderService.getPrimaryButtonAttributes());
+
+const router = useRouter();
+
+// watch for changes in path
+watch(
+  () => router.currentRoute.value.path,
+  () => {
+    navItems.value = HeaderService.getNavItems();
+    primaryButtonAttributes.value = HeaderService.getPrimaryButtonAttributes();
+  }
+);
+
+const handlePrimaryButtonClick = () => {
+    if (AuthService.userLoggedIn()) {
+        AuthService.logoutUser();
+    }
+}
 </script>
 
 <template>
     <header>
-        <h4 class="header-item">EvenTom</h4>
-        <nav>
-            <RouterLink to="/" class="p-large header-item">Home</RouterLink>
-            <RouterLink to="/" class="p-large header-item">About</RouterLink>
-            <RouterLink to="/dashboard" class="p-large header-item">Dashboard</RouterLink>
+        <h4 class="nav-item">EvenTom</h4>
+        <nav v-for="(item, index) in navItems" :key="index" class="nav-item-container">
+            <RouterLink :to="item.path" class="p-large nav-item">{{item.title}}</RouterLink>
         </nav>
-        <PrimaryButton text="Login" to="/auth/signin" type="green" class="header-item"/>
+        <PrimaryButton
+            @click="handlePrimaryButtonClick" 
+            :text="primaryButtonAttributes.title" 
+            :to="primaryButtonAttributes.path" 
+            type="green" 
+            class="nav-item"
+        />
     </header>
 </template>
 
@@ -24,14 +51,20 @@ header {
     padding: 20px 0 30px 0;
 }
 
-.header-item {
+.nav-item-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.nav-item {
     margin: 0 20px;
     font-weight: 600;
     cursor: pointer;
     color: var(--color-text-black);
 }
 
-.header-item:hover {
+.nav-item:hover {
     color: var(--color-text-green);
 }
 </style>
