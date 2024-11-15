@@ -3,20 +3,20 @@ import AuthService from "./AuthService"
 export default class HeaderService {
     static loggedOutNavItems = [
         { title: 'Home', path: '/' },
-        { title: 'About', path: '/' },
+        { title: 'About', path: '/not_implemented' },
         { title: 'Dashboard', path: '/dashboard' },
     ]
     static UserNavItems = [
-        { title: 'Events', path: '/' },
-        { title: 'Gutscheine', path: '/' },
+        { title: 'Events', path: '/not_implemented' },
+        { title: 'Gutscheine', path: '/not_implemented' },
     ]
     static EventManagerNavItems = [
-        { title: 'Events', path: '/' },
-        { title: 'Aktivitäten', path: '/' },
+        { title: 'Events', path: '/not_implemented' },
+        { title: 'Aktivitäten', path: '/not_implemented' },
     ]
     static EventCreatorNavItems = [
-        { title: 'Meine Events', path: '/' },
-        { title: 'Neues Event', path: '/' },
+        { title: 'Meine Events', path: '/not_implemented' },
+        { title: 'Neues Event', path: '/not_implemented' },
     ]
 
     static logoutButtonAttributes = {title: 'Logout', path: '/'}
