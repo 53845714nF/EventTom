@@ -1,5 +1,5 @@
 import AuthService from "./AuthService"
-import { useRoleStore } from "@/stores/RoleStore"
+import { useAuthStore } from "@/stores/AuthStore"
 
 export default class HeaderService {
 

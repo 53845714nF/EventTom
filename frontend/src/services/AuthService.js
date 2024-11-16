@@ -82,7 +82,7 @@ export default class AuthService {
 
     // sends a POST request to the backend to log in the user
     // if successful, saves the access token to the local storage and redirects to the provided redirectPath
-    static _postLoginData(user, redirectPath, roleStore){
+    static _postLoginData(user, redirectPath, authStore){
         
         const data = new URLSearchParams();
         data.append('grant_type', 'password');
@@ -100,8 +100,8 @@ export default class AuthService {
             }
         })
         .then(response => {
-            roleStore.setAccessToken(response.data.access_token);
-            roleStore.setRole('user');
+            authStore.setAccessToken(response.data.access_token);
+            authStore.setRole('user');
             router.push(redirectPath);
             ToasterService.createToasterPopUp('success', 'Login erfolgreich!');
         })
@@ -113,11 +113,11 @@ export default class AuthService {
 
     // logs out the user by removing the access token and role from the local storage
     // no redirect is needed, because it is implemented by giving path to the logout button in the header
-    static logoutUser(roleStore){
+    static logoutUser(authStore){
         console.log("Logging out user");
-        roleStore.removeAccessToken();
-        roleStore.setRole('guest');
-        console.log(roleStore.role);
+        authStore.removeAccessToken();
+        authStore.setRole('guest');
+        console.log(authStore.role);
         ToasterService.createToasterPopUp('success', 'Logout erfolgreich!');
     }
 

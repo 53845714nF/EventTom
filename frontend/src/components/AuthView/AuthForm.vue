@@ -5,7 +5,7 @@ import FormInput from '../Basic/FormInput.vue';
 import PrimaryButton from '../Basic/PrimaryButton.vue';
 import SecondaryButton from '../Basic/SecondaryButton.vue';
 import AuthService from '@/services/AuthService';
-import { useRoleStore } from '@/stores/RoleStore';
+import { useAuthStore } from '@/stores/AuthStore';
 
 // use the route to get the type parameter
 const route = useRoute();
@@ -23,7 +23,7 @@ watch(
   }
 );
 
-const store = useRoleStore();
+const store = useAuthStore();
 
 // computed value für `signUp` und `secondaryButtonRedirect`
 // computed is used to derive a value from other reactive values

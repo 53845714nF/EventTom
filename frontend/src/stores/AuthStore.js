@@ -1,24 +1,25 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
+import { LocalStorageKeys } from "@/constants/LocalStorageKeys";
 
-export const useRoleStore = defineStore('role', () => {
-    const role = ref(localStorage.getItem("role") || 'guest');
-    const accessToken = ref(localStorage.getItem("accessToken"))
+export const useAuthStore = defineStore('role', () => {
+    const role = ref(localStorage.getItem(LocalStorageKeys.USER_ROLE) || 'guest');
+    const accessToken = ref(localStorage.getItem(LocalStorageKeys.ACCESS_TOKEN) || '');
 
     const userAuthenticated = computed(() => !!accessToken.value)
     
     function setRole(newRole) {
-        localStorage.setItem("role", newRole);
+        localStorage.setItem(LocalStorageKeys.USER_ROLE, newRole);
         role.value = newRole;
     }
 
     function setAccessToken(newToken) {
-        localStorage.setItem("accessToken", newToken);
+        localStorage.setItem(LocalStorageKeys.ACCESS_TOKEN, newToken);
         accessToken.value = newToken;
     }
 
     function removeAccessToken () {
-        localStorage.setItem("accessToken", "");
+        localStorage.setItem(LocalStorageKeys.ACCESS_TOKEN, "");
         accessToken.value = "";
     }
 

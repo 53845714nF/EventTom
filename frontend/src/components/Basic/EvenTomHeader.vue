@@ -4,18 +4,15 @@ import PrimaryButton from './PrimaryButton.vue';
 import { RouterLink, useRouter } from 'vue-router';
 import HeaderService from '@/services/HeaderService';
 import AuthService from '@/services/AuthService';
-import { useRoleStore } from '@/stores/RoleStore';
+import { useAuthStore } from '@/stores/AuthStore';
 
-const roleStore = useRoleStore();
-const navItems = computed(() => HeaderService.getNavItems(roleStore.role));
-const primaryButtonAttributes = computed(() => HeaderService.getPrimaryButtonAttributes(roleStore.userAuthenticated));
-
-// primaryButtonAttributes.value = HeaderService.getPrimaryButtonAttributes(roleStore.userAuthenticated);
-// navItems.value = HeaderService.getNavItems(roleStore.role);
+const authStore = useAuthStore();
+const navItems = computed(() => HeaderService.getNavItems(authStore.role));
+const primaryButtonAttributes = computed(() => HeaderService.getPrimaryButtonAttributes(authStore.userAuthenticated));
 
 const handlePrimaryButtonClick = () => {
-    if (roleStore.userAuthenticated) {
-        AuthService.logoutUser(roleStore);
+    if (authStore.userAuthenticated) {
+        AuthService.logoutUser(authStore);
     }
 }
 </script>
