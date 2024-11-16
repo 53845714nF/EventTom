@@ -1,6 +1,8 @@
 import AuthService from "./AuthService"
+import { useRoleStore } from "@/stores/RoleStore"
 
 export default class HeaderService {
+
     static loggedOutNavItems = [
         { title: 'Home', path: '/' },
         { title: 'About', path: '/not_implemented' },
@@ -24,9 +26,9 @@ export default class HeaderService {
 
     // returns the navigation items for the header depending on the role of the user
     // because different roles have access to different views
-    static getNavItems() {
+    static getNavItems(role) {
 
-        const role = AuthService.getUserRole() || 'guest';
+        console.log(role);
 
         switch (role.toLowerCase()) {
             case 'user':
@@ -42,8 +44,8 @@ export default class HeaderService {
 
     // returns the attributes for the primary button in the header
     // so that it displays "logout" if the user is logged in and "login" if the user is logged out
-    static getPrimaryButtonAttributes() {
-        if (AuthService.userLoggedIn()) {
+    static getPrimaryButtonAttributes(userAuthenticated) {
+        if (userAuthenticated) {
             return HeaderService.logoutButtonAttributes;
         } else {
             return HeaderService.loginButtonAttributes;
