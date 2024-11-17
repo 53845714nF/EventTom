@@ -23,7 +23,7 @@ watch(
   }
 );
 
-const store = useAuthStore();
+const authStore = useAuthStore();
 
 // computed value für `signUp` und `secondaryButtonRedirect`
 // computed is used to derive a value from other reactive values
@@ -35,7 +35,7 @@ const secondaryButtonRedirect = computed(() => (signUp.value ? 'signin' : 'signu
 // get text for title, PrimaryButton, SecondaryButton based on whether the user is logged in or not
 const dynamicAuthText = computed(() => (AuthService.provideDynamicAuthText(signUp.value)));
 
-const postUser = () => AuthService.postUser(user, signUp.value, redirectPath, store);
+const postUser = () => AuthService.postUser(user, signUp.value, redirectPath, authStore);
 </script>
 
 <template>

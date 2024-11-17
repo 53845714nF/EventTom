@@ -115,4 +115,25 @@ export default class AuthService {
         console.log("not implemented yet")
         ToasterService.createToasterPopUp('error', 'Sign up not implemented yet.');
     }
+
+    static testAccessToken(store){
+        const data = {}
+        
+        const config = {
+            headers: {
+                Accept: 'application/json',
+                Authorization: `bearer ${store.accessToken}`
+            }
+        }
+
+        axios.post('/api/v1/login/test-token', data, config)
+        .then(response => {
+            console.log(response);
+            ToasterService.createToasterPopUp('success', `Token valid. Role: ${store.role}`);
+        })
+        .catch(error => {
+            console.log(error);
+            ToasterService.createToasterPopUp('error', 'Token invalid.');
+        });
+    }
 }
