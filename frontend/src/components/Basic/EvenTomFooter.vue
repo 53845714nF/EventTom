@@ -17,7 +17,7 @@ const testToken = () => AuthService.testAccessToken(authStore);
         </div>
         <div class="footer-container">
             <p class="light footer-element">LinkedIn</p>
-            <p @click="testToken" class="light footer-element">Test Token</p>
+            <p @click="testToken" class="light footer-element pointer">Test Token</p>
             <a href="https://www.youtube.com/watch?v=xvFZjo5PgG0" class="light footer-element">YouTube</a>
         </div>
     </footer>
@@ -56,5 +56,9 @@ a {
 
 .footer-element {
     margin: 0 20px;
+}
+
+.pointer {
+    cursor: pointer;
 }
 </style>
