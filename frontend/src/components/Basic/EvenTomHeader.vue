@@ -1,14 +1,10 @@
 <script setup>
-import { ref, watch, computed } from 'vue';
 import PrimaryButton from './PrimaryButton.vue';
-import { RouterLink, useRouter } from 'vue-router';
-import HeaderService from '@/services/HeaderService';
+import { RouterLink } from 'vue-router';
 import AuthService from '@/services/AuthService';
 import { useAuthStore } from '@/stores/AuthStore';
 
 const authStore = useAuthStore();
-const navItems = computed(() => HeaderService.getNavItems(authStore.role));
-const primaryButtonAttributes = computed(() => HeaderService.getPrimaryButtonAttributes(authStore.userAuthenticated));
 
 const handlePrimaryButtonClick = () => {
     if (authStore.userAuthenticated) {
@@ -21,12 +17,12 @@ const handlePrimaryButtonClick = () => {
     <header>
         <h4 class="nav-item">EvenTom</h4>
         <nav class="nav-item-container">
-            <RouterLink v-for="(item, index) in navItems" :key="index" :to="item.path" class="p-large nav-item">{{item.title}}</RouterLink>
+            <RouterLink v-for="(item, index) in authStore.navItems.items" :key="index" :to="item.path" class="p-large nav-item">{{item.title}}</RouterLink>
         </nav>
         <PrimaryButton
             @click="handlePrimaryButtonClick" 
-            :text="primaryButtonAttributes.title" 
-            :to="primaryButtonAttributes.path" 
+            :text="authStore.navItems.button.title" 
+            :to="authStore.navItems.button.path" 
             type="green" 
             class="nav-item"
         />

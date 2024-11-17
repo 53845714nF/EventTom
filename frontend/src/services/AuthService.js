@@ -2,27 +2,17 @@ import axios from 'axios';
 import { ref } from 'vue';
 import ToasterService from './ToasterService';
 import router from '@/router';
+import { Roles } from '@/constants/Roles';
+import { AuthFormText } from '@/constants/AuthFormText';
 
 export default class AuthService {
-
-    // Text values for Buttons in AuthForm
-    static _signUpText = {
-        title: "Willkommen bei EvenTom!",
-        primaryButtonText: 'Registrieren',
-        secondaryButtonText: 'Ich habe schon ein Konto',
-    };
-    static _signInText = {
-        title: "Willkommen zurück!",
-        primaryButtonText: 'Login',
-        secondaryButtonText: 'Ich habe noch kein Konto',
-    };
 
     // provides the text values for buttons in the AuthForm depending on whether the user is signing up or logging in
     static provideDynamicAuthText(signUp){
         if (signUp) {
-            return this._signUpText;
+            return AuthFormText.SIGN_UP;
         }else{
-            return this._signInText;
+            return AuthFormText.SIGN_IN;
         }
     }
 
@@ -101,7 +91,7 @@ export default class AuthService {
         })
         .then(response => {
             authStore.setAccessToken(response.data.access_token);
-            authStore.setRole('user');
+            authStore.setRole(Roles.USER);
             router.push(redirectPath);
             ToasterService.createToasterPopUp('success', 'Login erfolgreich!');
         })
@@ -116,7 +106,7 @@ export default class AuthService {
     static logoutUser(authStore){
         console.log("Logging out user");
         authStore.removeAccessToken();
-        authStore.setRole('guest');
+        authStore.setRole(Roles.GUEST);
         console.log(authStore.role);
         ToasterService.createToasterPopUp('success', 'Logout erfolgreich!');
     }
