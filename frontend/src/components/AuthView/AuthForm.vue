@@ -5,6 +5,7 @@ import FormInput from '../Basic/FormInput.vue';
 import PrimaryButton from '../Basic/PrimaryButton.vue';
 import SecondaryButton from '../Basic/SecondaryButton.vue';
 import AuthService from '@/services/AuthService';
+import { useAuthStore } from '@/stores/AuthStore';
 
 // use the route to get the type parameter
 const route = useRoute();
@@ -22,6 +23,8 @@ watch(
   }
 );
 
+const authStore = useAuthStore();
+
 // computed value für `signUp` und `secondaryButtonRedirect`
 // computed is used to derive a value from other reactive values
 // in this case, `type` is a reactive value and `signUp` and `secondaryButtonRedirect` are derived from it
@@ -32,7 +35,7 @@ const secondaryButtonRedirect = computed(() => (signUp.value ? 'signin' : 'signu
 // get text for title, PrimaryButton, SecondaryButton based on whether the user is logged in or not
 const dynamicAuthText = computed(() => (AuthService.provideDynamicAuthText(signUp.value)));
 
-const postUser = () => AuthService.postUser(user, signUp.value, redirectPath);
+const postUser = () => AuthService.postUser(user, signUp.value, redirectPath, authStore);
 </script>
 
 <template>

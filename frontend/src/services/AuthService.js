@@ -2,27 +2,17 @@ import axios from 'axios';
 import { ref } from 'vue';
 import ToasterService from './ToasterService';
 import router from '@/router';
+import { Roles } from '@/constants/Roles';
+import { AuthFormText } from '@/constants/AuthFormText';
 
 export default class AuthService {
-
-    // Text values for Buttons in AuthForm
-    static _signUpText = {
-        title: "Willkommen bei EvenTom!",
-        primaryButtonText: 'Registrieren',
-        secondaryButtonText: 'Ich habe schon ein Konto',
-    };
-    static _signInText = {
-        title: "Willkommen zurück!",
-        primaryButtonText: 'Login',
-        secondaryButtonText: 'Ich habe noch kein Konto',
-    };
 
     // provides the text values for buttons in the AuthForm depending on whether the user is signing up or logging in
     static provideDynamicAuthText(signUp){
         if (signUp) {
-            return this._signUpText;
+            return AuthFormText.SIGN_UP;
         }else{
-            return this._signInText;
+            return AuthFormText.SIGN_IN;
         }
     }
 
@@ -63,7 +53,7 @@ export default class AuthService {
 
     // sends a POST request to the backend with the user data
     // Either logs in user (signUp = false) or signs up user (signUp = true)
-    static postUser(user, signUp, redirectPath){
+    static postUser(user, signUp, redirectPath, store){
 
         const validationResult = this._checkIfInputValuesCorrect(user, signUp);
 
@@ -76,13 +66,13 @@ export default class AuthService {
             this._postSignUpData(user, redirectPath);
         } else {
             console.log("postLogin");
-            this._postLoginData(user, redirectPath);
+            this._postLoginData(user, redirectPath, store);
         }
     }
 
     // sends a POST request to the backend to log in the user
     // if successful, saves the access token to the local storage and redirects to the provided redirectPath
-    static _postLoginData(user, redirectPath){
+    static _postLoginData(user, redirectPath, authStore){
         
         const data = new URLSearchParams();
         data.append('grant_type', 'password');
@@ -100,8 +90,8 @@ export default class AuthService {
             }
         })
         .then(response => {
-            this._saveTokenToLocalStorage(response.data.access_token);
-            this._saveRoleToLocalStorage('user');
+            authStore.setAccessToken(response.data.access_token);
+            authStore.setRole(Roles.USER);
             router.push(redirectPath);
             ToasterService.createToasterPopUp('success', 'Login erfolgreich!');
         })
@@ -113,10 +103,11 @@ export default class AuthService {
 
     // logs out the user by removing the access token and role from the local storage
     // no redirect is needed, because it is implemented by giving path to the logout button in the header
-    static logoutUser(){
+    static logoutUser(authStore){
         console.log("Logging out user");
-        this._removeTokenFromLocalStorage();
-        this._removeRoleFromLocalStorage();
+        authStore.removeAccessToken();
+        authStore.setRole(Roles.GUEST);
+        console.log(authStore.role);
         ToasterService.createToasterPopUp('success', 'Logout erfolgreich!');
     }
 
@@ -125,30 +116,24 @@ export default class AuthService {
         ToasterService.createToasterPopUp('error', 'Sign up not implemented yet.');
     }
 
-    static userLoggedIn(){
-        return localStorage.getItem('access_token') ? true : false;
-    }
+    static testAccessToken(store){
+        const data = {}
+        
+        const config = {
+            headers: {
+                Accept: 'application/json',
+                Authorization: `bearer ${store.accessToken}`
+            }
+        }
 
-    static getUserRole(){
-        return localStorage.getItem('role');
-    }
-
-
-    // LoacalStorage functions
-
-    static _saveTokenToLocalStorage(token){
-        localStorage.setItem('access_token', token);
-    }
-
-    static _removeTokenFromLocalStorage(){
-        localStorage.removeItem('access_token');
-    }
-    
-    static _saveRoleToLocalStorage(role){
-        localStorage.setItem('role', role);
-    }
-
-    static _removeRoleFromLocalStorage(){
-        localStorage.removeItem('role');
+        axios.post('/api/v1/login/test-token', data, config)
+        .then(response => {
+            console.log(response);
+            ToasterService.createToasterPopUp('success', `Token valid. Role: ${store.role}`);
+        })
+        .catch(error => {
+            console.log(error);
+            ToasterService.createToasterPopUp('error', 'Token invalid.');
+        });
     }
 }

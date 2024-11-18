@@ -1,27 +1,14 @@
 <script setup>
-import { ref, watch } from 'vue';
 import PrimaryButton from './PrimaryButton.vue';
-import { RouterLink, useRouter } from 'vue-router';
-import HeaderService from '@/services/HeaderService';
+import { RouterLink } from 'vue-router';
 import AuthService from '@/services/AuthService';
+import { useAuthStore } from '@/stores/AuthStore';
 
-const navItems = ref(HeaderService.getNavItems());
-const primaryButtonAttributes = ref(HeaderService.getPrimaryButtonAttributes());
-
-const router = useRouter();
-
-// watch for changes in path
-watch(
-  () => router.currentRoute.value.path,
-  () => {
-    navItems.value = HeaderService.getNavItems();
-    primaryButtonAttributes.value = HeaderService.getPrimaryButtonAttributes();
-  }
-);
+const authStore = useAuthStore();
 
 const handlePrimaryButtonClick = () => {
-    if (AuthService.userLoggedIn()) {
-        AuthService.logoutUser();
+    if (authStore.userAuthenticated) {
+        AuthService.logoutUser(authStore);
     }
 }
 </script>
@@ -29,13 +16,13 @@ const handlePrimaryButtonClick = () => {
 <template>
     <header>
         <h4 class="nav-item">EvenTom</h4>
-        <nav v-for="(item, index) in navItems" :key="index" class="nav-item-container">
-            <RouterLink :to="item.path" class="p-large nav-item">{{item.title}}</RouterLink>
+        <nav class="nav-item-container">
+            <RouterLink v-for="(item, index) in authStore.navItems.items" :key="index" :to="item.path" class="p-large nav-item">{{item.title}}</RouterLink>
         </nav>
         <PrimaryButton
             @click="handlePrimaryButtonClick" 
-            :text="primaryButtonAttributes.title" 
-            :to="primaryButtonAttributes.path" 
+            :text="authStore.navItems.button.title" 
+            :to="authStore.navItems.button.path" 
             type="green" 
             class="nav-item"
         />

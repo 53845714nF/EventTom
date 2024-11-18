@@ -1,3 +1,12 @@
+<script setup>
+import AuthService from '@/services/AuthService';
+import { useAuthStore } from '@/stores/AuthStore';
+
+const authStore = useAuthStore();
+
+const testToken = () => AuthService.testAccessToken(authStore);
+</script>
+
 <template>
     <footer>
         <p class="p-large light">2024 EvenTom</p>
@@ -8,7 +17,7 @@
         </div>
         <div class="footer-container">
             <p class="light footer-element">LinkedIn</p>
-            <p class="light footer-element">Instagram</p>
+            <p @click="testToken" class="light footer-element pointer">Test Token</p>
             <a href="https://www.youtube.com/watch?v=xvFZjo5PgG0" class="light footer-element">YouTube</a>
         </div>
     </footer>
@@ -47,5 +56,9 @@ a {
 
 .footer-element {
     margin: 0 20px;
+}
+
+.pointer {
+    cursor: pointer;
 }
 </style>

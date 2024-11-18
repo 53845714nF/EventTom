@@ -31,7 +31,7 @@ const props = defineProps({
 }
 
 .secondary-button:hover p {
-    color: var(--color-text-green);
+    text-decoration: underline;
 }
 
 .p-white {
