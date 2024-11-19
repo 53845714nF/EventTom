@@ -2,7 +2,7 @@ name: Frontend Build and Test
 
 on:
   push:
-    branches: [ "frontend-dev", "vitest-testing"]
+    branches: [ "frontend-dev"]
   pull_request:
     branches: [ "main", "frontend-dev"]
 
