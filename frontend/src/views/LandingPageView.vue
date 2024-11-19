@@ -1,6 +1,7 @@
 <script setup>
 import PrimaryButton from '@/components/Basic/PrimaryButton.vue';
 import SecondaryButton from '@/components/Basic/SecondaryButton.vue';
+import { PrimaryButtonTypes, SecondaryButtonTypes } from '@/constants/ButtonTypes';
 </script>
 
 <template>
@@ -9,8 +10,8 @@ import SecondaryButton from '@/components/Basic/SecondaryButton.vue';
             <h1>Das ist der Slogan von EvenTom</h1>
             <p class="white margin-top-bottom">Hier stehen ein paar coole Sachen bezuüglich EvenTom. Also was die App so kann und warum du sie nutzen solltest.</p>
             <div class="button-container">
-                <PrimaryButton to="/auth/signup" text="Registrieren" type="green"/>
-                <SecondaryButton to="/auth/signin" text="Login" type="white"/>
+                <PrimaryButton to="/auth/signup" text="Registrieren" :type="PrimaryButtonTypes.GREEN"/>
+                <SecondaryButton to="/auth/signin" text="Login" :type="SecondaryButtonTypes.WHITE"/>
             </div>
         </div>
     </div>

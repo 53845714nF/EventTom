@@ -3,6 +3,7 @@ import PrimaryButton from './PrimaryButton.vue';
 import { RouterLink } from 'vue-router';
 import AuthService from '@/services/AuthService';
 import { useAuthStore } from '@/stores/AuthStore';
+import { PrimaryButtonTypes } from '@/constants/ButtonTypes';
 
 const authStore = useAuthStore();
 
@@ -23,7 +24,7 @@ const handlePrimaryButtonClick = () => {
             @click="handlePrimaryButtonClick" 
             :text="authStore.navItems.button.title" 
             :to="authStore.navItems.button.path" 
-            type="green" 
+            :type="PrimaryButtonTypes.GREEN" 
             class="nav-item"
         />
     </header>

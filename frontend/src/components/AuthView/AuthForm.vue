@@ -6,6 +6,7 @@ import PrimaryButton from '../Basic/PrimaryButton.vue';
 import SecondaryButton from '../Basic/SecondaryButton.vue';
 import AuthService from '@/services/AuthService';
 import { useAuthStore } from '@/stores/AuthStore';
+import { PrimaryButtonTypes, SecondaryButtonTypes } from '@/constants/ButtonTypes';
 
 // use the route to get the type parameter
 const route = useRoute();
@@ -48,8 +49,16 @@ const postUser = () => AuthService.postUser(user, signUp.value, redirectPath, au
             <FormInput v-if="signUp" v-model="user.passwordRepeat" title="Passwort wiederholen" placeholder="Passwort" type="password"/>
         </div>
         <div class="button-container">
-            <PrimaryButton @click="postUser" :text="dynamicAuthText.primaryButtonText" type="green"/>
-            <SecondaryButton :to="`/auth/${secondaryButtonRedirect}`" :text="dynamicAuthText.secondaryButtonText" type="black"/>
+            <PrimaryButton 
+                @click="postUser" 
+                :text="dynamicAuthText.primaryButtonText" 
+                :type="PrimaryButtonTypes.GREEN"
+            />
+            <SecondaryButton 
+                :to="`/auth/${secondaryButtonRedirect}`" 
+                :text="dynamicAuthText.secondaryButtonText" 
+                :type="SecondaryButtonTypes.BLACK"
+            />
         </div>
     </div>
 </template>

@@ -2,6 +2,7 @@ import { test, expect, vi, describe } from "vitest";
 import { mount } from "@vue/test-utils";
 
 import PrimaryButton from "@/components/Basic/PrimaryButton.vue";
+import { PrimaryButtonTypes } from "@/constants/ButtonTypes";
 
 describe("Primary Button", () => {
 
@@ -28,7 +29,7 @@ describe("Primary Button", () => {
             props: {
                 to: "/",
                 text: "Test Button",
-                type: "green",
+                type: PrimaryButtonTypes.GREEN,
             },
         });
 

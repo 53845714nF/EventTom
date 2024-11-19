@@ -1,10 +1,15 @@
 <script setup>
 import { RouterLink } from 'vue-router';
+import { PrimaryButtonTypes } from '@/constants/ButtonTypes';
 
 const props = defineProps({
     to: String,
     text: String,
-    type: String,
+    type: {
+        type: String,
+        validator: (value) => Object.values(PrimaryButtonTypes).includes(value),
+        default: PrimaryButtonTypes.GREEN,
+    },
 })
 
 </script>
