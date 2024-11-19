@@ -21,5 +21,9 @@ export default defineConfig({
         changeOrigin: true, // this is needed for the correct headers to be set (CORS)
       }
     }
+  },
+  test:{
+    globals: true,
+    environment: 'jsdom',
   }
 })
