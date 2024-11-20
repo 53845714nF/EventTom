@@ -1,23 +1,23 @@
 import { test, expect, vi, describe } from "vitest";
 import { mount } from "@vue/test-utils";
 
-import PrimaryButton from "@/components/Basic/PrimaryButton.vue";
-import { PrimaryButtonTypes } from "@/constants/ButtonTypes";
+import SecondaryButton from "@/components/Basic/SecondaryButton.vue";
+import { SecondaryButtonTypes } from "@/constants/ButtonTypes";
 
-describe("Primary Button", () => {
+describe("Secondary Button", () => {
 
     afterEach(() => {
         vi.clearAllMocks();
     });
 
     test("Renders RouterLink if to is specified", async () => {
-        expect(PrimaryButton).toBeTruthy();
+        expect(SecondaryButton).toBeTruthy();
 
-        const wrapper = mount(PrimaryButton, { 
+        const wrapper = mount(SecondaryButton, { 
             props: {
                 to: "/",
                 text: "Test Button",
-                type: PrimaryButtonTypes.GREEN,
+                type: SecondaryButtonTypes.WHITE,
             },
             global: {
                 stubs: ["RouterLink"], // mocks vue internal components like RouterLink
@@ -28,12 +28,12 @@ describe("Primary Button", () => {
     });
     
     test("Doesn't render RouterLink if no to is specified", async () => {
-        expect(PrimaryButton).toBeTruthy();
+        expect(SecondaryButton).toBeTruthy();
 
-        const wrapper = mount(PrimaryButton, { 
+        const wrapper = mount(SecondaryButton, { 
             props: {
                 text: "Test Button",
-                type: PrimaryButtonTypes.GREEN,
+                type: SecondaryButtonTypes.WHITE,
             },
             global: {
                 stubs: ["RouterLink"],
@@ -45,33 +45,29 @@ describe("Primary Button", () => {
     });
     
     test("Renders correct text", async () => {
-        expect(PrimaryButton).toBeTruthy();
+        expect(SecondaryButton).toBeTruthy();
 
-        const wrapper = mount(PrimaryButton, { 
+        const wrapper = mount(SecondaryButton, { 
             props: {
-                // to: "/", will render a RouterLink and therefore all child components (also p, where the text ist) won't be rendered because of the mock
                 text: "Test Button",
-                type: PrimaryButtonTypes.GREEN,
+                type: SecondaryButtonTypes.WHITE,
             }
         });
 
         expect(wrapper.text()).toContain("Test Button");
     });
-
+    
     test("Sets correct CSS classes", async () => {
-        expect(PrimaryButton).toBeTruthy();
+        expect(SecondaryButton).toBeTruthy();
 
-        const wrapper = mount(PrimaryButton, { 
+        const wrapper = mount(SecondaryButton, { 
             props: {
                 text: "Test Button",
-                type: PrimaryButton.GREEN,
+                type: SecondaryButtonTypes.WHITE,
             }
         });
 
-        expect(wrapper.find('div').classes()).toContain("button-green");
-        expect(wrapper.find('p').classes()).toContain("p-black");
-
-        expect(wrapper.find('div').classes()).not.toContain("button-black");
-        expect(wrapper.find('p').classes()).not.toContain("p-white");
+        expect(wrapper.find('p').classes()).toContain("p-white");
+        expect(wrapper.find('p').classes()).not.toContain("p-black");
     });
 });

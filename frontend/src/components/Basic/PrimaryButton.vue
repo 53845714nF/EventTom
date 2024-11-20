@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 import { PrimaryButtonTypes } from '@/constants/ButtonTypes';
 
@@ -12,18 +13,40 @@ const props = defineProps({
     },
 })
 
+const buttonClass = computed(() => {
+    switch (props.type) {
+        case PrimaryButtonTypes.BLACK:
+            return 'button-black';
+        case PrimaryButtonTypes.GREEN:
+            return 'button-green';
+        default:
+            return 'button-green';
+    }
+});
+
+const pClass = computed(() => {
+    switch (props.type) {
+        case PrimaryButtonTypes.BLACK:
+            return 'p-white';
+        case PrimaryButtonTypes.GREEN:
+            return 'p-black';
+        default:
+            return 'p-black';
+    }
+});
+
 </script>
 
 <template>
     <!-- If the button has a to prop, it will be a router link, otherwise it will be a normal div -->
     <RouterLink v-if="props.to" :to="props.to">
-        <div :class="['primary-button', { 'button-black': props.type === 'black', 'button-green': props.type === 'green' }]">
-            <p :class="['p-large no-margin', { 'p-white': props.type === 'black', 'p-black': props.type === 'green' }]">{{ props.text }}</p>
+        <div :class="['primary-button', buttonClass]">
+            <p :class="['p-large no-margin', pClass]">{{ props.text }}</p>
         </div>
     </RouterLink>
 
-    <div v-else :class="['primary-button', { 'button-black': props.type === 'black', 'button-green': props.type === 'green' }]">
-        <p :class="['p-large no-margin', { 'p-white': props.type === 'black', 'p-black': props.type === 'green' }]">{{ props.text }}</p>
+    <div v-else :class="['primary-button', buttonClass]">
+        <p :class="['p-large no-margin', pClass]">{{ props.text }}</p>
     </div>
 </template>
 
