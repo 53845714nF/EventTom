@@ -4,11 +4,7 @@ import { mount } from "@vue/test-utils";
 import SecondaryButton from "@/components/Basic/SecondaryButton.vue";
 import { SecondaryButtonTypes } from "@/constants/ButtonTypes";
 
-describe("Secondary Button", () => {
-
-    afterEach(() => {
-        vi.clearAllMocks();
-    });
+describe("SecondaryButton", () => {
 
     test("Renders RouterLink if to is specified", async () => {
         expect(SecondaryButton).toBeTruthy();

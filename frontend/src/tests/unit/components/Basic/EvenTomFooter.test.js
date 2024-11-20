@@ -3,16 +3,12 @@ import { mount } from "@vue/test-utils";
 
 import EvenTomFooter from "@/components/Basic/EvenTomFooter.vue";
 
-describe("EvenTom Footer", () => {
+describe("EvenTomFooter", () => {
 
     vi.mock("@/stores/AuthStore", () => {
         return {
             useAuthStore: vi.fn(),
         };
-    });
-
-    afterEach(() => {
-        vi.clearAllMocks();
     });
 
     test("Renders correctly", async () => {

@@ -4,11 +4,7 @@ import { mount } from "@vue/test-utils";
 import EvenTomHeader from "@/components/Basic/EvenTomHeader.vue";
 import { NavItems } from "@/constants/NavItems";
 
-describe("EvenTom Header", () => {
-
-    afterEach(() => {
-        vi.clearAllMocks();
-    });
+describe("EvenTomHeader", () => {
      
     // MOCKING
     vi.mock("@/stores/AuthStore", () => {

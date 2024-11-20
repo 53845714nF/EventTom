@@ -4,11 +4,7 @@ import { mount } from "@vue/test-utils";
 import PrimaryButton from "@/components/Basic/PrimaryButton.vue";
 import { PrimaryButtonTypes } from "@/constants/ButtonTypes";
 
-describe("Primary Button", () => {
-
-    afterEach(() => {
-        vi.clearAllMocks();
-    });
+describe("PrimaryButton", () => {
 
     test("Renders RouterLink if to is specified", async () => {
         expect(PrimaryButton).toBeTruthy();
