@@ -10,26 +10,61 @@ describe("Primary Button", () => {
         vi.clearAllMocks();
     });
     
-    // Mock the router since it is required for the Button component  
-    vi.mock("vue-router", async () => {
-        return {
-            RouterLink: { // Mock for RouterLink since it's not available in the test environment but used in the Button
-            name: "RouterLink",
-            props: ["to"], // Mock for props of RouterLink
-            template: '<a :href="to"><slot /></a>', // Mock for template of RouterLink
-            }
-        };
-    });
+    // chill sebastian, das ist nur damit ich mich dran erinnere wie das geht
+    
+    // Components can also be mocked with a custom template like this:
+    // vi.mock("vue-router", () => ({
+    //     RouterLink: { 
+    //         name: "RouterLink", 
+    //         props: ["to"],
+    //         template: "<a :href='to'><slot /></a>"},
+    // }));
 
-    test("Mount Button with correct Text", async () => {
+    test("Renders RouterLink if to is specified", async () => {
         expect(PrimaryButton).toBeTruthy();
 
-        // wrapper 
         const wrapper = mount(PrimaryButton, { 
             props: {
                 to: "/",
                 text: "Test Button",
                 type: PrimaryButtonTypes.GREEN,
+            },
+            global: {
+                stubs: ["RouterLink"],
+            },
+        });
+        
+        expect(wrapper.findComponent({ name: "RouterLink" }).exists()).toBeTruthy();
+    });
+    
+    test("Doesn't render RouterLink if no to is specified", async () => {
+        expect(PrimaryButton).toBeTruthy();
+
+        const wrapper = mount(PrimaryButton, { 
+            props: {
+                text: "Test Button",
+                type: PrimaryButtonTypes.GREEN,
+            },
+            global: {
+                stubs: ["RouterLink"],
+            },
+        });
+    
+        
+        expect(wrapper.findComponent({ name: "RouterLink" }).exists()).toBeFalsy();
+    });
+    
+    test("Renders correct text", async () => {
+        expect(PrimaryButton).toBeTruthy();
+
+        const wrapper = mount(PrimaryButton, { 
+            props: {
+                // to: "/", will render a RouterLink and therefore all child components (also p, where the text ist) won't be rendered because of the mock
+                text: "Test Button",
+                type: PrimaryButtonTypes.GREEN,
+            },
+            global: {
+                stubs: ["RouterLink"],
             },
         });
 
