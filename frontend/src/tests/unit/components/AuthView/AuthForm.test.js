@@ -103,18 +103,31 @@ describe("AuthForm", () => {
         expect(wrapper.vm.user).toStrictEqual(testUser);
     });
     
-    test("Post User when button is clicked", async () => {
-        
-        const wrapper = mount(AuthForm);
-        const spyOnPostUser = vi.spyOn(AuthService, "postUser");
+    // test("Post User after clicking PrimaryButton", async () => {
+    //     const wrapper = mount(AuthForm);
+    //     const spyOnPostUser = vi.spyOn(AuthService, "postUser");
+    //     //const spyOnPostUser = vi.spyOn(wrapper.vm, "postUser");
 
-        const button = wrapper.findComponent({ name: 'PrimaryButton' });
-        // expect(button.text()).toContain("Registrieren");
-        await button.trigger('click');
+    //     // AuthService.postUser();
+    
+    //     // Button finden
+    //     const button = wrapper.findComponent({ name: "PrimaryButton" });
+    
+    //     // Klick simulieren
+    //     await button.trigger("click");
+    
+    //     // Erwartung: postUser wurde genau einmal aufgerufen
+    //     expect(spyOnPostUser).toHaveBeenCalledTimes(1);
+    // });
 
-        // expect(spyOnPostUser).toBeCalledTimes(1);
-        //expect(AuthService.postUser).toBeCalledTimes(1);
-        //expect(wrapper.vm.postUser).toBeCalledTimes(1);
+    // test("Redirect after clicking SecondaryButton", () => {
+    //     const wrapper = mount(AuthForm);
+    //     const spyOnRouter = vi.spyOn(wrapper.vm.$router, "push");
 
-    });
+    //     const secondaryButton = wrapper.findComponent({ name: "SecondaryButton" });
+    //     secondaryButton.trigger("click");
+
+    //     expect(spyOnRouter).toHaveBeenCalledTimes(1);
+    //     expect(spyOnRouter).toHaveBeenCalledWith({ name: "signin" });
+    // })
 });

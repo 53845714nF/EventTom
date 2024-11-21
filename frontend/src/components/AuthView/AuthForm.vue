@@ -43,8 +43,8 @@ const postUser = () => AuthService.postUser(user, signUp.value, redirectPath, au
     <div class="form-background">
         <h3 class="heading-margin">{{dynamicAuthText.title}}</h3>
         <div class="form-container">
-            <FormInput v-model="user.username" title="Name" placeholder="Arne123" type="text"/>
-            <FormInput v-if="signUp" v-model="user.email" title="E-Mail" placeholder="feet.lover@gmail.com" type="text"/>
+            <FormInput v-model="user.username" title="Name" placeholder="Nutzername" type="text"/>
+            <FormInput v-if="signUp" v-model="user.email" title="E-Mail" placeholder="E-Mail" type="text"/>
             <FormInput v-model="user.password" title="Passwort" placeholder="Passwort" type="password"/>
             <FormInput v-if="signUp" v-model="user.passwordRepeat" title="Passwort wiederholen" placeholder="Passwort" type="password"/>
         </div>
