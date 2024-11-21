@@ -6,7 +6,6 @@ import FormInput from "@/components/Basic/FormInput.vue";
 describe("FormInput", () => {
 
     test("Sets Props correctly", async () => {
-        expect(FormInput).toBeTruthy();
         
         const wrapper = mount(FormInput, {
             props:{

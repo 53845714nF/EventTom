@@ -7,8 +7,7 @@ import { SecondaryButtonTypes } from "@/constants/ButtonTypes";
 describe("SecondaryButton", () => {
 
     test("Renders RouterLink if to is specified", async () => {
-        expect(SecondaryButton).toBeTruthy();
-
+        
         const wrapper = mount(SecondaryButton, { 
             props: {
                 to: "/",
@@ -24,7 +23,6 @@ describe("SecondaryButton", () => {
     });
     
     test("Doesn't render RouterLink if no to is specified", async () => {
-        expect(SecondaryButton).toBeTruthy();
 
         const wrapper = mount(SecondaryButton, { 
             props: {
@@ -41,7 +39,6 @@ describe("SecondaryButton", () => {
     });
     
     test("Renders correct text", async () => {
-        expect(SecondaryButton).toBeTruthy();
 
         const wrapper = mount(SecondaryButton, { 
             props: {
@@ -54,7 +51,6 @@ describe("SecondaryButton", () => {
     });
     
     test("Sets correct CSS classes", async () => {
-        expect(SecondaryButton).toBeTruthy();
 
         const wrapper = mount(SecondaryButton, { 
             props: {

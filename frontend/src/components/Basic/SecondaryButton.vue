@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 import { SecondaryButtonTypes } from '@/constants/ButtonTypes';
+import SecondaryButtonService from '@/services/SecondaryButtonService';
 
 const props = defineProps({
     to: String,
@@ -13,28 +14,19 @@ const props = defineProps({
     },
 })
 
-const buttonClass = computed(() => {
-    switch (props.type) {
-        case SecondaryButtonTypes.BLACK:
-            return 'p-black';
-        case SecondaryButtonTypes.WHITE:
-            return 'p-white';
-        default:
-            return 'p-black';
-    }
-});
+const textCssClass = computed(() => SecondaryButtonService.provideTextCssClass(props.type));
 
 </script>
 
 <template>
     <RouterLink v-if="props.to" :to="props.to">
         <div class="secondary-button">
-            <p :class="['p-large no-margin', buttonClass]">{{ props.text }}</p>
+            <p :class="['p-large no-margin', textCssClass]">{{ props.text }}</p>
         </div>
     </RouterLink>
 
     <div v-else: class="secondary-button">
-            <p :class="['p-large no-margin', buttonClass]">{{ props.text }}</p>
+            <p :class="['p-large no-margin', textCssClass]">{{ props.text }}</p>
         </div>
 </template>
 

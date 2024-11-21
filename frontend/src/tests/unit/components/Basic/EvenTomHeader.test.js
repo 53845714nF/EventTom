@@ -22,13 +22,13 @@ describe("EvenTomHeader", () => {
             RouterLink: { 
                 name: "RouterLink", 
                 props: ["to"],
-                template: "<a :href='to'> <slot /> </a>"}, // <slot /> is the placeholder for the content between the RouterLink tags and renders the text insider the RouterLink
+                template: "<a :href='to'> <slot /> </a>"
+            }, // <slot /> is the placeholder for the content between the RouterLink tags and renders the text insider the RouterLink
         }
-      })
+    })
 
     // TESTS
     test("Renders correctly", async () => {
-        expect(EvenTomHeader).toBeTruthy();
 
         const wrapper = mount(EvenTomHeader, {
             global: {
@@ -43,8 +43,7 @@ describe("EvenTomHeader", () => {
     });
     
     test("Renders correct navItems", async () => {
-        expect(EvenTomHeader).toBeTruthy();
-
+        
         const wrapper = mount(EvenTomHeader);
 
         // correct text in navItems

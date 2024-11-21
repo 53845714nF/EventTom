@@ -6,7 +6,6 @@ import PageTitleContainer from "@/components/Basic/PageTitleContainer.vue";
 describe("PageTitleContainer", () => {
 
     test("Renders text correctly", async () => {
-        expect(PageTitleContainer).toBeTruthy();
         
         const wrapper = mount(PageTitleContainer, {
             props:{

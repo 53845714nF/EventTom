@@ -50,7 +50,7 @@ const postUser = () => AuthService.postUser(user, signUp.value, redirectPath, au
         </div>
         <div class="button-container">
             <PrimaryButton 
-                @click="postUser" 
+                :onClick="postUser" 
                 :text="dynamicAuthText.primaryButtonText" 
                 :type="PrimaryButtonTypes.GREEN"
             />

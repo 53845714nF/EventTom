@@ -7,8 +7,7 @@ import { PrimaryButtonTypes } from "@/constants/ButtonTypes";
 describe("PrimaryButton", () => {
 
     test("Renders RouterLink if to is specified", async () => {
-        expect(PrimaryButton).toBeTruthy();
-
+        
         const wrapper = mount(PrimaryButton, { 
             props: {
                 to: "/",
@@ -24,7 +23,6 @@ describe("PrimaryButton", () => {
     });
     
     test("Doesn't render RouterLink if no to is specified", async () => {
-        expect(PrimaryButton).toBeTruthy();
 
         const wrapper = mount(PrimaryButton, { 
             props: {
@@ -41,7 +39,6 @@ describe("PrimaryButton", () => {
     });
     
     test("Renders correct text", async () => {
-        expect(PrimaryButton).toBeTruthy();
 
         const wrapper = mount(PrimaryButton, { 
             props: {
@@ -55,7 +52,6 @@ describe("PrimaryButton", () => {
     });
 
     test("Sets correct CSS classes", async () => {
-        expect(PrimaryButton).toBeTruthy();
 
         const wrapper = mount(PrimaryButton, { 
             props: {
