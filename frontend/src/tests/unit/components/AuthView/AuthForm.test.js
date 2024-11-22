@@ -4,6 +4,7 @@ import { mount } from "@vue/test-utils";
 import AuthForm from "@/components/AuthView/AuthForm.vue";
 import { AuthFormText } from "@/constants/AuthFormText";
 import AuthService from "@/services/AuthService";
+import { createCorrectUserSignUp } from "../../utils/testUtils";
 
 
 describe("AuthForm", () => {
@@ -81,26 +82,21 @@ describe("AuthForm", () => {
 
         const wrapper = mount(AuthForm);
 
-        const testUser = {
-            username: "testUsername",
-            email: "testEmail",
-            password: "testPassword",
-            passwordRepeat: "passwordRepeat",
-        }
+        const testUser = createCorrectUserSignUp();
 
         const usernameInput = wrapper.findAllComponents({ name: 'FormInput' }).at(0);
-        usernameInput.setValue(testUser.username);
+        usernameInput.setValue(testUser.value.username);
         
         const emailInput = wrapper.findAllComponents({ name: 'FormInput' }).at(1);
-        emailInput.setValue(testUser.email);
+        emailInput.setValue(testUser.value.email);
 
         const passwordInput = wrapper.findAllComponents({ name: 'FormInput' }).at(2);
-        passwordInput.setValue(testUser.password);
+        passwordInput.setValue(testUser.value.password);
 
         const passwordRepeatInput = wrapper.findAllComponents({ name: 'FormInput' }).at(3);
-        passwordRepeatInput.setValue(testUser.passwordRepeat);
+        passwordRepeatInput.setValue(testUser.value.passwordRepeat);
 
-        expect(wrapper.vm.user).toStrictEqual(testUser);
+        expect(wrapper.vm.user).toStrictEqual(testUser.value);
     });
     
     // test("Post User after clicking PrimaryButton", async () => {

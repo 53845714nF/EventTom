@@ -71,7 +71,7 @@ export default class AuthService {
 
     // sends a POST request to the backend to log in the user
     // if successful, saves the access token to the local storage and redirects to the provided redirectPath
-    static _postLoginData(user, redirectPath, authStore){
+    static async _postLoginData(user, redirectPath, authStore){
         
         const data = new URLSearchParams();
         data.append('grant_type', 'password');
@@ -82,7 +82,7 @@ export default class AuthService {
         data.append('client_secret', 'string');
         
         // send api request of type application/x-www-form-urlencoded
-        axios.post('/api/v1/login/access-token', data, {
+        await axios.post('/api/v1/login/access-token', data, {
             headers: {
                 'accept': 'application/json',
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -109,14 +109,12 @@ export default class AuthService {
     // logs out the user by removing the access token and role from the local storage
     // no redirect is needed, because it is implemented by giving path to the logout button in the header
     static logoutUser(authStore){
-        console.log("Logging out user");
         authStore.removeAccessToken();
         authStore.setRole(Roles.GUEST);
-        console.log(authStore.role);
         ToasterService.createToasterPopUp('success', 'Logout erfolgreich!');
     }
 
-    static testAccessToken(store){
+    static async testAccessToken(store){
         const data = {}
         
         const config = {
@@ -126,7 +124,7 @@ export default class AuthService {
             }
         }
 
-        axios.post('/api/v1/login/test-token', data, config)
+        await axios.post('/api/v1/login/test-token', data, config)
         .then(response => {
             console.log(response);
             ToasterService.createToasterPopUp('success', `Token valid. Role: ${store.role}`);
