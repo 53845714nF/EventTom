@@ -1,30 +1,34 @@
 <template>
-    <div>
-      <main>
+    <!--For the general structure of a view, please refer to Views/AuthView.vue-->
+    <div> <!-- This should be class="content-container"-->
+      <main> <!-- We dont need a main tag-->
         <section class="event-page">
-          <h1 class="title">Ansicht Kunde</h1>
-          <div class="event-list">
-            <div v-for="event in events" :key="event.id" class="event-card">
+          <h1 class="title">Ansicht Kunde</h1> <!-- Please use the existing component (components/Basic/PageTitleContainer)-->
+          <div class="event-list"> 
+            <div v-for="event in events" :key="event.id" class="event-card">  <!-- Please extract this into a single component and call it "EventCard" or something like that-->
               <h2>{{ event.title }} <span>Preis pro Ticket: {{ event.price }}</span></h2>
               <p>{{ event.description }}</p>
               <p>Name des Organisators: {{ event.organizer }}</p>
               <button
                 :class="event.available ? 'available' : 'sold-out'"
                 :disabled="!event.available"
-              >
+              > <!-- Please use the existing PrimaryButton component (type=black) (components/Basic/PrimaryButton)-->
                 {{ event.available ? `Noch ${event.tickets} Tickets` : 'Ausverkauft' }}
-              </button>
+              </button> <!-- Also this button should be on the right -->
             </div>
           </div>
         </section>
       </main>
-      <EvenTomFooter />
+      <EvenTomFooter /> <!-- You dont have to put the footer here since it is already rendered in App.vue-->
     </div>
   </template>
   
   <script setup>
   import { reactive } from 'vue';  
   // Define reactive data
+
+  // This should be fetched from the backend
+  // it is okay for now to have it hardcoded, but you should try to create a Service for the CustomerView which fetches the data from a mock api (see https://mockoon.com)
   const events = reactive([
     {
       id: 1,
@@ -100,7 +104,7 @@
   }
   
   .available {
-    background-color: #38c172;
+    background-color: #38c172;  /* use the correct color variables from assets/base.css  (--cp-pastel-green) */
     color: white;
   }
   
