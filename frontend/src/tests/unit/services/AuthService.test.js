@@ -6,7 +6,7 @@ import { Roles } from "@/constants/Roles";
 import { NavItems } from "@/constants/NavItems";
 import axios from "axios";
 import ToasterService from "@/services/ToasterService";
-import { createCorrectUserSignUp, createEmptyUser, createCorrectUserSignIn, createUserWithPasswordsDontMatch, createUserWithPasswordTooShort, createAuthStoreLoggedOut, createAuthStoreLoggedInUser } from "../utils/testUtils";
+import { createCorrectUserSignUp, createEmptyUser, createCorrectUserSignIn, createUserWithPasswordsDontMatch, createUserWithPasswordTooShort, createAuthStoreLoggedOut, createAuthStoreLoggedInUser } from "../../utils/testUtils";
 
 describe("AuthService validating User Input", () => {
 
