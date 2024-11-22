@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import AboutView from '../views/AboutView.vue'
+import LandingPageView from '@/views/LandingPageView.vue'
+import AuthView from '@/views/AuthView.vue'
+import NotImplementedView from '@/views/NotImplementedView.vue'
+import NotFoundView from '@/views/NotFoundView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,13 +10,26 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: LandingPageView
     },
     {
-      path: '/about',
-      name: 'about',
-      component: AboutView
-    }
+      path: '/auth/:type',
+      name: 'auth',
+      component: AuthView
+    },
+    {
+      path: '/not_implemented',
+      name: 'notImplemented',
+      component: NotImplementedView
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      name: "not_found",
+      component: NotFoundView,
+      meta: {
+          title: "404 - Not Found"
+      }
+  }
   ]
 })
 

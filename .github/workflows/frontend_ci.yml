@@ -1,0 +1,32 @@
+name: Frontend Build and Test
+
+on:
+  push:
+    branches: [ "frontend-dev"]
+  pull_request:
+    branches: [ "main", "frontend-dev"]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: frontend
+
+      - name: Run tests
+        run: npm test
+        working-directory: frontend
+
+      - name: Run build
+        run: npm run build
+        working-directory: frontend
