@@ -2,6 +2,8 @@ import { ref } from "vue";
 import { vi } from "vitest";
 import { Roles } from "@/constants/Roles";
 import { NavItems } from "@/constants/NavItems";
+import { LocalStorageKeys } from "@/constants/LocalStorageKeys";
+import { useAuthStore } from "@/stores/AuthStore";
 // Different Users for testing
 
 export function createCorrectUserSignUp(){
@@ -66,7 +68,7 @@ export function createAuthStoreLoggedOut() {
             this.role = newRole
         })
     };
-}
+};
 
 export function createAuthStoreLoggedInUser() {
     return {
@@ -84,4 +86,10 @@ export function createAuthStoreLoggedInUser() {
             this.role = newRole
         })
     };
+};
+
+export function setLocalStorageItemsAndCreateAuthStore(role, token) {
+    localStorage.setItem(LocalStorageKeys.USER_ROLE, role);
+    localStorage.setItem(LocalStorageKeys.ACCESS_TOKEN, token);
+    return useAuthStore();
 }
