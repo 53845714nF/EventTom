@@ -3,7 +3,7 @@ export const NavItems = {
     items: [
       {title: 'Home', path: '/'},
       {title: 'About', path: '/not_implemented'},
-      {title: 'Dashboard', path: '/dashboard'},
+      {title: 'Dashboard', path: '/not_implemented'},
     ],
     button: {title: 'Login', path: '/auth/signin'},
   },
