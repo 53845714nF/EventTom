@@ -25,7 +25,7 @@ describe("EvenTomHeader", () => {
                 template: "<a :href='to'> <slot /> </a>"
             }, // <slot /> is the placeholder for the content between the RouterLink tags and renders the text insider the RouterLink
         }
-    })
+    });
 
     // TESTS
     test("Renders correctly", async () => {
