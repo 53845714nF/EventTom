@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LandingPageView from '@/views/LandingPageView.vue'
-import AppDashboardView from '@/views/AppDashboardView.vue'
 import AuthView from '@/views/AuthView.vue'
 import NotImplementedView from '@/views/NotImplementedView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
@@ -12,11 +11,6 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: LandingPageView
-    },
-    {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: AppDashboardView
     },
     {
       path: '/auth/:type',

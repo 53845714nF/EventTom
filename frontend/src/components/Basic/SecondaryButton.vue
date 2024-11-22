@@ -1,6 +1,8 @@
 <script setup>
+import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 import { SecondaryButtonTypes } from '@/constants/ButtonTypes';
+import SecondaryButtonService from '@/services/SecondaryButtonService';
 
 const props = defineProps({
     to: String,
@@ -12,14 +14,20 @@ const props = defineProps({
     },
 })
 
+const textCssClass = computed(() => SecondaryButtonService.provideTextCssClass(props.type));
+
 </script>
 
 <template>
-    <RouterLink :to="props.to">
+    <RouterLink v-if="props.to" :to="props.to">
         <div class="secondary-button">
-            <p :class="['p-large no-margin', { 'p-black': props.type === 'black', 'p-white': props.type === 'white' }]">{{ props.text }}</p>
+            <p :class="['p-large no-margin', textCssClass]">{{ props.text }}</p>
         </div>
     </RouterLink>
+
+    <div v-else: class="secondary-button">
+            <p :class="['p-large no-margin', textCssClass]">{{ props.text }}</p>
+        </div>
 </template>
 
 <style scoped>

@@ -1,6 +1,8 @@
 <script setup>
+import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 import { PrimaryButtonTypes } from '@/constants/ButtonTypes';
+import PrimaryButtonService from '@/services/PrimaryButtonService';
 
 const props = defineProps({
     to: String,
@@ -10,20 +12,33 @@ const props = defineProps({
         validator: (value) => Object.values(PrimaryButtonTypes).includes(value),
         default: PrimaryButtonTypes.GREEN,
     },
-})
+    onClick: {
+        type: Function,
+        required: false,
+    }
+});
+
+const divCssClass = computed(() => PrimaryButtonService.provideDivCssClass(props.type));
+const textCssClass = computed(() => PrimaryButtonService.provideTextCssClass(props.type));
+
+const onClick = () => {
+    if (props.onClick) {
+        props.onClick();
+    }
+};
 
 </script>
 
 <template>
     <!-- If the button has a to prop, it will be a router link, otherwise it will be a normal div -->
-    <RouterLink v-if="props.to" :to="props.to">
-        <div :class="['primary-button', { 'button-black': props.type === 'black', 'button-green': props.type === 'green' }]">
-            <p :class="['p-large no-margin', { 'p-white': props.type === 'black', 'p-black': props.type === 'green' }]">{{ props.text }}</p>
+    <RouterLink v-if="props.to" :to="props.to" @click="onClick()">
+        <div :class="['primary-button', divCssClass]">
+            <p :class="['p-large no-margin', textCssClass]">{{ props.text }}</p>
         </div>
     </RouterLink>
 
-    <div v-else :class="['primary-button', { 'button-black': props.type === 'black', 'button-green': props.type === 'green' }]">
-        <p :class="['p-large no-margin', { 'p-white': props.type === 'black', 'p-black': props.type === 'green' }]">{{ props.text }}</p>
+    <div v-else :class="['primary-button', divCssClass]" @click="onClick()">
+        <p :class="['p-large no-margin', textCssClass]">{{ props.text }}</p>
     </div>
 </template>
 

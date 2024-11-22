@@ -8,8 +8,8 @@ import { AuthFormText } from '@/constants/AuthFormText';
 export default class AuthService {
 
     // provides the text values for buttons in the AuthForm depending on whether the user is signing up or logging in
-    static provideDynamicAuthText(signUp){
-        if (signUp) {
+    static provideDynamicAuthText(isUserSigningUp){
+        if (isUserSigningUp) {
             return AuthFormText.SIGN_UP;
         }else{
             return AuthFormText.SIGN_IN;
@@ -28,13 +28,13 @@ export default class AuthService {
 
     // checks if input values from AuthForm are correct
     // logic depends on if user is signing up (signUp = true) or logging in (signUp = false)
-    static _checkIfInputValuesCorrect(user, signUp){
+    static _checkIfInputValuesCorrect(user, isUserSigningUp){
     
         if (!(user.value.username && user.value.password)){
             return {isValid: false, message: "Keine leeren Felder erlaubt."};
         }
 
-        if (signUp) {
+        if (isUserSigningUp) {
             if (!(user.value.password === user.value.passwordRepeat)) {
                 return {isValid: false, message: "Passwörter stimmen nicht überein."};
             }
@@ -53,26 +53,25 @@ export default class AuthService {
 
     // sends a POST request to the backend with the user data
     // Either logs in user (signUp = false) or signs up user (signUp = true)
-    static postUser(user, signUp, redirectPath, store){
+    static postUser(user, isUserSigningUp, redirectPath, store){
 
-        const validationResult = this._checkIfInputValuesCorrect(user, signUp);
+        const validationResult = this._checkIfInputValuesCorrect(user, isUserSigningUp);
 
         if (!validationResult.isValid) {
             ToasterService.createToasterPopUp('error', validationResult.message);
             return;
         }
 
-        if (signUp) {
-            this._postSignUpData(user, redirectPath);
+        if (isUserSigningUp) {
+            this._postSignupData(user, redirectPath);
         } else {
-            console.log("postLogin");
             this._postLoginData(user, redirectPath, store);
         }
     }
 
     // sends a POST request to the backend to log in the user
     // if successful, saves the access token to the local storage and redirects to the provided redirectPath
-    static _postLoginData(user, redirectPath, authStore){
+    static async _postLoginData(user, redirectPath, authStore){
         
         const data = new URLSearchParams();
         data.append('grant_type', 'password');
@@ -83,7 +82,7 @@ export default class AuthService {
         data.append('client_secret', 'string');
         
         // send api request of type application/x-www-form-urlencoded
-        axios.post('/api/v1/login/access-token', data, {
+        await axios.post('/api/v1/login/access-token', data, {
             headers: {
                 'accept': 'application/json',
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -101,22 +100,21 @@ export default class AuthService {
         });
     }
 
-    // logs out the user by removing the access token and role from the local storage
-    // no redirect is needed, because it is implemented by giving path to the logout button in the header
-    static logoutUser(authStore){
-        console.log("Logging out user");
-        authStore.removeAccessToken();
-        authStore.setRole(Roles.GUEST);
-        console.log(authStore.role);
-        ToasterService.createToasterPopUp('success', 'Logout erfolgreich!');
-    }
 
-    static _postSignUpData(user, redirectPath){
+    static _postSignupData(user, redirectPath){
         console.log("not implemented yet")
         ToasterService.createToasterPopUp('error', 'Sign up not implemented yet.');
     }
 
-    static testAccessToken(store){
+    // logs out the user by removing the access token and role from the local storage
+    // no redirect is needed, because it is implemented by giving path to the logout button in the header
+    static logoutUser(authStore){
+        authStore.removeAccessToken();
+        authStore.setRole(Roles.GUEST);
+        ToasterService.createToasterPopUp('success', 'Logout erfolgreich!');
+    }
+
+    static async testAccessToken(store){
         const data = {}
         
         const config = {
@@ -126,7 +124,7 @@ export default class AuthService {
             }
         }
 
-        axios.post('/api/v1/login/test-token', data, config)
+        await axios.post('/api/v1/login/test-token', data, config)
         .then(response => {
             console.log(response);
             ToasterService.createToasterPopUp('success', `Token valid. Role: ${store.role}`);
