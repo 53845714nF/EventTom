@@ -1,5 +1,6 @@
 import PrimaryButtonService from "@/services/PrimaryButtonService";
 import { PrimaryButtonTypes } from "@/constants/ButtonTypes";
+import { describe, test, expect } from "vitest";
 describe("PrimaryButtonService", () => {
   test("Provides correct div CSS class for given button type", async () => {
     const expectedClass = PrimaryButtonService.provideDivCssClass(

@@ -109,7 +109,7 @@ export default class AuthService {
       });
   }
 
-  static _postSignupData(user, redirectPath) {
+  static _postSignupData() {
     console.log("not implemented yet");
     ToasterService.createToasterPopUp("error", "Sign up not implemented yet.");
   }

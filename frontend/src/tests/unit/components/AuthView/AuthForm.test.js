@@ -3,7 +3,6 @@ import { mount } from "@vue/test-utils";
 
 import AuthForm from "@/components/AuthView/AuthForm.vue";
 import { AuthFormText } from "@/constants/AuthFormText";
-import AuthService from "@/services/AuthService";
 import { createCorrectUserSignUp } from "../../../utils/testUtils";
 
 describe("AuthForm", () => {
