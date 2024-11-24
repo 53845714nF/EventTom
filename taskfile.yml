@@ -3,6 +3,7 @@ version: '3'
 tasks:
   up:
     cmds:
+      - sudo docker image rm eventtom-backend eventtom-prestart eventtom-frontend -f
       - sudo docker compose  --env-file .env up
   down: 
     cmds:

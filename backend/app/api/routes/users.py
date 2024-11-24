@@ -19,11 +19,11 @@ from app.models import (
     UserType,
     UserCreate,
     UserPublic,
-    UserRegister,
     UsersPublic,
     UserUpdate,
     UserUpdateMe,
-    EventCustomer
+    EmployeeCreate,
+    EmployeeRole
 )
 from app.utils import generate_new_account_email, send_email
 
@@ -52,10 +52,17 @@ def read_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
 @router.post(
     "/", dependencies=[Depends(get_current_active_employee)], response_model=UserPublic
 )
-def create_user(*, session: SessionDep, user_in: UserCreate) -> Any:
+def create_user(*, session: SessionDep, user_in: EmployeeCreate, current_user: CurrentUser
+) -> Any:
     """
     Create new user.
     """
+    if current_user.role != EmployeeRole.ADMIN:
+        raise HTTPException(
+            status_code=403,
+            detail="Only administrators can create new users",
+        )
+    
     user = crud.get_user_by_email(session=session, email=user_in.email)
     if user:
         raise HTTPException(
@@ -63,7 +70,7 @@ def create_user(*, session: SessionDep, user_in: UserCreate) -> Any:
             detail="The user with this email already exists in the system.",
         )
 
-    user = crud.create_user(session=session, user_create=user_in)
+    user = crud.create_employee(session=session, user_create=user_in)
     if settings.emails_enabled and user_in.email:
         email_data = generate_new_account_email(
             email_to=user_in.email, username=user_in.email, password=user_in.password
@@ -135,17 +142,15 @@ def delete_user_me(session: SessionDep, current_user: CurrentUser) -> Any:
         raise HTTPException(
             status_code=403, detail="Employes are not allowed to delete themselves"
         )
-    statement = delete(EventCustomer).where(col(EventCustomer.customer_id) == current_user.id)
-    session.exec(statement)  # type: ignore
     session.delete(current_user)
     session.commit()
     return Message(message="User deleted successfully")
 
 
 @router.post("/signup", response_model=UserPublic)
-def register_user(session: SessionDep, user_in: UserRegister) -> Any:
+def register_user(session: SessionDep, user_in: UserCreate) -> Any:
     """
-    Create new user without the need to be logged in.
+    Public endpoint for customer registration only.
     """
     user = crud.get_user_by_email(session=session, email=user_in.email)
     if user:
@@ -154,7 +159,7 @@ def register_user(session: SessionDep, user_in: UserRegister) -> Any:
             detail="The user with this email already exists in the system",
         )
     user_create = UserCreate.model_validate(user_in)
-    user = crud.create_user(session=session, user_create=user_create)
+    user = crud.create_customer(session=session, user_create=user_create)
     return user
 
 
@@ -222,8 +227,6 @@ def delete_user(
         raise HTTPException(
             status_code=403, detail="Super users are not allowed to delete themselves"
         )
-    statement = delete(EventCustomer).where(col(EventCustomer.customer_id) == user_id)
-    session.exec(statement)  # type: ignore
     session.delete(user)
     session.commit()
     return Message(message="User deleted successfully")
