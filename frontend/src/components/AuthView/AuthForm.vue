@@ -18,7 +18,7 @@ const type = ref(route.params.type);
 const user = AuthService.provideEmptyUser();
 
 // redirect path after successful login / signup -> change this to the path you want to redirect to
-const redirectPath = DevVariables.redirectPath;
+const redirectPath = DevVariables.LOGIN_REDIRECT;
 
 // watch for changes in route.params.type
 watch(
