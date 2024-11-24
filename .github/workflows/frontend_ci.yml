@@ -2,7 +2,7 @@ name: Frontend Build and Test
 
 on:
   push:
-    branches: [ "main", "frontend-dev", "add-linting"]
+    branches: [ "main", "frontend-dev"]
   pull_request:
     branches: [ "main", "frontend-dev"]
 

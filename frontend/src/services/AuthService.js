@@ -4,7 +4,6 @@ import ToasterService from "./ToasterService";
 import router from "@/router";
 import { Roles } from "@/constants/Roles";
 import { AuthFormText } from "@/constants/AuthFormText";
-import { vi } from "vitest";
 
 export default class AuthService {
   // provides the text values for buttons in the AuthForm depending on whether the user is signing up or logging in
