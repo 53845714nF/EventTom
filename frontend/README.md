@@ -5,6 +5,7 @@
 - Navigate inside frontend folder: `cd frontend`
 - Install dependencies: `npm install` (run after each _git pull_)
 - Run on your local machine in dev mode with hot-reload: `npm run dev`
+- Run the backend container: `docker compose  --env-file .env up`
 
 ## Building Project with Docker (Not necassary for development purposes)
 
@@ -58,7 +59,6 @@ Views are **complete pages** for a certain topic (e.g. Where the user can see al
 Every View should be structured the following way: It should contain a [PageTitleContainer](/frontend/src/components/Basic/PageTitleContainer.vue) and a div with `class="content-container"` which adds some padding to the content area and makes sure every page follows the design guidelines. A new View should look something like this:
 
 **File:** `BookView.js`
-
 ```javascript
 <script setup>
 import PageTitleContainer from "@/components/Basic/PageTitleContainer.vue";

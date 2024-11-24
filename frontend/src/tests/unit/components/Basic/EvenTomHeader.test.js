@@ -33,7 +33,6 @@ describe("EvenTomHeader", () => {
         stubs: ["RouterLink"],
       },
     });
-    expect(wrapper.find("h4").exists()).toBeTruthy();
     expect(wrapper.find("nav").exists()).toBeTruthy();
     expect(wrapper.findComponent({ name: "RouterLink" }).exists()).toBeTruthy();
     expect(

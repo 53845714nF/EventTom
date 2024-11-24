@@ -100,12 +100,18 @@ p {
   margin-bottom: 5px;
 }
 
-a {
-  text-decoration: none;
+.nav-item-active {
   color: var(--cp-bright-green);
+}  
+
+a {
+  font-family: FunnelDisplay;
+  text-decoration: none;
   transition: 0.4s;
   padding: 3px;
+  color: var(--color-text-black);
 }
+
 
 /* Containers */
 

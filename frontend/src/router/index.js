@@ -1,6 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
+
 import LandingPageView from "@/views/LandingPageView.vue";
+
 import AuthView from "@/views/AuthView.vue";
+
+import EventManagerEventsView from "@/views/EventManagerEventsView.vue";
+
 import NotImplementedView from "@/views/NotImplementedView.vue";
 import NotFoundView from "@/views/NotFoundView.vue";
 
@@ -16,6 +21,11 @@ const router = createRouter({
       path: "/auth/:type",
       name: "auth",
       component: AuthView,
+    },
+    {
+      path: "/event-manager/events",
+      name: "EMEvents",
+      component: EventManagerEventsView,
     },
     {
       path: "/not_implemented",
