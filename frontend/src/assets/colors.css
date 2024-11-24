@@ -1,21 +1,21 @@
 /* color palette */
 :root {
   --cp-white: #fff;
-  --cp-black: #181A1B;
-  --cp-light-grey: #DDDDDD; 
-  --cp-dark-grey: #696A6A;
-  --cp-bright-green: #54EA55;
-  --cp-dark-green: #16B917;
+  --cp-black: #181a1b;
+  --cp-light-grey: #dddddd;
+  --cp-dark-grey: #696a6a;
+  --cp-bright-green: #54ea55;
+  --cp-dark-green: #16b917;
 
-  --cp-pastel-green: #BBF99E;
-  --cp-pastel-blue: #A5E4F9;
-  --cp-pastel-purple: #CCBAFE;
+  --cp-pastel-green: #bbf99e;
+  --cp-pastel-blue: #a5e4f9;
+  --cp-pastel-purple: #ccbafe;
 
-  --cp-action-green: #23B610;
-  --cp-action-red: #D71212;
+  --cp-action-green: #23b610;
+  --cp-action-red: #d71212;
 
-  --cp-gradient1: #A6F6A4;
-  --cp-gradient2: #F4F3CE;
+  --cp-gradient1: #a6f6a4;
+  --cp-gradient2: #f4f3ce;
 }
 
 /* semantic color variables for this project */
