@@ -1,9 +1,7 @@
-import { expect, vi, describe } from "vitest";
+import { expect, vi, describe, test, afterEach } from "vitest";
 import AuthService from "@/services/AuthService";
 import { AuthFormText } from "@/constants/AuthFormText";
-import { ref } from "vue";
 import { Roles } from "@/constants/Roles";
-import { NavItems } from "@/constants/NavItems";
 import axios from "axios";
 import ToasterService from "@/services/ToasterService";
 import {

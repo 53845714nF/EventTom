@@ -6,6 +6,13 @@ export default [
     rules: {
       semi: ["warn", "always"],
     },
-    // ...other config
+    languageOptions: {
+      globals: {
+        localStorage: "readonly", // localStorage is read-only and should not be reassigned
+        Storage: "readonly", 
+        console: "readonly", 
+        URLSearchParams: "readonly", 
+      },
+    },
   },
 ];

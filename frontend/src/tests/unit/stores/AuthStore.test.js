@@ -1,4 +1,4 @@
-import { describe, afterEach, test, expect, vi } from "vitest";
+import { describe, beforeEach, afterEach, test, expect, vi } from "vitest";
 import { useAuthStore } from "@/stores/AuthStore";
 import { LocalStorageKeys } from "@/constants/LocalStorageKeys";
 import { Roles } from "@/constants/Roles";

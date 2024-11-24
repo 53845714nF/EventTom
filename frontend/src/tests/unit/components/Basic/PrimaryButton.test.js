@@ -1,4 +1,4 @@
-import { test, expect, vi, describe } from "vitest";
+import { test, expect, describe } from "vitest";
 import { mount } from "@vue/test-utils";
 
 import PrimaryButton from "@/components/Basic/PrimaryButton.vue";
