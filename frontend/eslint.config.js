@@ -9,9 +9,9 @@ export default [
     languageOptions: {
       globals: {
         localStorage: "readonly", // localStorage is read-only and should not be reassigned
-        Storage: "readonly", 
-        console: "readonly", 
-        URLSearchParams: "readonly", 
+        Storage: "readonly",
+        console: "readonly",
+        URLSearchParams: "readonly",
       },
     },
   },
