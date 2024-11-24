@@ -115,29 +115,13 @@ a {
   padding: 15px 40px;
   background-color: var(--cp-white);
   border-radius: 15px;
-  min-height: calc(100vh - 80px);
   position: relative;
 }
 
+.router-view-container {
+  min-height: calc(100vh - 150px);
+}
+
 .content-container {
-  padding: 20px 20px;
+  padding: 20px 20px 100px 20px;
 }
-
-/* @media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
-} */
