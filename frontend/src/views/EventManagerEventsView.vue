@@ -6,9 +6,9 @@ const events = [
   {
     title: "Event 1",
     description: "Description 1",
-    tickets: 200,
-    tickets_sold: 110,
-    pred_tickets_sold: 100,
+    tickets: 134,
+    tickets_sold: 89,
+    pred_tickets_sold: 45,
   },
   {
     title: "Event 1",

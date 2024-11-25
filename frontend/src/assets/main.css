@@ -92,6 +92,10 @@ p {
   color: var(--color-text-white);
 }
 
+.bg-white {
+  background-color: var(--color-text-white);
+}
+
 .no-margin {
   margin: 0;
 }
@@ -118,6 +122,14 @@ p {
 
 .highlight-green {
   color: var(--cp-highlight-green);
+}
+
+.bg-highlight-red {
+  background-color: var(--cp-highlight-red);
+}
+
+.bg-highlight-green {
+  background-color: var(--cp-highlight-green);
 }
 
 a {
