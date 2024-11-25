@@ -16,10 +16,7 @@ const handlePrimaryButtonClick = () => {
 
 <template>
   <header>
-    <RouterLink 
-      class="nav-item logo-text"
-      to="/"
-    >EvenTom</RouterLink>
+    <RouterLink class="nav-item logo-text" to="/">EvenTom</RouterLink>
     <nav class="nav-item-container">
       <RouterLink
         v-for="(item, index) in authStore.navItems.items"
@@ -27,7 +24,8 @@ const handlePrimaryButtonClick = () => {
         :to="item.path"
         class="p-large nav-item"
         active-class="nav-item-active"
-        >{{ item.title }}</RouterLink>
+        >{{ item.title }}</RouterLink
+      >
     </nav>
     <PrimaryButton
       @click="handlePrimaryButtonClick"
