@@ -17,9 +17,25 @@
 
 ## Design Best Practices
 
+### Basics
+
 - Create your Views and Components according to the [Design Guideline](/frontend/src/assets/Design_Guideline.pdf)
 - Use the [Color Variables](/frontend/src/assets/base.css)
 - Basic styling classes which can be reused all accross the page are implemented inside the [main.css](/frontend/src/assets/main.css)
+
+### Icons
+
+**FontAwesome**, an icon library, is integrated in this project. If you want to add a new icon, you can search for icons [here](https://fontawesome.com/icons). Make sure to only use **free icons** which are not marked as "*PRO*".
+
+Adding icons is as simple as pasting the HTML code provided on the FontAwesome website inside the `<template>` like this:
+
+```html
+<template>
+  <div class="icon-container">
+    <i class="fa-solid fa-book"></i> <!--Book Icon-->
+  </div>
+</template>
+```
 
 ## Coding Best Practices
 
