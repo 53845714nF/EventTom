@@ -1,5 +1,7 @@
 export default class EventManagerService {
 
+  // ### TicketSalesCard.vue ###
+
   static getPercentageOfTicketsSold(no_tickets, sold) {
     return  Math.round((sold / no_tickets) * 100);
   }

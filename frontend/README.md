@@ -150,7 +150,7 @@ const props = defineProps({
 
 ### Services
 
-Services contain API Calls and logic for a specific type of object from inside the database (e.g. User, Event, Voucher). Each Service is a class inside its own file and should only contain logic for the equivalent type of object. Services should be place inside the [services](/frontend/src/services/) directory.
+Services contain API Calls and / or logic for a specific View. Each Service is a class inside its own file and should **only** contain logic for the equivalent View. Services should be place inside the [services](/frontend/src/services/) directory.
 
 Lets say we want the `BookView.js` View we defined above to render books we get from an API endpoint, then we could define a Service like this:
 
