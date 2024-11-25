@@ -1,15 +1,20 @@
 export default class EventManagerService {
+
+  static getPercentageOfTicketsSold(no_tickets, sold) {
+    return  Math.round((sold / no_tickets) * 100);
+  }
+
   static getPercentageOfTicketsSoldComparedToExpected(actual, expected) {
-    return ((actual - expected) / expected) * 100;
+    return Math.round(((actual - expected) / expected) * 100);
   }
 
   static getHighlightClass(percentage) {
     if (percentage >= 10) {
-      return "highlight-red";
+      return {text: "highlight-red", bar: "bg-highlight-red"};
     } else if (percentage <= -10) {
-      return "highlight-green";
+      return {text: "highlight-green", bar: "bg-highlight-green"};
     } else {
-      return "";
+      return {text: "white", bar: "bg-white"};
     }
   }
 

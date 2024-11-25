@@ -10,6 +10,14 @@ const props = defineProps({
 });
 
 const showPercentage = ref(true);
+const switchView = () => (showPercentage.value = !showPercentage.value);
+
+const percentageSold = computed(() => {
+    return EventManagerService.getPercentageOfTicketsSold(
+      props.event.tickets,
+      props.event.tickets_sold,
+    );
+});
 
 const percentageComparedToExpected = computed(() =>
   EventManagerService.getPercentageOfTicketsSoldComparedToExpected(
@@ -26,29 +34,35 @@ const comparisonText = computed(() =>
   EventManagerService.getComparisonText(percentageComparedToExpected.value),
 );
 
-const switchView = () => (showPercentage.value = !showPercentage.value);
 </script>
 
 <template>
   <div class="sales-card-body">
-    <div v-if="showPercentage">
+    <div v-if="showPercentage" class="sales-card-text-container">
       <p class="white p-large small-margin">
         {{ props.event.tickets_sold }} Tickets verkauft
       </p>
       <p class="white small-margin">
-        <span :class="[highLightClass, 'p-bold']"
+        <span :class="[highLightClass.text, 'p-bold']"
           >{{ Math.abs(percentageComparedToExpected) }}% {{ comparisonText }}
         </span>
         als erwartet
       </p>
     </div>
 
-    <div v-else>
-      <p class="white p-large small-margin">Bar View</p>
+    <div v-else class="sales-card-text-container">
+      <p class="white p-large small-margin">{{ props.event.tickets_sold }} / {{ props.event.tickets }} Tickets</p>
+      <div class="progress-bar small-margin">
+        <div :class="['progress-bar-fill', highLightClass.bar]" :style="{ width: percentageSold + '%' }">
+        </div>
+      </div>
     </div>
 
-    <div @click="switchView" class="switch-view-button">
-      <p class="black p-large">+</p>
+    <div class="switch-view-button-container">
+        <div @click="switchView" class="switch-view-button">
+            <i v-if="showPercentage" class="fa-solid fa-chart-simple"></i>
+            <i v-else class="fa-solid fa-percent"></i>
+        </div>
     </div>
   </div>
 </template>
@@ -64,6 +78,14 @@ const switchView = () => (showPercentage.value = !showPercentage.value);
   padding: 10px 15px;
 }
 
+.sales-card-text-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 80%;
+}
+
 .switch-view-button {
   display: flex;
   justify-content: center;
@@ -76,7 +98,26 @@ const switchView = () => (showPercentage.value = !showPercentage.value);
   transition: 0.4s;
 }
 
+.switch-view-button-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 20%;
+}
+
 .switch-view-button:hover {
   background-color: var(--cp-light-grey);
+}
+
+.progress-bar {
+  background-color: var(--cp-dark-grey);
+  border-radius: 10px;
+  width: 90%;
+  height: 20px;
+}
+
+.progress-bar-fill {
+  border-radius: 10px;
+  height: 100%;
 }
 </style>
