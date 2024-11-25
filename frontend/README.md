@@ -59,6 +59,7 @@ Views are **complete pages** for a certain topic (e.g. Where the user can see al
 Every View should be structured the following way: It should contain a [PageTitleContainer](/frontend/src/components/Basic/PageTitleContainer.vue) and a div with `class="content-container"` which adds some padding to the content area and makes sure every page follows the design guidelines. A new View should look something like this:
 
 **File:** `BookView.js`
+
 ```javascript
 <script setup>
 import PageTitleContainer from "@/components/Basic/PageTitleContainer.vue";
@@ -90,7 +91,7 @@ Components are **small parts** of the UI (e.g. Buttons, Containers, etc.) which 
 - contain no to minimal logic
 - be placed inside the components folder: /frontend/src/components
 
-New components are placed inside the [Components directory](/frontend/src/components/) and should be named after what they do and ideally have a fitting **suffix** such as "Event**Form**" or "Submit**Button**". If a component belongs to a certain View, make sure to put it in a directory named after the view. If a component which is made up of multiple smaller components, place the relevant files inside a separate directory named after the parent component.
+New components are placed inside the [Components directory](/frontend/src/components/) and should be named after what they do and ideally have a fitting **suffix** such as "Event**Form**" or "Submit**Button**". If a component belongs to a certain View, make sure to put it in a directory named after the view. If a component which is made up of more than 2 smaller components, place the relevant files inside a separate directory named after the parent component.
 
 To Pass information from a View to a component or from a component to another, you can use props. An example of how to define props for a component and how to pass them to another component is given here below. Here, the component "BookList" gets an Array of books from its View "BookView" (View above).
 

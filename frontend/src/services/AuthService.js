@@ -35,7 +35,10 @@ export default class AuthService {
 
     if (isUserSigningUp) {
       if (!(user.value.password === user.value.passwordRepeat)) {
-        return { isValid: false, message: "Passwörter stimmen nicht überein." };
+        return {
+          isValid: false,
+          message: "Passwörter stimmen nicht überein.",
+        };
       }
 
       if (!(user.value.password.length >= 8)) {

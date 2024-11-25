@@ -62,9 +62,9 @@ h3 {
 
 h4 {
   font-family: FunnelDisplay;
-  font-size: 24px;
+  font-size: 30px;
   margin: 0;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--color-text-dark);
 }
 
@@ -80,6 +80,10 @@ p {
   font-weight: 500;
 }
 
+.p-bold {
+  font-weight: 500;
+}
+
 .light {
   color: var(--color-text-light);
 }
@@ -92,6 +96,10 @@ p {
   margin: 0;
 }
 
+.small-margin {
+  margin: 5px;
+}
+
 .heading-margin {
   margin-bottom: 20px;
 }
@@ -102,7 +110,15 @@ p {
 
 .nav-item-active {
   color: var(--cp-bright-green);
-}  
+}
+
+.highlight-red {
+  color: var(--cp-highlight-red);
+}
+
+.highlight-green {
+  color: var(--cp-highlight-green);
+}
 
 a {
   font-family: FunnelDisplay;
@@ -111,7 +127,6 @@ a {
   padding: 3px;
   color: var(--color-text-black);
 }
-
 
 /* Containers */
 
