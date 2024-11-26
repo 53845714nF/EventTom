@@ -19,7 +19,7 @@ export const NavItems = {
   EVENT_MANAGER: {
     items: [
       { title: "Events", path: "/event-manager/events" },
-      { title: "Aktivitäten", path: "/not_implemented" },
+      { title: "Aktivitäten", path: "/event-manager/activities" },
     ],
     button: { title: "Logout", path: "/" },
   },

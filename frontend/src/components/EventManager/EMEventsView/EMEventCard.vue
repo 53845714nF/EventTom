@@ -26,7 +26,7 @@ const props = defineProps({
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  background-color: var(--cp-pastel-purple);
+  background-color: var(--color-event-manager);
 }
 
 .card-content {

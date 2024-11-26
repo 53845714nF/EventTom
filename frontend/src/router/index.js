@@ -6,7 +6,8 @@ import LandingPageView from "@/views/LandingPageView.vue";
 
 import AuthView from "@/views/AuthView.vue";
 
-import EventManagerEventsView from "@/views/EventManager/EMEventsView.vue";
+import EMEventsView from "@/views/EventManager/EMEventsView.vue";
+import EMActivitiesView from "@/views/EventManager/EMActivitiesView.vue";
 
 import NotImplementedView from "@/views/Errors/NotImplementedView.vue";
 import NotFoundView from "@/views/Errors/NotFoundView.vue";
@@ -39,12 +40,22 @@ const router = createRouter({
       name: "auth",
       component: AuthView,
     },
+
+    // Event Manager
     {
       path: "/event-manager/events",
       name: "EMEvents",
-      component: EventManagerEventsView,
+      component: EMEventsView,
       beforeEnter: requireRole(Roles.EVENT_MANAGER),
     },
+    {
+      path: "/event-manager/activities",
+      name: "EMActivities",
+      component: EMActivitiesView,
+      beforeEnter: requireRole(Roles.EVENT_MANAGER),
+    },
+
+    // Error pages
     {
       path: "/not_implemented",
       name: "notImplemented",
