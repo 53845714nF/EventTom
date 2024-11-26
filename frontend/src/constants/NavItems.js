@@ -31,4 +31,12 @@ export const NavItems = {
     ],
     button: { title: "Logout", path: "/" },
   },
+  
+  ADMIN: {
+    items: [
+      { title: "Benutzerübersicht", path: "/not_implemented" },
+      { title: "Neuer Benutzer", path: "/not_implemented" },
+    ],
+    button: { title: "Logout", path: "/" },
+  },
 };

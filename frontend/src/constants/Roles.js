@@ -3,4 +3,5 @@ export const Roles = {
   USER: "user",
   EVENT_MANAGER: "eventmanager",
   EVENT_CREATOR: "eventcreator",
+  ADMIN: "admin",
 };
