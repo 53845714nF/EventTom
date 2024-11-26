@@ -1,0 +1,43 @@
+/* color palette */
+:root {
+  --cp-white: #fff;
+  --cp-black: #181a1b;
+  --cp-light-grey: #dddddd;
+  --cp-dark-grey: #696a6a;
+  --cp-bright-green: #54ea55;
+  --cp-dark-green: #16b917;
+
+  --cp-pastel-green: #bbf99e;
+  --cp-pastel-blue: #a5e4f9;
+  --cp-pastel-purple: #ccbafe;
+
+  --cp-highlight-green: #23b610;
+  --cp-highlight-red: #d71212;
+
+  --cp-gradient1: #a6f6a4;
+  --cp-gradient2: #f4f3ce;
+}
+
+/* semantic color variables for this project */
+:root {
+  --color-background: var(--cp-white);
+  --color-page-title: var(--cp-black);
+
+  --color-auth: var(--cp-pastel-green);
+
+  --color-user: var(--cp-pastel-green);
+  --color-event-creator: var(--cp-pastel-blue);
+  --color-event-manager: var(--cp-pastel-purple);
+
+  --color-text-dark: var(--cp-black);
+  --color-text-light: var(--cp-dark-grey);
+  --color-text-white: var(--cp-white);
+  --color-text-green: var(--cp-bright-green);
+
+  --color-primary-button-green: var(--cp-bright-green);
+  --color-primary-button-green-hover: var(--cp-dark-green);
+  --color-primary-button-black: var(--cp-black);
+  --color-primary-button-black-hover: var(--cp-dark-grey);
+
+  --section-gap: 160px;
+}

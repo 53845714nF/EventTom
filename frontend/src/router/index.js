@@ -1,33 +1,72 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import LandingPageView from '@/views/LandingPageView.vue'
-import AppDashboardView from '@/views/AppDashboardView.vue'
-import AuthView from '@/views/AuthView.vue'
-import NotImplementedView from '@/views/NotImplementedView.vue'
-import NotFoundView from '@/views/NotFoundView.vue'
+import { createRouter, createWebHistory } from "vue-router";
+import { useAuthStore } from "@/stores/AuthStore";
+import { Roles } from "@/constants/Roles";
+
+import LandingPageView from "@/views/LandingPageView.vue";
+
+import AuthView from "@/views/AuthView.vue";
+
 import CustomerView from '@/views/CustomerView.vue'
+
+import EMEventsView from "@/views/EventManager/EMEventsView.vue";
+import EMActivitiesView from "@/views/EventManager/EMActivitiesView.vue";
+
+import NotImplementedView from "@/views/Errors/NotImplementedView.vue";
+import NotFoundView from "@/views/Errors/NotFoundView.vue";
+import NotAllowedView from "@/views/Errors/NotAllowedView.vue";
+
+// Middleware, which checks if the user has the required role
+function requireRole(requiredRole) {
+  return (to, from, next) => {
+    const authStore = useAuthStore();
+    const userRole = authStore.role;
+
+    if (userRole === requiredRole) {
+      next();
+    } else {
+      next({ name: "notAllowed" });
+    }
+  };
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: LandingPageView
+      path: "/",
+      name: "home",
+      component: LandingPageView,
     },
     {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: AppDashboardView
+      path: "/auth/:type",
+      name: "auth",
+      component: AuthView,
+    },
+
+    // Event Manager
+    {
+      path: "/event-manager/events",
+      name: "EMEvents",
+      component: EMEventsView,
+      beforeEnter: requireRole(Roles.EVENT_MANAGER),
     },
     {
-      path: '/auth/:type',
-      name: 'auth',
-      component: AuthView
+      path: "/event-manager/activities",
+      name: "EMActivities",
+      component: EMActivitiesView,
+      beforeEnter: requireRole(Roles.EVENT_MANAGER),
+    },
+
+    // Error pages
+    {
+      path: "/not_implemented",
+      name: "notImplemented",
+      component: NotImplementedView,
     },
     {
-      path: '/not_implemented',
-      name: 'notImplemented',
-      component: NotImplementedView
+      path: "/not_allowed",
+      name: "notAllowed",
+      component: NotAllowedView,
     },
     {
       path: '/customer',
@@ -36,13 +75,13 @@ const router = createRouter({
     },
     {
       path: "/:pathMatch(.*)*",
-      name: "not_found",
+      name: "notFound",
       component: NotFoundView,
       meta: {
-          title: "404 - Not Found"
-      }
-  }
-  ]
-})
+        title: "404 - Not Found",
+      },
+    },
+  ],
+});
 
-export default router
+export default router;

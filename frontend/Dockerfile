@@ -1,7 +1,7 @@
 ### Build Stage
 
 # use node image based on alpine linux, set alias as build-stage
-FROM node:lts-alpine as build-stage 
+FROM node:20-alpine as build-stage 
 
 # set working directory insider the container to /app (if not exists, it will be created)
 # all of the following commands (COPY, RUN) will be executed in this directory
