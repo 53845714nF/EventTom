@@ -1,20 +1,7 @@
-<template>
-  <div class="content-container">
-    <PageTitleContainer :title="'Ansicht Kunde'" />
-    <div class="event-list">
-      <EventCard 
-        v-for="event in events" 
-        :key="event.id" 
-        :event="event" 
-      />
-    </div>
-  </div>
-</template>
-
 <script setup>
 import { ref, onMounted } from 'vue';
 import PageTitleContainer from '@/components/Basic/PageTitleContainer.vue';
-import EventCard from '@/components/Basic/EventCard.vue';
+import CEventCard from '@/components/Customer/CEventsView/CEventCard.vue';
 import { fetchEvents } from '@/services/CustomerService.js';
 
 const events = ref([]);
@@ -23,6 +10,19 @@ onMounted(async () => {
   events.value = await fetchEvents();
 });
 </script>
+
+<template>
+  <div class="content-container">
+    <PageTitleContainer :title="'Ansicht Kunde'" />
+    <div class="event-list">
+      <CEventCard 
+        v-for="event in events" 
+        :key="event.id" 
+        :event="event" 
+      />
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .content-container {

@@ -10,7 +10,7 @@ export const NavItems = {
 
   CUSTOMER: {
     items: [
-      { title: "Events", path: "/not_implemented" },
+      { title: "Events", path: "/customer/events" },
       { title: "Gutscheine", path: "/not_implemented" },
     ],
     button: { title: "Logout", path: "/" },

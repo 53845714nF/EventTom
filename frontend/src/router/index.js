@@ -6,7 +6,7 @@ import LandingPageView from "@/views/LandingPageView.vue";
 
 import AuthView from "@/views/AuthView.vue";
 
-import CustomerView from '@/views/CustomerView.vue'
+import CEventsView from "@/views/Customer/CEventsView.vue";
 
 import EMEventsView from "@/views/EventManager/EMEventsView.vue";
 import EMActivitiesView from "@/views/EventManager/EMActivitiesView.vue";
@@ -43,6 +43,14 @@ const router = createRouter({
       component: AuthView,
     },
 
+    // Customer
+    {
+      path: '/customer/events',
+      name: 'CEvents',
+      component: CEventsView,
+      beforeEnter: requireRole(Roles.CUSTOMER),
+    },
+
     // Event Manager
     {
       path: "/event-manager/events",
@@ -67,11 +75,6 @@ const router = createRouter({
       path: "/not_allowed",
       name: "notAllowed",
       component: NotAllowedView,
-    },
-    {
-      path: '/customer',
-      name: 'Customert',
-      component: CustomerView
     },
     {
       path: "/:pathMatch(.*)*",
