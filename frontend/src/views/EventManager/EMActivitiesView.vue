@@ -123,15 +123,14 @@ const activities = [
     no_tickets: 2,
     event: "Event 20",
   },
-]
-
+];
 </script>
 
 <template>
   <PageTitleContainer title="Aktivitäten" />
   <div class="content-container">
     <EMActivityCard
-      v-for="activity in activities" 
+      v-for="activity in activities"
       :key="activity.timestamp"
       :activity="activity"
     />

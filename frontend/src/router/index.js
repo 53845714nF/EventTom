@@ -45,8 +45,8 @@ const router = createRouter({
 
     // Customer
     {
-      path: '/customer/events',
-      name: 'CEvents',
+      path: "/customer/events",
+      name: "CEvents",
       component: CEventsView,
       beforeEnter: requireRole(Roles.CUSTOMER),
     },

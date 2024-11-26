@@ -14,10 +14,10 @@ const showPercentage = ref(true);
 const switchView = () => (showPercentage.value = !showPercentage.value);
 
 const percentageSold = computed(() => {
-    return EventManagerService.getPercentageOfTicketsSold(
-      props.event.tickets,
-      props.event.tickets_sold,
-    );
+  return EventManagerService.getPercentageOfTicketsSold(
+    props.event.tickets,
+    props.event.tickets_sold,
+  );
 });
 
 const percentageComparedToExpected = computed(() =>
@@ -35,7 +35,6 @@ const highLightClass = computed(() =>
 const comparisonText = computed(() =>
   EventManagerService.getComparisonText(percentageComparedToExpected.value),
 );
-
 </script>
 
 <template>
@@ -53,18 +52,22 @@ const comparisonText = computed(() =>
     </div>
 
     <div v-else class="sales-card-text-container">
-      <p class="white p-large small-margin">{{ props.event.tickets_sold }} / {{ props.event.tickets }} Tickets</p>
+      <p class="white p-large small-margin">
+        {{ props.event.tickets_sold }} / {{ props.event.tickets }} Tickets
+      </p>
       <div class="progress-bar small-margin">
-        <div :class="['progress-bar-fill', highLightClass.bar]" :style="{ width: percentageSold + '%' }">
-        </div>
+        <div
+          :class="['progress-bar-fill', highLightClass.bar]"
+          :style="{ width: percentageSold + '%' }"
+        ></div>
       </div>
     </div>
 
     <div class="switch-view-button-container">
-        <div @click="switchView" class="switch-view-button">
-            <i v-if="showPercentage" class="fa-solid fa-chart-simple"></i>
-            <i v-else class="fa-solid fa-percent"></i>
-        </div>
+      <div @click="switchView" class="switch-view-button">
+        <i v-if="showPercentage" class="fa-solid fa-chart-simple"></i>
+        <i v-else class="fa-solid fa-percent"></i>
+      </div>
     </div>
   </div>
 </template>
@@ -101,10 +104,10 @@ const comparisonText = computed(() =>
 }
 
 .switch-view-button-container {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    width: 20%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 20%;
 }
 
 .switch-view-button:hover {

@@ -49,13 +49,17 @@ const onClick = () => {
 .primary-button {
   font-family: FunnelDisplay;
   text-align: center;
-  padding: 10px 40px;
+  padding: 12px 40px;
   border-radius: 25px;
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
   transition: 0.4s;
   width: fit-content;
+}
+
+.primary-button p {
+  white-space: nowrap;
 }
 
 .button-green {

@@ -1,5 +1,5 @@
 <script setup>
-import PrimaryButton from '@/components/Basic/PrimaryButton.vue';
+import PrimaryButton from "@/components/Basic/PrimaryButton.vue";
 
 const props = defineProps({
   event: {
@@ -11,15 +11,21 @@ const props = defineProps({
 
 <template>
   <div class="event-card">
-    <h2>
-      {{ event.title }}
-      <span class="event-price">Preis pro Ticket: {{ event.price }}</span>
-    </h2>
-    <p class="event-description">{{ event.description }}</p>
-    <p class="event-organizer">Name des Organisators: {{ event.organizer }}</p>
+    <div class="card-content-container">
+      <div class="heading-container">
+        <h4>{{ event.title }}</h4>
+        <p>
+          Preis pro Ticket: <span class="p-bold">{{ event.price }}</span>
+        </p>
+      </div>
+      <p>{{ event.description }}</p>
+      <p class="p-large">{{ event.organizer }}</p>
+    </div>
     <div class="button-container">
       <PrimaryButton
-        :text="event.available ? `Noch ${event.tickets} Tickets` : 'Ausverkauft'"
+        :text="
+          event.available ? `Noch ${event.tickets} Tickets` : 'Ausverkauft'
+        "
         :disabled="!event.available"
         type="black"
         class="primary-button"
@@ -30,46 +36,36 @@ const props = defineProps({
 
 <style scoped>
 .event-card {
-  padding: 20px 40px;
-  margin: 10px 40px;
-  border-radius: 25px;
-  background-color: var(--cp-pastel-green); /* Match the background color */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 25px 40px;
+  border-radius: 20px;
+  padding: 20px 30px;
+  background-color: var(--color-customer);
+  display: flex;
+  flex-direction: row;
 }
 
-.event-card h2 {
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0;
+.card-content-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
 }
 
-.event-card .event-price {
-  font-size: 16px;
-  font-weight: 400;
-  color: var(--color-text-dark);
-  margin-left: 10px;
+.heading-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-end;
 }
 
-.event-description {
-  font-size: 14px;
-  color: var(--color-text-dark);
-  font-weight: 300;
-  margin: 5px 0;
-}
-
-.event-organizer {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-text-dark);
+.heading-container p {
+  margin: 4px 4px 4px 15px;
 }
 
 .button-container {
   display: flex;
+  flex-direction: column;
   justify-content: flex-end;
-  margin-top: 10px;
-}
-
-.primary-button {
-  min-width: 150px;
 }
 </style>
