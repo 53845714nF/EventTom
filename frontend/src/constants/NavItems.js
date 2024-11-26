@@ -8,7 +8,7 @@ export const NavItems = {
     button: { title: "Login", path: "/auth/signin" },
   },
 
-  USER: {
+  CUSTOMER: {
     items: [
       { title: "Events", path: "/not_implemented" },
       { title: "Gutscheine", path: "/not_implemented" },
