@@ -71,10 +71,10 @@ export function createAuthStoreLoggedOut() {
 
 export function createAuthStoreLoggedInUser() {
   return {
-    role: Roles.USER,
+    role: Roles.CUSTOMER,
     accessToken: "validToken",
     userAuthenticated: true,
-    navItems: NavItems.USER,
+    navItems: NavItems.CUSTOMER,
     setAccessToken: vi.fn(function (newToken) {
       this.accessToken = newToken;
     }),
