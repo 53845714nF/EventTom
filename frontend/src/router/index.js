@@ -8,9 +8,9 @@ import AuthView from "@/views/AuthView.vue";
 
 import EventManagerEventsView from "@/views/EventManager/EMEventsView.vue";
 
-import NotImplementedView from "@/views/NotImplementedView.vue";
-import NotFoundView from "@/views/NotFoundView.vue";
-import NotAllowedView from "@/views/NotAllowedView.vue";
+import NotImplementedView from "@/views/Errors/NotImplementedView.vue";
+import NotFoundView from "@/views/Errors/NotFoundView.vue";
+import NotAllowedView from "@/views/Errors/NotAllowedView.vue";
 
 // Middleware, which checks if the user has the required role
 function requireRole(requiredRole) {
