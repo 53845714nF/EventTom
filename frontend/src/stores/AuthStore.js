@@ -22,6 +22,8 @@ export const useAuthStore = defineStore("role", () => {
         return NavItems.EVENT_MANAGER;
       case Roles.EVENT_CREATOR:
         return NavItems.EVENT_CREATOR;
+      case Roles.ADMIN:
+        return NavItems.ADMIN;
       default:
         return NavItems.GUEST;
     }
