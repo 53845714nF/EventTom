@@ -16,12 +16,14 @@ export const useAuthStore = defineStore("role", () => {
 
   const navItems = computed(() => {
     switch (role.value.toLowerCase()) {
-      case Roles.USER:
-        return NavItems.USER;
+      case Roles.CUSTOMER:
+        return NavItems.CUSTOMER;
       case Roles.EVENT_MANAGER:
         return NavItems.EVENT_MANAGER;
       case Roles.EVENT_CREATOR:
         return NavItems.EVENT_CREATOR;
+      case Roles.ADMIN:
+        return NavItems.ADMIN;
       default:
         return NavItems.GUEST;
     }

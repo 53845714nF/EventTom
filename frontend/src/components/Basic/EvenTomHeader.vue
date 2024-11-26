@@ -16,13 +16,14 @@ const handlePrimaryButtonClick = () => {
 
 <template>
   <header>
-    <h4 class="nav-item">EvenTom</h4>
+    <RouterLink class="nav-item logo-text" to="/">EvenTom</RouterLink>
     <nav class="nav-item-container">
       <RouterLink
         v-for="(item, index) in authStore.navItems.items"
         :key="index"
         :to="item.path"
         class="p-large nav-item"
+        active-class="nav-item-active"
         >{{ item.title }}</RouterLink
       >
     </nav>
@@ -53,12 +54,15 @@ header {
 
 .nav-item {
   margin: 0 20px;
-  font-weight: 600;
   cursor: pointer;
-  color: var(--color-text-black);
 }
 
 .nav-item:hover {
   color: var(--color-text-green);
+}
+
+.logo-text {
+  font-size: 24px;
+  font-weight: 600;
 }
 </style>

@@ -6,6 +6,7 @@ import PrimaryButton from "../Basic/PrimaryButton.vue";
 import SecondaryButton from "../Basic/SecondaryButton.vue";
 import AuthService from "@/services/AuthService";
 import { useAuthStore } from "@/stores/AuthStore";
+import DevVariables from "@/constants/DevVariables";
 import {
   PrimaryButtonTypes,
   SecondaryButtonTypes,
@@ -17,7 +18,7 @@ const type = ref(route.params.type);
 const user = AuthService.provideEmptyUser();
 
 // redirect path after successful login / signup -> change this to the path you want to redirect to
-const redirectPath = "/not_implemented";
+const redirectPath = DevVariables.LOGIN_REDIRECT;
 
 // watch for changes in route.params.type
 watch(

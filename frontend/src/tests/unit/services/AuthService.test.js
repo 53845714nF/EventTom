@@ -13,6 +13,7 @@ import {
   createAuthStoreLoggedOut,
   createAuthStoreLoggedInUser,
 } from "../../utils/testUtils";
+import DevVariables from "@/constants/DevVariables";
 
 describe("AuthService validating User Input", () => {
   test("Expect Correct AuthForm text to be returned", async () => {
@@ -114,7 +115,7 @@ describe("AuthService handling user data", () => {
     );
   });
 
-  test("Expect store to set role to Roles.User if postLoginData is successfull", async () => {
+  test("TODO: SET ROLE DEPENDING ON LOGIN!!! Expect store to set role to correct initial role if postLoginData is successfull", async () => {
     axios.post.mockResolvedValue({ data: { success: true } });
 
     const testUser = createCorrectUserSignUp();
@@ -122,7 +123,7 @@ describe("AuthService handling user data", () => {
 
     await AuthService._postLoginData(testUser, "/test", testStore);
 
-    expect(testStore.role).toBe(Roles.USER);
+    expect(testStore.role).toBe(DevVariables.INITIAL_ROLE);
   });
 
   test("Expect error toast if postLoginData is not successfull", async () => {

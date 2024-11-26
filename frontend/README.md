@@ -5,6 +5,7 @@
 - Navigate inside frontend folder: `cd frontend`
 - Install dependencies: `npm install` (run after each _git pull_)
 - Run on your local machine in dev mode with hot-reload: `npm run dev`
+- Run the backend container: `docker compose  --env-file .env up`
 
 ## Building Project with Docker (Not necassary for development purposes)
 
@@ -16,9 +17,25 @@
 
 ## Design Best Practices
 
+### Basics
+
 - Create your Views and Components according to the [Design Guideline](/frontend/src/assets/Design_Guideline.pdf)
 - Use the [Color Variables](/frontend/src/assets/base.css)
 - Basic styling classes which can be reused all accross the page are implemented inside the [main.css](/frontend/src/assets/main.css)
+
+### Icons
+
+**FontAwesome**, an icon library, is integrated in this project. If you want to add a new icon, you can search for icons [here](https://fontawesome.com/icons). Make sure to only use **free icons** which are not marked as "*PRO*".
+
+Adding icons is as simple as pasting the HTML code provided on the FontAwesome website inside the `<template>` like this:
+
+```html
+<template>
+  <div class="icon-container">
+    <i class="fa-solid fa-book"></i> <!--Book Icon-->
+  </div>
+</template>
+```
 
 ## Coding Best Practices
 
@@ -90,7 +107,7 @@ Components are **small parts** of the UI (e.g. Buttons, Containers, etc.) which 
 - contain no to minimal logic
 - be placed inside the components folder: /frontend/src/components
 
-New components are placed inside the [Components directory](/frontend/src/components/) and should be named after what they do and ideally have a fitting **suffix** such as "Event**Form**" or "Submit**Button**". If a component belongs to a certain View, make sure to put it in a directory named after the view. If a component which is made up of multiple smaller components, place the relevant files inside a separate directory named after the parent component.
+New components are placed inside the [Components directory](/frontend/src/components/) and should be named after what they do and ideally have a fitting **suffix** such as "Event**Form**" or "Submit**Button**". If a component belongs to a certain View, make sure to put it in a directory named after the view. If a component which is made up of more than 2 smaller components, place the relevant files inside a separate directory named after the parent component.
 
 To Pass information from a View to a component or from a component to another, you can use props. An example of how to define props for a component and how to pass them to another component is given here below. Here, the component "BookList" gets an Array of books from its View "BookView" (View above).
 
@@ -133,7 +150,7 @@ const props = defineProps({
 
 ### Services
 
-Services contain API Calls and logic for a specific type of object from inside the database (e.g. User, Event, Voucher). Each Service is a class inside its own file and should only contain logic for the equivalent type of object. Services should be place inside the [services](/frontend/src/services/) directory.
+Services contain API Calls and / or logic for a specific View. Each Service is a class inside its own file and should **only** contain logic for the equivalent View. Services should be place inside the [services](/frontend/src/services/) directory.
 
 Lets say we want the `BookView.js` View we defined above to render books we get from an API endpoint, then we could define a Service like this:
 

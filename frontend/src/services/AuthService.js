@@ -4,6 +4,7 @@ import ToasterService from "./ToasterService";
 import router from "@/router";
 import { Roles } from "@/constants/Roles";
 import { AuthFormText } from "@/constants/AuthFormText";
+import DevVariables from "@/constants/DevVariables";
 
 export default class AuthService {
   // provides the text values for buttons in the AuthForm depending on whether the user is signing up or logging in
@@ -34,7 +35,10 @@ export default class AuthService {
 
     if (isUserSigningUp) {
       if (!(user.value.password === user.value.passwordRepeat)) {
-        return { isValid: false, message: "Passwörter stimmen nicht überein." };
+        return {
+          isValid: false,
+          message: "Passwörter stimmen nicht überein.",
+        };
       }
 
       if (!(user.value.password.length >= 8)) {
@@ -96,7 +100,7 @@ export default class AuthService {
       })
       .then((response) => {
         authStore.setAccessToken(response.data.access_token);
-        authStore.setRole(Roles.USER);
+        authStore.setRole(DevVariables.INITIAL_ROLE);
         router.push(redirectPath);
         ToasterService.createToasterPopUp("success", "Login erfolgreich!");
       })

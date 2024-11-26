@@ -1,6 +1,7 @@
 export const Roles = {
   GUEST: "guest",
-  USER: "user",
+  CUSTOMER: "customer",
   EVENT_MANAGER: "eventmanager",
   EVENT_CREATOR: "eventcreator",
+  ADMIN: "admin",
 };

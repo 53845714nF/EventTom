@@ -18,11 +18,11 @@ describe("AuthStore", () => {
   test("Initial Role set correctly", () => {
     const getItemSpy = vi.spyOn(Storage.prototype, "getItem");
     const store = setLocalStorageItemsAndCreateAuthStore(
-      Roles.USER,
+      Roles.CUSTOMER,
       "testToken",
     );
 
-    expect(store.role).toBe(Roles.USER);
+    expect(store.role).toBe(Roles.CUSTOMER);
     expect(getItemSpy).toHaveBeenCalledWith(LocalStorageKeys.USER_ROLE);
   });
 
@@ -30,7 +30,7 @@ describe("AuthStore", () => {
     const tokenValue = "testToken";
     const getItemSpy = vi.spyOn(Storage.prototype, "getItem");
     const store = setLocalStorageItemsAndCreateAuthStore(
-      Roles.USER,
+      Roles.CUSTOMER,
       tokenValue,
     );
 
@@ -40,11 +40,11 @@ describe("AuthStore", () => {
 
   test("NavItems computed correctly after initialization for User", () => {
     const store = setLocalStorageItemsAndCreateAuthStore(
-      Roles.USER,
+      Roles.CUSTOMER,
       "testToken",
     );
 
-    expect(store.navItems).toBe(NavItems.USER);
+    expect(store.navItems).toBe(NavItems.CUSTOMER);
   });
 
   test("NavItems computed correctly after initialization for Eventcreator", () => {
@@ -67,7 +67,7 @@ describe("AuthStore", () => {
 
   test("setRole() sets role correctly", () => {
     const initialRole = Roles.GUEST;
-    const newRole = Roles.USER;
+    const newRole = Roles.CUSTOMER;
     const setItemSpy = vi.spyOn(Storage.prototype, "setItem");
 
     const store = setLocalStorageItemsAndCreateAuthStore(

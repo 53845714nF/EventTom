@@ -9,7 +9,7 @@ describe("EvenTomHeader", () => {
   vi.mock("@/stores/AuthStore", () => {
     return {
       useAuthStore: vi.fn(() => ({
-        navItems: NavItems.USER,
+        navItems: NavItems.CUSTOMER,
       })),
     };
   });
@@ -33,7 +33,6 @@ describe("EvenTomHeader", () => {
         stubs: ["RouterLink"],
       },
     });
-    expect(wrapper.find("h4").exists()).toBeTruthy();
     expect(wrapper.find("nav").exists()).toBeTruthy();
     expect(wrapper.findComponent({ name: "RouterLink" }).exists()).toBeTruthy();
     expect(
@@ -52,6 +51,6 @@ describe("EvenTomHeader", () => {
     const navRouterLinks = wrapper
       .find("nav")
       .findAllComponents({ name: "RouterLink" });
-    expect(navRouterLinks).toHaveLength(NavItems.USER.items.length);
+    expect(navRouterLinks).toHaveLength(NavItems.CUSTOMER.items.length);
   });
 });

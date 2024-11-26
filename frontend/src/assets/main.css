@@ -62,9 +62,9 @@ h3 {
 
 h4 {
   font-family: FunnelDisplay;
-  font-size: 24px;
+  font-size: 30px;
   margin: 0;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--color-text-dark);
 }
 
@@ -80,6 +80,10 @@ p {
   font-weight: 500;
 }
 
+.p-bold {
+  font-weight: 500;
+}
+
 .light {
   color: var(--color-text-light);
 }
@@ -88,8 +92,16 @@ p {
   color: var(--color-text-white);
 }
 
+.bg-white {
+  background-color: var(--color-text-white);
+}
+
 .no-margin {
   margin: 0;
+}
+
+.small-margin {
+  margin: 5px;
 }
 
 .heading-margin {
@@ -100,11 +112,32 @@ p {
   margin-bottom: 5px;
 }
 
-a {
-  text-decoration: none;
+.nav-item-active {
   color: var(--cp-bright-green);
+}
+
+.highlight-red {
+  color: var(--cp-highlight-red);
+}
+
+.highlight-green {
+  color: var(--cp-highlight-green);
+}
+
+.bg-highlight-red {
+  background-color: var(--cp-highlight-red);
+}
+
+.bg-highlight-green {
+  background-color: var(--cp-highlight-green);
+}
+
+a {
+  font-family: FunnelDisplay;
+  text-decoration: none;
   transition: 0.4s;
   padding: 3px;
+  color: var(--color-text-black);
 }
 
 /* Containers */
