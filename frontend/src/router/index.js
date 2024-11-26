@@ -6,7 +6,7 @@ import LandingPageView from "@/views/LandingPageView.vue";
 
 import AuthView from "@/views/AuthView.vue";
 
-import EventManagerEventsView from "@/views/EventManagerEventsView.vue";
+import EventManagerEventsView from "@/views/EventManager/EMEventsView.vue";
 
 import NotImplementedView from "@/views/NotImplementedView.vue";
 import NotFoundView from "@/views/NotFoundView.vue";

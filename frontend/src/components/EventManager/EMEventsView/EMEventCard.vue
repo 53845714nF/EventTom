@@ -1,5 +1,5 @@
 <script setup>
-import TicketSalesCard from "./TicketSalesCard.vue";
+import EMTicketSalesCard from "./EMTicketSalesCard.vue";
 const props = defineProps({
   event: {
     type: Object,
@@ -14,7 +14,7 @@ const props = defineProps({
       <h4>{{ event.title }}</h4>
       <p class="no-margin">{{ event.description }}</p>
     </div>
-    <TicketSalesCard :event="event"></TicketSalesCard>
+    <EMTicketSalesCard :event="event"></EMTicketSalesCard>
   </div>
 </template>
 

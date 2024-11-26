@@ -1,6 +1,6 @@
 <script setup>
 import PageTitleContainer from "@/components/Basic/PageTitleContainer.vue";
-import EventManagerEventCard from "@/components/EventManagerEventsView/EventManagerEventCard.vue";
+import EMEventCard from "@/components/EventManager/EMEventsView/EMEventCard.vue";
 
 const events = [
   {
@@ -45,10 +45,10 @@ const events = [
 <template>
   <PageTitleContainer title="Anstehende Events" />
   <div class="content-container">
-    <EventManagerEventCard
+    <EMEventCard
       v-for="event in events"
       :key="event.title"
       :event="event"
-    ></EventManagerEventCard>
+    ></EMEventCard>
   </div>
 </template>
