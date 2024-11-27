@@ -2,6 +2,7 @@ import { test, expect, vi, describe } from "vitest";
 import { mount } from "@vue/test-utils";
 
 import AuthForm from "@/components/AuthView/AuthForm.vue";
+import AuthService from "@/services/AuthService";
 import { AuthFormText } from "@/constants/AuthFormText";
 import { createCorrectUserSignUp } from "../../../utils/testUtils";
 
@@ -105,31 +106,15 @@ describe("AuthForm", () => {
     expect(wrapper.vm.user).toStrictEqual(testUser.value);
   });
 
-  // test("Post User after clicking PrimaryButton", async () => {
-  //     const wrapper = mount(AuthForm);
-  //     const spyOnPostUser = vi.spyOn(AuthService, "postUser");
-  //     //const spyOnPostUser = vi.spyOn(wrapper.vm, "postUser");
+  test("Post User after clicking PrimaryButton", async () => {
+    const wrapper = mount(AuthForm);
+    const spyOnPostUser = vi.spyOn(AuthService, "postUser");
 
-  //     // AuthService.postUser();
+    expect(spyOnPostUser).toHaveBeenCalledTimes(0);
 
-  //     // Button finden
-  //     const button = wrapper.findComponent({ name: "PrimaryButton" });
+    // simulate click on primary button
+    await wrapper.find(".primary-button").trigger("click");
 
-  //     // Klick simulieren
-  //     await button.trigger("click");
-
-  //     // Erwartung: postUser wurde genau einmal aufgerufen
-  //     expect(spyOnPostUser).toHaveBeenCalledTimes(1);
-  // });
-
-  // test("Redirect after clicking SecondaryButton", () => {
-  //     const wrapper = mount(AuthForm);
-  //     const spyOnRouter = vi.spyOn(wrapper.vm.$router, "push");
-
-  //     const secondaryButton = wrapper.findComponent({ name: "SecondaryButton" });
-  //     secondaryButton.trigger("click");
-
-  //     expect(spyOnRouter).toHaveBeenCalledTimes(1);
-  //     expect(spyOnRouter).toHaveBeenCalledWith({ name: "signin" });
-  // })
+    expect(spyOnPostUser).toHaveBeenCalledTimes(1);
+  });
 });

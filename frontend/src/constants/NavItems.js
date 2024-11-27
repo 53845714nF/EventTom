@@ -31,7 +31,7 @@ export const NavItems = {
     ],
     button: { title: "Logout", path: "/" },
   },
-  
+
   ADMIN: {
     items: [
       { title: "Benutzerübersicht", path: "/not_implemented" },

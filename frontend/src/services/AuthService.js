@@ -150,4 +150,13 @@ export default class AuthService {
         ToasterService.createToasterPopUp("error", "Token invalid.");
       });
   }
+
+  static getConfig(authStore) {
+    return {
+      headers: {
+        Accept: "application/json",
+        Authorization: `bearer ${authStore.accessToken}`,
+      },
+    };
+  }
 }
