@@ -205,4 +205,17 @@ describe("AuthService handling user data", () => {
     expect(spyOnCreateToasterPopUp).toBeCalledWith("error", "Token invalid.");
     expect(spyOnCreateToasterPopUp).toBeCalledTimes(1);
   });
+
+  test("Expect correct config object to be returned", async () => {
+    const mockStore = createAuthStoreLoggedInUser();
+
+    const config = AuthService.getConfig(mockStore);
+
+    expect(config).toEqual({
+      headers: {
+        Accept: "application/json",
+        Authorization: `bearer ${mockStore.accessToken}`,
+      },
+    });
+  });
 });
