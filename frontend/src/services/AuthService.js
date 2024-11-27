@@ -129,15 +129,8 @@ export default class AuthService {
   static async testAccessToken(store) {
     const data = {};
 
-    const config = {
-      headers: {
-        Accept: "application/json",
-        Authorization: `bearer ${store.accessToken}`,
-      },
-    };
-
     await axios
-      .post("/api/v1/login/test-token", data, config)
+      .post("/api/v1/login/test-token", data, AuthService.getConfig(store))
       .then((response) => {
         console.log(response);
         ToasterService.createToasterPopUp(

@@ -2,17 +2,21 @@
 import PageTitleContainer from "@/components/Basic/PageTitleContainer.vue";
 import EMEventCard from "@/components/EventManager/EMEventsView/EMEventCard.vue";
 import EventManagerService from "@/services/EventManagerService";
-import { ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { useAuthStore } from "@/stores/AuthStore";
 
 const authStore = useAuthStore();
 const eventManagerId = 1;
-const events = ref(
-  EventManagerService.getEventsForEventManager(
+const events = ref([]);
+
+onBeforeMount(async () => {
+  await EventManagerService.getEventsForEventManager(
     eventManagerId,
-    authStore.accessToken,
-  ),
-);
+    authStore,
+  ).then((data) => {
+    events.value = data;
+  });
+});
 </script>
 
 <template>
