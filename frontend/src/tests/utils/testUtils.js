@@ -87,8 +87,21 @@ export function createAuthStoreLoggedInUser() {
   };
 }
 
+// LocalStorage functions for testing
+
 export function setLocalStorageItemsAndCreateAuthStore(role, token) {
   localStorage.setItem(LocalStorageKeys.USER_ROLE, role);
   localStorage.setItem(LocalStorageKeys.ACCESS_TOKEN, token);
   return useAuthStore();
+}
+
+// Test Event Objects
+
+export function getTestEvent() {
+  return {
+    title: "Test Event",
+    description: "Test Description",
+    tickets: 100,
+    tickets_sold: 80,
+  };
 }

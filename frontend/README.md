@@ -25,14 +25,15 @@
 
 ### Icons
 
-**FontAwesome**, an icon library, is integrated in this project. If you want to add a new icon, you can search for icons [here](https://fontawesome.com/icons). Make sure to only use **free icons** which are not marked as "*PRO*".
+**FontAwesome**, an icon library, is integrated in this project. If you want to add a new icon, you can search for icons [here](https://fontawesome.com/icons). Make sure to only use **free icons** which are not marked as "_PRO_".
 
 Adding icons is as simple as pasting the HTML code provided on the FontAwesome website inside the `<template>` like this:
 
 ```html
 <template>
   <div class="icon-container">
-    <i class="fa-solid fa-book"></i> <!--Book Icon-->
+    <i class="fa-solid fa-book"></i>
+    <!--Book Icon-->
   </div>
 </template>
 ```
