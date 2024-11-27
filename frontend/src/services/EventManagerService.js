@@ -4,7 +4,7 @@ import ToasterService from "./ToasterService";
 
 export default class EventManagerService {
   // ### EMEventsView.vue
-  static async getEventsForEventManager(eventManagerId, accessToken) {
+  static async getEventsForEventManager(eventManagerId, authStore) {
     const endpointExists = false;
 
     if (!endpointExists) {
@@ -51,7 +51,7 @@ export default class EventManagerService {
         .post(
           `/api/v1/events/event-manager/${eventManagerId}`,
           {},
-          AuthService.getConfig(accessToken),
+          AuthService.getConfig(authStore.accessToken),
         )
         .then((response) => {
           return response.data;
