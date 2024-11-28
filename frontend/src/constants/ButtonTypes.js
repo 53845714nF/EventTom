@@ -1,11 +1,11 @@
 const SecondaryButtonTypes = {
-    WHITE: 'white',
-    BLACK: 'black',
-}
+  WHITE: "white",
+  BLACK: "black",
+};
 
 const PrimaryButtonTypes = {
-    GREEN: 'green',
-    BLACK: 'black',
-}
+  GREEN: "green",
+  BLACK: "black",
+};
 
-export { SecondaryButtonTypes, PrimaryButtonTypes }
+export { SecondaryButtonTypes, PrimaryButtonTypes };
