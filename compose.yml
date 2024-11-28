@@ -28,7 +28,7 @@ services:
     environment:
       - ADMINER_DESIGN=pepa-linha-dark
     ports: 
-      - 8080:8080
+      - "8080:8080"
 
   mailcatcher:
     restart: "no"
@@ -105,8 +105,14 @@ services:
     build:
       context: ./backend
     ports:
-      - 8000:8000
+      - "8000:8000"
 
+  frontend:
+    restart: "no"
+    build:
+     context: ./frontend
+    ports:
+      - "80:80"
 
 #volumes:
 #  app-db-data:
