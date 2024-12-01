@@ -100,6 +100,7 @@ const myBooks = [
 ```
 
 New Views should be placed inside the [Views](/frontend/src/views/) directory and should append the **View**-suffix to its name e.g. "LandingPage**View**" or "CutomerManagement**View**". If a View is only accessible for a user with a specific role (e.g. Customer, Event Manager, Event Creator, Admin) it should be put in a separate directory named after the role of the user and should include an equivalent prefix in its filename:
+
 - C -> Customer
 - EM -> Event Manager
 - EC -> Event Creator
@@ -114,14 +115,15 @@ Components are **small parts** of the UI (e.g. Buttons, Containers, etc.) which 
 - contain no to minimal logic
 - be placed inside the components folder: /frontend/src/components
 
-New components are placed inside the [Components directory](/frontend/src/components/) and should be named after what they do and ideally have a fitting **suffix** such as "Event**Form**" or "Submit**Button**". If a component belongs to a certain View, make sure to put it in a directory named after the view. If Views are only accessible for a user with a specific role (e.g. Customer, EventManager, EventCreator, Admin), make sure to put the components for those Views inside a directory named after the Role of the user itself. Also make sure to add one of the following prefix to the filename of the component: 
+New components are placed inside the [Components directory](/frontend/src/components/) and should be named after what they do and ideally have a fitting **suffix** such as "Event**Form**" or "Submit**Button**". If a component belongs to a certain View, make sure to put it in a directory named after the view. If Views are only accessible for a user with a specific role (e.g. Customer, EventManager, EventCreator, Admin), make sure to put the components for those Views inside a directory named after the Role of the user itself. Also make sure to add one of the following prefix to the filename of the component:
+
 - C -> Customer
 - EM -> Event Manager
 - EC -> Event Creator
 - A -> Admin
-If a component which is made up of more than 2 smaller components, place the relevant files inside a separate directory named after the parent component. 
+  If a component which is made up of more than 2 smaller components, place the relevant files inside a separate directory named after the parent component.
 
-**Example:** The View **EMEventsView** View contains the **EMEventCard** component. Since EMEventCard is part of the EMEventView, it should be placed inside a directory named *EMEventsView*. Since the EMEventsView View is only acessible for EventManagers, this directory itself should be put in a directory called **EventManager**. And since the EMEventCard ist part of a View for a user with a specific role, its filename should contain the equivalent prefix -> **EM**EventCard
+**Example:** The View **EMEventsView** View contains the **EMEventCard** component. Since EMEventCard is part of the EMEventView, it should be placed inside a directory named _EMEventsView_. Since the EMEventsView View is only acessible for EventManagers, this directory itself should be put in a directory called **EventManager**. And since the EMEventCard ist part of a View for a user with a specific role, its filename should contain the equivalent prefix -> **EM**EventCard
 
 To Pass information from a View to a component or from a component to another, you can use props. An example of how to define props for a component and how to pass them to another component is given here below. Here, the component "BookList" gets an Array of books from its View "BookView" (View above).
 

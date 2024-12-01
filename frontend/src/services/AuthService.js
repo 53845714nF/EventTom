@@ -61,7 +61,7 @@ export default class AuthService {
 
   // sends a POST request to the backend with the user data
   // Either logs in user (signUp = false) or signs up user (signUp = true)
-  static postUser(user, isUserSigningUp, redirectPath, store) {
+  static postUser(user, isUserSigningUp, store) {
     const validationResult = this._checkIfInputValuesCorrect(
       user,
       isUserSigningUp,
@@ -73,15 +73,15 @@ export default class AuthService {
     }
 
     if (isUserSigningUp) {
-      this._postSignupData(user, redirectPath);
+      this._postSignupData(user);
     } else {
-      this._postLoginData(user, redirectPath, store);
+      this._postLoginData(user, store);
     }
   }
 
   // sends a POST request to the backend to log in the user
   // if successful, saves the access token to the local storage and redirects to the provided redirectPath
-  static async _postLoginData(user, redirectPath, authStore) {
+  static async _postLoginData(user, authStore) {
     const data = new URLSearchParams();
     data.append("grant_type", "password");
     data.append("username", user.value.username); // beachte die URL-kodierte Form
@@ -101,7 +101,11 @@ export default class AuthService {
       .then((response) => {
         authStore.setAccessToken(response.data.access_token);
         authStore.setRole(DevVariables.INITIAL_ROLE);
+
+        // set the redirect path to the first item in the navItems array
+        const redirectPath = authStore.navItems.items[0].path;
         router.push(redirectPath);
+
         ToasterService.createToasterPopUp("success", "Login erfolgreich!");
       })
       .catch((error) => {

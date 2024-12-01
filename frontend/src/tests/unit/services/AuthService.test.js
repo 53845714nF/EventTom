@@ -107,7 +107,7 @@ describe("AuthService handling user data", () => {
       "createToasterPopUp",
     );
 
-    await AuthService._postLoginData(testUser, "/test", testStore);
+    await AuthService._postLoginData(testUser, testStore);
 
     expect(spyOnCreateToasterPopUp).toBeCalledWith(
       "success",
@@ -121,7 +121,7 @@ describe("AuthService handling user data", () => {
     const testUser = createCorrectUserSignUp();
     const testStore = createAuthStoreLoggedOut();
 
-    await AuthService._postLoginData(testUser, "/test", testStore);
+    await AuthService._postLoginData(testUser, testStore);
 
     expect(testStore.role).toBe(DevVariables.INITIAL_ROLE);
   });
@@ -137,7 +137,7 @@ describe("AuthService handling user data", () => {
       "createToasterPopUp",
     );
 
-    await AuthService._postLoginData(testUser, "/test", testStore);
+    await AuthService._postLoginData(testUser, testStore);
 
     expect(spyOnCreateToasterPopUp).toBeCalledWith(
       "error",

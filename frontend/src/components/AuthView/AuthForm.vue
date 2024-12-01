@@ -16,9 +16,7 @@ import {
 const route = useRoute();
 const type = ref(route.params.type);
 const user = AuthService.provideEmptyUser();
-
-// redirect path after successful login / signup -> change this to the path you want to redirect to
-const redirectPath = DevVariables.LOGIN_REDIRECT;
+const authStore = useAuthStore();
 
 // watch for changes in route.params.type
 watch(
@@ -27,8 +25,6 @@ watch(
     type.value = newType;
   },
 );
-
-const authStore = useAuthStore();
 
 // computed value für `signUp` und `secondaryButtonRedirect`
 // computed is used to derive a value from other reactive values
@@ -44,8 +40,7 @@ const dynamicAuthText = computed(() =>
   AuthService.provideDynamicAuthText(signUp.value),
 );
 
-const postUser = () =>
-  AuthService.postUser(user, signUp.value, redirectPath, authStore);
+const postUser = () => AuthService.postUser(user, signUp.value, authStore);
 </script>
 
 <template>
