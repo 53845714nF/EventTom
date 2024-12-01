@@ -152,7 +152,8 @@ export default class AuthService {
     return {
       headers: {
         Accept: "application/json",
-        Authorization: `bearer ${authStore.accessToken}`,
+        Authorization: `Bearer ${authStore.accessToken}`,
+        "Content-Type": "application/json",
       },
     };
   }

@@ -34,8 +34,8 @@ export const NavItems = {
 
   ADMIN: {
     items: [
-      { title: "Benutzerübersicht", path: "/not_implemented" },
-      { title: "Neuer Benutzer", path: "/not_implemented" },
+      { title: "Neuer Benutzer", path: "/admin/new_user" },
+      { title: "Neuer Gutschein", path: "/admin/create_voucher" },
     ],
     button: { title: "Logout", path: "/" },
   },
