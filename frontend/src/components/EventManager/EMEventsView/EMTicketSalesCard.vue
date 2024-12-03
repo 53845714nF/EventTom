@@ -1,7 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
 import EventManagerService from "@/services/EventManagerService";
-import DevVariables from "@/constants/DevVariables";
 
 const props = defineProps({
   event: {
@@ -24,7 +23,7 @@ const percentageComparedToExpected = computed(() =>
   EventManagerService.getPercentageOfTicketsSoldComparedToExpected(
     props.event.tickets,
     props.event.tickets_sold,
-    DevVariables.TICKET_THRESHOLD,
+    import.meta.env.VITE_TICKET_THRESHOLD,
   ),
 );
 
