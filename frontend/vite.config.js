@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const backendUrl = process.env.VITE_BACKEND_URL
+const backendUrl = process.env.VITE_BACKEND_URL;
 
 // https://vite.dev/config/
 export default defineConfig({

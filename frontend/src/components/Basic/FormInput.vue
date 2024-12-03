@@ -6,8 +6,8 @@ const props = defineProps({
   type: String,
   options: {
     type: Array,
-    reqired: false
-  }
+    reqired: false,
+  },
 });
 
 // if the v-model is changed, the child component will emit an event to update the parent's modelValue
@@ -20,7 +20,7 @@ const updateValue = (event) => {
 <template>
   <div class="form-input">
     <p class="p-large form-heading-margin">{{ props.title }}</p>
-    
+
     <!--Normal Input field-->
     <input
       v-if="!props.options"
@@ -36,7 +36,6 @@ const updateValue = (event) => {
         {{ option }}
       </option>
     </select>
-
   </div>
 </template>
 
@@ -63,8 +62,8 @@ input::placeholder {
 }
 
 select {
-  appearance: none; 
-  -webkit-appearance: none; 
+  appearance: none;
+  -webkit-appearance: none;
   -moz-appearance: none;
 }
 

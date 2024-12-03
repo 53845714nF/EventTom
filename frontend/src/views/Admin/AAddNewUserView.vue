@@ -6,6 +6,6 @@ import ANewUserForm from "@/components/Admin/AAddNewUserView/ANewUserForm.vue";
 <template>
   <PageTitleContainer title="Neuer User" />
   <div class="content-container">
-    <ANewUserForm/>
+    <ANewUserForm />
   </div>
 </template>

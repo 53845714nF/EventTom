@@ -4,6 +4,5 @@ import PageTitleContainer from "@/components/Basic/PageTitleContainer.vue";
 
 <template>
   <PageTitleContainer title="Neuer Gutschein" />
-  <div class="content-container">
-  </div>
+  <div class="content-container"></div>
 </template>
