@@ -15,6 +15,7 @@ import NotAllowedView from "@/views/Errors/NotAllowedView.vue";
 
 import AAddNewUserView from "@/views/Admin/AAddNewUserView.vue";
 import ACreateVoucherView from "@/views/Admin/ACreateVoucherView.vue";
+import AListUsersView from "@/views/Admin/AListUsersView.vue";
 
 // Middleware, which checks if the user has the required role
 function requireRole(requiredRole) {
@@ -45,6 +46,11 @@ const router = createRouter({
     },
 
     // Admin
+    {
+      path: "/admin/users",
+      name: "adminListUsers",
+      component: AListUsersView,
+    },
     {
       path: "/admin/new_user",
       name: "adminNewUser",

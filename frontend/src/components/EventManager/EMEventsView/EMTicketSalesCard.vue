@@ -63,7 +63,7 @@ const comparisonText = computed(() =>
     </div>
 
     <div class="switch-view-button-container">
-      <div @click="switchView" class="switch-view-button">
+      <div @click="switchView" class="icon-button switch-view-button">
         <i v-if="showPercentage" class="fa-solid fa-chart-simple"></i>
         <i v-else class="fa-solid fa-percent"></i>
       </div>
@@ -91,15 +91,7 @@ const comparisonText = computed(() =>
 }
 
 .switch-view-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   background-color: var(--cp-white);
-  border-radius: 15px;
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-  transition: 0.4s;
 }
 
 .switch-view-button-container {
