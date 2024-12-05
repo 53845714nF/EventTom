@@ -29,10 +29,10 @@ export default class AdminService {
       role: user.value.role,
       password: user.value.password,
     };
-  
+
     return axios
       .post("/api/v1/users/", data, AuthService.getConfig(authStore))
-      .then((response) => {
+      .then(() => {
         ToasterService.createToasterPopUp(
           "success",
           "User erfolgreich hinzugefügt",
@@ -55,14 +55,17 @@ export default class AdminService {
       })
       .catch((error) => {
         console.log(error);
-        ToasterService.createToasterPopUp("error", "Fehler beim Laden der User.");
+        ToasterService.createToasterPopUp(
+          "error",
+          "Fehler beim Laden der User.",
+        );
       });
   }
 
   static async deleteUser(userId, authStore) {
     return axios
       .delete(`/api/v1/users/${userId}`, AuthService.getConfig(authStore))
-      .then((response) => {
+      .then(() => {
         ToasterService.createToasterPopUp(
           "success",
           "User erfolgreich gelöscht",

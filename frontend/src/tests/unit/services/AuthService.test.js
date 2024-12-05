@@ -207,7 +207,6 @@ describe("AuthService handling user data", () => {
       headers: {
         Accept: "application/json",
         Authorization: `Bearer ${mockStore.accessToken}`,
-        "Content-Type": "application/json",
       },
     });
   });
