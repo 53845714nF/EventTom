@@ -10,19 +10,19 @@ const authStore = useAuthStore();
 const users = ref([]);
 
 onBeforeMount(async () => {
-    await AdminService.fetchUsers().then((data) => {
-        users.value = data.data;
-        console.log(users.value)
-        for (const user in users.value) {
-            console.log(user)
-        }
-    });
-})
+  // await AdminService.fetchUsers().then((data) => {
+  //     users.value = data;
+  // });
+  await AdminService.getAllUsers(authStore).then((data) => {
+    console.log(data);
+    users.value = data;
+  });
+});
 </script>
 
 <template>
   <PageTitleContainer title="Benutzer Liste" />
   <div class="content-container">
-    <AUserCard v-for="user in users" :key="user" :index="user" :user="user"/>
+    <AUserCard v-for="user in users" :key="user" :index="user" :user="user" />
   </div>
 </template>

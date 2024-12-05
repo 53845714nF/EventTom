@@ -1,5 +1,8 @@
 <script setup>
-import AdminService from '@/services/AdminService';
+import AdminService from "@/services/AdminService";
+import { useAuthStore } from "@/stores/AuthStore";
+
+const authStore = useAuthStore();
 
 const props = defineProps({
   user: {
@@ -8,23 +11,22 @@ const props = defineProps({
   },
 });
 
-const deleteUser = () => AdminService.deleteUser(props.user.email);
-
+const deleteUser = async () => await AdminService.deleteUser(props.user.id, authStore);
 </script>
 
 <template>
-    <div class="card-body">
-      <div>
-        <div class="heading-role-container">
-          <h4>{{ user.full_name }}</h4>
-          <p class="p-bold small-margin">{{ user.role }}</p>
-        </div>
-        <div @click="deleteUser" class="icon-button delete-user-button">
-          <i class="fa-solid fa-trash"></i>
-        </div>
+  <div class="card-body">
+    <div>
+      <div class="heading-role-container">
+        <h4>{{ user.full_name ? user.full_name : "AdminAccount" }}</h4>
+        <p class="p-bold small-margin">{{ user.role }}</p>
       </div>
-      <p class="small-margin">{{ props.user.email }}</p>
+      <div @click="deleteUser" class="icon-button delete-user-button">
+        <i class="fa-solid fa-trash"></i>
+      </div>
     </div>
+    <p class="small-margin">{{ props.user.email }}</p>
+  </div>
 </template>
 
 <style scoped>
@@ -55,4 +57,7 @@ const deleteUser = () => AdminService.deleteUser(props.user.email);
   background-color: var(--cp-white);
 }
 
+.delete-user-button:hover {
+  background-color: var(--cp-light-grey);
+}
 </style>

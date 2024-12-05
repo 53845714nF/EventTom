@@ -8,7 +8,7 @@ import { useAuthStore } from "@/stores/AuthStore";
 const authStore = useAuthStore();
 const user = AdminService.provideEmptyUser();
 const roleOptions = AdminService.provideRoleOptions();
-const postUser = () => AdminService.getAllUsers(authStore);
+const postUser = () => AdminService.postNewUser(user, authStore);
 </script>
 
 <template>

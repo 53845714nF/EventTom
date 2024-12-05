@@ -148,12 +148,14 @@ export default class AuthService {
   }
 
   static getConfig(authStore) {
-    return {
+    const config = {
       headers: {
         Accept: "application/json",
         Authorization: `Bearer ${authStore.accessToken}`,
-        "Content-Type": "application/json",
       },
     };
+
+    console.log(config);
+    return config;
   }
 }
