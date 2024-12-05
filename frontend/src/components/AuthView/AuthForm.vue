@@ -6,7 +6,6 @@ import PrimaryButton from "../Basic/PrimaryButton.vue";
 import SecondaryButton from "../Basic/SecondaryButton.vue";
 import AuthService from "@/services/AuthService";
 import { useAuthStore } from "@/stores/AuthStore";
-import DevVariables from "@/constants/DevVariables";
 import {
   PrimaryButtonTypes,
   SecondaryButtonTypes,

@@ -291,7 +291,26 @@ At the moment, we only use the [AuthStore](/frontend/src/stores/AuthStore.js) to
 
 ### Environmant Variables
 
-You can find environment variables regarding the development process inside the **[DevVariables.js](/frontend/src/constants/DevVariables.js)** file. You can add new variables if it makes sense for development, just make sure that they don't compromise testing (`npm run test`).
+Fronted environment Variables are defined inside the [.env file](/frontend/.env) and follow the following naming conventions:
+
+- contain the prefix "VITE" and are written in all caps and in snake-case, e.g. `VITE_VARIABLE`
+
+They have to be accessed in in different ways depending on where you need them:
+
+**At runtime** (after building process, in components, services, ...):
+
+```javascript
+const variable = import.meta.env.VITE_VARIABLE;
+```
+
+**During build process** (in .config files):
+
+```javascript
+import dotenv from "dotenv";
+dotenv.config();
+
+const variable = process.env.VITE_VARIABLE;
+```
 
 ### Testing
 

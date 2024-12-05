@@ -108,6 +108,7 @@ services:
       - "8000:8000"
 
   frontend:
+    image: frontend:latest
     restart: "no"
     build:
      context: ./frontend

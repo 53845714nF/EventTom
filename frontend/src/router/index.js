@@ -13,6 +13,10 @@ import NotImplementedView from "@/views/Errors/NotImplementedView.vue";
 import NotFoundView from "@/views/Errors/NotFoundView.vue";
 import NotAllowedView from "@/views/Errors/NotAllowedView.vue";
 
+import AAddNewUserView from "@/views/Admin/AAddNewUserView.vue";
+import ACreateVoucherView from "@/views/Admin/ACreateVoucherView.vue";
+import AListUsersView from "@/views/Admin/AListUsersView.vue";
+
 // Middleware, which checks if the user has the required role
 function requireRole(requiredRole) {
   return (to, from, next) => {
@@ -39,6 +43,23 @@ const router = createRouter({
       path: "/auth/:type",
       name: "auth",
       component: AuthView,
+    },
+
+    // Admin
+    {
+      path: "/admin/users",
+      name: "adminListUsers",
+      component: AListUsersView,
+    },
+    {
+      path: "/admin/new_user",
+      name: "adminNewUser",
+      component: AAddNewUserView,
+    },
+    {
+      path: "/admin/create_voucher",
+      name: "AdminCreateVoucher",
+      component: ACreateVoucherView,
     },
 
     // Event Manager

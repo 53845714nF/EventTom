@@ -4,7 +4,6 @@ import ToasterService from "./ToasterService";
 import router from "@/router";
 import { Roles } from "@/constants/Roles";
 import { AuthFormText } from "@/constants/AuthFormText";
-import DevVariables from "@/constants/DevVariables";
 
 export default class AuthService {
   // provides the text values for buttons in the AuthForm depending on whether the user is signing up or logging in
@@ -100,7 +99,7 @@ export default class AuthService {
       })
       .then((response) => {
         authStore.setAccessToken(response.data.access_token);
-        authStore.setRole(DevVariables.INITIAL_ROLE);
+        authStore.setRole(import.meta.env.VITE_INITIAL_ROLE);
 
         // set the redirect path to the first item in the navItems array
         const redirectPath = authStore.navItems.items[0].path;
@@ -149,11 +148,14 @@ export default class AuthService {
   }
 
   static getConfig(authStore) {
-    return {
+    const config = {
       headers: {
         Accept: "application/json",
-        Authorization: `bearer ${authStore.accessToken}`,
+        Authorization: `Bearer ${authStore.accessToken}`,
       },
     };
+
+    console.log(config);
+    return config;
   }
 }
