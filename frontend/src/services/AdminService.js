@@ -33,6 +33,7 @@ export default class AdminService {
     return axios
       .post("/api/v1/users/", data, AuthService.getConfig(authStore))
       .then(() => {
+        user.value = AdminService.provideEmptyUser();
         ToasterService.createToasterPopUp(
           "success",
           "User erfolgreich hinzugefügt",
