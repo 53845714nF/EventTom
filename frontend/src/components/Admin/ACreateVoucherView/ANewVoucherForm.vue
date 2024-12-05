@@ -4,46 +4,63 @@ import PrimaryButton from "@/components/Basic/PrimaryButton.vue";
 import AdminService from "@/services/AdminService";
 import { PrimaryButtonTypes } from "@/constants/ButtonTypes";
 import { useAuthStore } from "@/stores/AuthStore";
+import { computed, onBeforeMount, ref, watch } from "vue";
 
 const authStore = useAuthStore();
-const user = AdminService.provideEmptyUser();
-const roleOptions = AdminService.provideRoleOptions();
-const postUser = () => AdminService.postNewUser(user, authStore);
+const voucher = ref(AdminService.provideEmptyVoucher());
+const users = ref([]);
+
+onBeforeMount(async () => {
+  AdminService.getAllUsers(authStore).then((options) => {
+    users.value = options;
+  });
+  console.log(users.value);
+});
+
+const ownerEmailOptions = computed(() =>
+  users.value.map((owner) => owner.email),
+);
+
+watch(
+  () => voucher.value.owner_email,
+  (newEmail) => {
+    voucher.value.owner_id = AdminService.getUserIdByEmail(
+      newEmail,
+      users.value,
+    );
+  },
+);
+
+const postVoucher = () => AdminService.postNewVoucher(voucher, authStore);
 </script>
 
 <template>
   <div class="form-background">
     <div class="form-container">
       <FormInput
-        v-model="user.full_name"
-        title="Name"
-        placeholder="Nutzername"
+        v-model="voucher.amount"
+        title="Betrag (€)"
+        placeholder="Betrag"
+        type="number"
+      />
+      <FormInput
+        v-model="voucher.code"
+        title="Gutscheincode"
+        placeholder="Gutscheincode"
         type="text"
       />
       <FormInput
-        v-model="user.email"
-        title="E-Mail"
-        placeholder="E-Mail"
-        type="text"
-      />
-      <FormInput
-        v-model="user.password"
-        title="Passwort"
-        placeholder="Passwort"
-        type="text"
-      />
-      <FormInput
-        v-model="user.role"
-        title="Rolle"
-        placeholder="Rolle"
+        v-model="voucher.owner_email"
+        title="Kunden Email"
+        placeholder="Kunden Email"
         type="select"
-        :options="roleOptions"
+        :options="ownerEmailOptions"
       />
     </div>
     <div class="button-container">
       <PrimaryButton
-        :onClick="postUser"
-        text="User hinzufügen"
+        :onClick="postVoucher"
+        text="Gutschein erstellen"
         :type="PrimaryButtonTypes.GREEN"
       />
     </div>

@@ -18,7 +18,23 @@ export default class AdminService {
 
   static provideRoleOptions() {
     // only provide employee roles
-    return Object.values(Roles).filter((role) => role !== Roles.GUEST && role !== Roles.CUSTOMER);
+    return Object.values(Roles).filter(
+      (role) => role !== Roles.GUEST && role !== Roles.CUSTOMER,
+    );
+  }
+
+  static provideEmptyVoucher() {
+    return {
+      code: "",
+      amount: "0",
+      owner_id: "",
+      owner_email: "",
+    };
+  }
+
+  static getUserIdByEmail(email, users) {
+    const user = users.find((user) => user.email === email);
+    return user.id;
   }
 
   static async postNewUser(user, authStore) {
@@ -80,5 +96,10 @@ export default class AdminService {
           "Fehler beim Löschen des Users.",
         );
       });
+  }
+
+  static postNewVoucher(voucher) {
+    console.log(voucher.value);
+    ToasterService.createToasterPopUp("error", "Not implemented yet.");
   }
 }
