@@ -17,7 +17,8 @@ export default class AdminService {
   }
 
   static provideRoleOptions() {
-    return Object.values(Roles).filter((role) => role !== Roles.GUEST);
+    // only provide employee roles
+    return Object.values(Roles).filter((role) => role !== Roles.GUEST && role !== Roles.CUSTOMER);
   }
 
   static async postNewUser(user, authStore) {
