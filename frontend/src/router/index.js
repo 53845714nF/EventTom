@@ -9,6 +9,9 @@ import AuthView from "@/views/AuthView.vue";
 import EMEventsView from "@/views/EventManager/EMEventsView.vue";
 import EMActivitiesView from "@/views/EventManager/EMActivitiesView.vue";
 
+import ECEventsView from "@/views/EventCreator/ECEventsView.vue";
+import ECCreateNewEventView from "@/views/EventCreator/ECCreateNewEventView.vue";
+
 import NotImplementedView from "@/views/Errors/NotImplementedView.vue";
 import NotFoundView from "@/views/Errors/NotFoundView.vue";
 import NotAllowedView from "@/views/Errors/NotAllowedView.vue";
@@ -74,6 +77,20 @@ const router = createRouter({
       name: "EMActivities",
       component: EMActivitiesView,
       beforeEnter: requireRole(Roles.EVENT_MANAGER),
+    },
+
+    // Event Creator
+    {
+      path: "/eventcreator/events",
+      name: "ECEvents",
+      component: ECEventsView,
+      beforeEnter: requireRole(Roles.EVENT_CREATOR),
+    },
+    {
+      path: "/eventcreator/new_event",
+      name: "ECNewEvent",
+      component: ECCreateNewEventView,
+      beforeEnter: requireRole(Roles.EVENT_CREATOR),
     },
 
     // Error pages

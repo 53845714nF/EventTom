@@ -14,7 +14,6 @@ onBeforeMount(async () => {
   AdminService.getAllUsers(authStore).then((options) => {
     users.value = options;
   });
-  console.log(users.value);
 });
 
 const ownerEmailOptions = computed(() =>
