@@ -2,7 +2,7 @@ from sqlmodel import Session, create_engine, select
 
 from app import crud
 from app.core.config import settings
-from app.models import User, EmployeeCreate, UserType, EmployeeRole
+from app.models import EmployeeCreate, EmployeeRole, User, UserType
 
 engine = create_engine(str(settings.SQLALCHEMY_DATABASE_URI))
 
@@ -29,6 +29,6 @@ def init_db(session: Session) -> None:
             email=settings.FIRST_SUPERUSER,
             password=settings.FIRST_SUPERUSER_PASSWORD,
             user_type=UserType.EMPLOYEE,
-            role=EmployeeRole.ADMIN
+            role=EmployeeRole.ADMIN,
         )
         user = crud.create_employee(session=session, user_create=user_in)

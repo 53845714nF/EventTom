@@ -2,7 +2,7 @@ import uuid
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import col, delete, func, select
+from sqlmodel import func, select
 
 from app import crud
 from app.api.deps import (
@@ -13,17 +13,17 @@ from app.api.deps import (
 from app.core.config import settings
 from app.core.security import get_password_hash, verify_password
 from app.models import (
+    EmployeeCreate,
+    EmployeeRole,
     Message,
     UpdatePassword,
     User,
-    UserType,
     UserCreate,
     UserPublic,
     UsersPublic,
+    UserType,
     UserUpdate,
     UserUpdateMe,
-    EmployeeCreate,
-    EmployeeRole
 )
 from app.utils import generate_new_account_email, send_email
 
@@ -52,17 +52,18 @@ def read_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
 @router.post(
     "/", dependencies=[Depends(get_current_active_employee)], response_model=UserPublic
 )
-def create_user(*, session: SessionDep, user_in: EmployeeCreate, current_user: CurrentUser
+def create_employee(
+    *, session: SessionDep, user_in: EmployeeCreate, current_user: CurrentUser
 ) -> Any:
     """
-    Create new user.
+    Create new Employee.
     """
     if current_user.role != EmployeeRole.ADMIN:
         raise HTTPException(
             status_code=403,
             detail="Only administrators can create new users",
         )
-    
+
     user = crud.get_user_by_email(session=session, email=user_in.email)
     if user:
         raise HTTPException(
