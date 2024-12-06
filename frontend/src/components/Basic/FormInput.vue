@@ -23,15 +23,25 @@ const updateValue = (event) => {
 
     <!--Normal Input field-->
     <input
-      v-if="!props.options"
+      v-if="props.type === 'text' || props.type === 'number' || props.type === 'password'"
       :value="modelValue"
       @input="updateValue"
       :type="props.type"
       :placeholder="props.placeholder"
     />
 
+    <!-- Textarea if type is textarea -->
+    <textarea
+      v-if="props.type === 'textarea'"
+      :value="modelValue"
+      @input="updateValue"
+      :placeholder="props.placeholder"
+      rows="4"
+      cols="50"
+    ></textarea>
+
     <!--Drop down menu if options are provided-->
-    <select v-else :value="modelValue" @change="updateValue">
+    <select v-if="props.type === 'select'" :value="modelValue" @change="updateValue">
       <option v-for="option in props.options" :key="option" :value="option">
         {{ option }}
       </option>
@@ -40,19 +50,23 @@ const updateValue = (event) => {
 </template>
 
 <style scoped>
-.form-input {
-  max-width: 50%;
-}
+
 
 input,
+textarea,
 select {
-  width: 100%;
+  width: 50%;
   padding: 10px;
   border-radius: 10px;
   border: none;
   color: var(--color-text-black);
   font-family: FunnelDisplay;
   font-size: 14px;
+}
+
+textarea {
+  width: 70%;
+  resize: none;
 }
 
 input::placeholder {

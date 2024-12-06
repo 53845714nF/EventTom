@@ -60,7 +60,7 @@ const postVoucher = () => AdminService.postNewVoucher(voucher, authStore);
       <PrimaryButton
         :onClick="postVoucher"
         text="Gutschein erstellen"
-        :type="PrimaryButtonTypes.GREEN"
+        :type="PrimaryButtonTypes.BLACK"
       />
     </div>
   </div>
@@ -79,7 +79,6 @@ const postVoucher = () => AdminService.postNewVoucher(voucher, authStore);
   flex-direction: column;
   justify-content: center;
   flex-wrap: wrap;
-  align-items: flex-start;
 }
 
 .button-container {

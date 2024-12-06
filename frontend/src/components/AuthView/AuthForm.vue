@@ -101,7 +101,6 @@ const postUser = () => AuthService.postUser(user, signUp.value, authStore);
   flex-direction: column;
   justify-content: center;
   flex-wrap: wrap;
-  align-items: flex-start;
 }
 
 .button-container {

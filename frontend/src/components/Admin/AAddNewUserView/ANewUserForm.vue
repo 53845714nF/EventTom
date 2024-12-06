@@ -44,7 +44,7 @@ const postUser = () => AdminService.postNewUser(user, authStore);
       <PrimaryButton
         :onClick="postUser"
         text="User hinzufügen"
-        :type="PrimaryButtonTypes.GREEN"
+        :type="PrimaryButtonTypes.BLACK"
       />
     </div>
   </div>
@@ -63,7 +63,6 @@ const postUser = () => AdminService.postNewUser(user, authStore);
   flex-direction: column;
   justify-content: center;
   flex-wrap: wrap;
-  align-items: flex-start;
 }
 
 .button-container {
