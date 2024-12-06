@@ -1,18 +1,16 @@
-import uuid
 from typing import Any
 
 from sqlmodel import Session, select
 
 from app.core.security import get_password_hash, verify_password
 from app.models import (
-    User,
-    UserType,
-    UserCreate,
-    UserUpdate,
     EmployeeCreate,
-    Event,
-    EventCreate
+    User,
+    UserCreate,
+    UserType,
+    UserUpdate,
 )
+
 
 def create_employee(*, session: Session, user_create: EmployeeCreate) -> User:
     db_obj = User.model_validate(
@@ -23,14 +21,20 @@ def create_employee(*, session: Session, user_create: EmployeeCreate) -> User:
     session.refresh(db_obj)
     return db_obj
 
+
 def create_customer(*, session: Session, user_create: UserCreate) -> User:
     db_obj = User.model_validate(
-        user_create, update={"hashed_password": get_password_hash(user_create.password),"user_type": UserType.CUSTOMER}
+        user_create,
+        update={
+            "hashed_password": get_password_hash(user_create.password),
+            "user_type": UserType.CUSTOMER,
+        },
     )
     session.add(db_obj)
     session.commit()
     session.refresh(db_obj)
     return db_obj
+
 
 def update_user(*, session: Session, db_user: User, user_in: UserUpdate) -> Any:
     user_data = user_in.model_dump(exclude_unset=True)
@@ -59,11 +63,3 @@ def authenticate(*, session: Session, email: str, password: str) -> User | None:
     if not verify_password(password, db_user.hashed_password):
         return None
     return db_user
-
-
-def create_event(*, session: Session, event_in: EventCreate, manager_id: uuid.UUID) -> Event:
-    db_event = Event.model_validate(event_in, update={"ownemanager_id": manager_id})
-    session.add(db_event)
-    session.commit()
-    session.refresh(db_event)
-    return db_event
