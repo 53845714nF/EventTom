@@ -264,10 +264,7 @@ export default class BookService {
       })
       .catch((error) => {
         console.log(error);
-        ToasterService.createToasterPopUp(
-          "error",
-          "Something went wrong while fetching your books.",
-        );
+        ToasterService.createToasterPopUp("error", "Something went wrong while fetching your books.");
       });
 
     return books;
@@ -283,9 +280,8 @@ At the moment, we only use the [AuthStore](/frontend/src/stores/AuthStore.js) to
 
 ```javascript
 <script setup>
-  import AuthService from "@/services/AuthService"; const authStore =
-  useAuthStore(); console.log(authStore.role) // access attributes directly
-  AuthService.logoutUser(authStore) // pass store to Service
+  import AuthService from "@/services/AuthService"; const authStore = useAuthStore(); console.log(authStore.role) //
+  access attributes directly AuthService.logoutUser(authStore) // pass store to Service
 </script>
 ```
 

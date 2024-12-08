@@ -4,10 +4,14 @@ import { Roles } from "@/constants/Roles";
 
 import LandingPageView from "@/views/LandingPageView.vue";
 
-import AuthView from "@/views/AuthView.vue";
+import SignUpView from "@/views/SignUpView.vue";
+import LoginView from "@/views/LoginView.vue";
 
 import EMEventsView from "@/views/EventManager/EMEventsView.vue";
 import EMActivitiesView from "@/views/EventManager/EMActivitiesView.vue";
+
+import ECEventsView from "@/views/EventCreator/ECEventsView.vue";
+import ECCreateNewEventView from "@/views/EventCreator/ECCreateNewEventView.vue";
 
 import NotImplementedView from "@/views/Errors/NotImplementedView.vue";
 import NotFoundView from "@/views/Errors/NotFoundView.vue";
@@ -39,10 +43,17 @@ const router = createRouter({
       name: "home",
       component: LandingPageView,
     },
+
+    // Auth
     {
-      path: "/auth/:type",
-      name: "auth",
-      component: AuthView,
+      path: "/signup",
+      name: "signup",
+      component: SignUpView,
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: LoginView,
     },
 
     // Admin
@@ -74,6 +85,20 @@ const router = createRouter({
       name: "EMActivities",
       component: EMActivitiesView,
       beforeEnter: requireRole(Roles.EVENT_MANAGER),
+    },
+
+    // Event Creator
+    {
+      path: "/eventcreator/events",
+      name: "ECEvents",
+      component: ECEventsView,
+      beforeEnter: requireRole(Roles.EVENT_CREATOR),
+    },
+    {
+      path: "/eventcreator/new_event",
+      name: "ECNewEvent",
+      component: ECCreateNewEventView,
+      beforeEnter: requireRole(Roles.EVENT_CREATOR),
     },
 
     // Error pages

@@ -3,6 +3,8 @@ import { Roles } from "@/constants/Roles";
 import AuthService from "./AuthService";
 import ToasterService from "./ToasterService";
 import axios from "axios";
+import FormValidatorService from "./FormValidatorService";
+import FormTypes from "@/constants/FormTypes";
 
 export default class AdminService {
   static provideEmptyUser() {
@@ -18,9 +20,7 @@ export default class AdminService {
 
   static provideRoleOptions() {
     // only provide employee roles
-    return Object.values(Roles).filter(
-      (role) => role !== Roles.GUEST && role !== Roles.CUSTOMER,
-    );
+    return Object.values(Roles).filter((role) => role !== Roles.GUEST && role !== Roles.CUSTOMER);
   }
 
   static provideEmptyVoucher() {
@@ -37,7 +37,15 @@ export default class AdminService {
     return user.id;
   }
 
-  static async postNewUser(user, authStore) {
+  static async tryPostNewUser(user, authStore) {
+    const validationRules = FormValidatorService.getValidationRules(FormTypes.NEW_USER);
+    const validationError = FormValidatorService.validateForm(user.value, validationRules);
+
+    if (validationError) {
+      ToasterService.createToasterPopUp("error", validationError);
+      return;
+    }
+
     const data = {
       full_name: user.value.full_name,
       email: user.value.email,
@@ -51,17 +59,11 @@ export default class AdminService {
       .post("/api/v1/users/", data, AuthService.getConfig(authStore))
       .then(() => {
         user.value = AdminService.provideEmptyUser();
-        ToasterService.createToasterPopUp(
-          "success",
-          "User erfolgreich hinzugefügt",
-        );
+        ToasterService.createToasterPopUp("success", "User erfolgreich hinzugefügt");
       })
       .catch((error) => {
         console.log(error);
-        ToasterService.createToasterPopUp(
-          "error",
-          "Etwas ist schief gelaufen.",
-        );
+        ToasterService.createToasterPopUp("error", "Etwas ist schief gelaufen.");
       });
   }
 
@@ -73,10 +75,7 @@ export default class AdminService {
       })
       .catch((error) => {
         console.log(error);
-        ToasterService.createToasterPopUp(
-          "error",
-          "Fehler beim Laden der User.",
-        );
+        ToasterService.createToasterPopUp("error", "Fehler beim Laden der User.");
       });
   }
 
@@ -84,21 +83,23 @@ export default class AdminService {
     return axios
       .delete(`/api/v1/users/${userId}`, AuthService.getConfig(authStore))
       .then(() => {
-        ToasterService.createToasterPopUp(
-          "success",
-          "User erfolgreich gelöscht",
-        );
+        ToasterService.createToasterPopUp("success", "User erfolgreich gelöscht");
       })
       .catch((error) => {
         console.log(error);
-        ToasterService.createToasterPopUp(
-          "error",
-          "Fehler beim Löschen des Users.",
-        );
+        ToasterService.createToasterPopUp("error", "Fehler beim Löschen des Users.");
       });
   }
 
-  static postNewVoucher(voucher) {
+  static tryPostNewVoucher(voucher) {
+    const validationRules = FormValidatorService.getValidationRules(FormTypes.NEW_VOUCHER);
+    const validationError = FormValidatorService.validateForm(voucher.value, validationRules);
+
+    if (validationError) {
+      ToasterService.createToasterPopUp("error", validationError);
+      return;
+    }
+
     console.log(voucher.value);
     ToasterService.createToasterPopUp("error", "Not implemented yet.");
   }

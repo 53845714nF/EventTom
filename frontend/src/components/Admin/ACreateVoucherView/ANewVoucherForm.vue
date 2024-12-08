@@ -14,41 +14,25 @@ onBeforeMount(async () => {
   AdminService.getAllUsers(authStore).then((options) => {
     users.value = options;
   });
-  console.log(users.value);
 });
 
-const ownerEmailOptions = computed(() =>
-  users.value.map((owner) => owner.email),
-);
+const ownerEmailOptions = computed(() => users.value.map((owner) => owner.email));
 
 watch(
   () => voucher.value.owner_email,
   (newEmail) => {
-    voucher.value.owner_id = AdminService.getUserIdByEmail(
-      newEmail,
-      users.value,
-    );
+    voucher.value.owner_id = AdminService.getUserIdByEmail(newEmail, users.value);
   },
 );
 
-const postVoucher = () => AdminService.postNewVoucher(voucher, authStore);
+const tryPostVoucher = () => AdminService.tryPostNewVoucher(voucher, authStore);
 </script>
 
 <template>
   <div class="form-background">
     <div class="form-container">
-      <FormInput
-        v-model="voucher.amount"
-        title="Betrag (€)"
-        placeholder="Betrag"
-        type="number"
-      />
-      <FormInput
-        v-model="voucher.code"
-        title="Gutscheincode"
-        placeholder="Gutscheincode"
-        type="text"
-      />
+      <FormInput v-model="voucher.amount" title="Betrag (€)" placeholder="Betrag" type="number" />
+      <FormInput v-model="voucher.code" title="Gutscheincode" placeholder="Gutscheincode" type="text" />
       <FormInput
         v-model="voucher.owner_email"
         title="Kunden Email"
@@ -58,11 +42,7 @@ const postVoucher = () => AdminService.postNewVoucher(voucher, authStore);
       />
     </div>
     <div class="button-container">
-      <PrimaryButton
-        :onClick="postVoucher"
-        text="Gutschein erstellen"
-        :type="PrimaryButtonTypes.GREEN"
-      />
+      <PrimaryButton :onClick="tryPostVoucher" text="Gutschein erstellen" :type="PrimaryButtonTypes.BLACK" />
     </div>
   </div>
 </template>
@@ -80,7 +60,6 @@ const postVoucher = () => AdminService.postNewVoucher(voucher, authStore);
   flex-direction: column;
   justify-content: center;
   flex-wrap: wrap;
-  align-items: flex-start;
 }
 
 .button-container {

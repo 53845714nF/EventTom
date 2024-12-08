@@ -129,10 +129,6 @@ const activities = [
 <template>
   <PageTitleContainer title="Aktivitäten" />
   <div class="content-container">
-    <EMActivityCard
-      v-for="activity in activities"
-      :key="activity.timestamp"
-      :activity="activity"
-    />
+    <EMActivityCard v-for="activity in activities" :key="activity.timestamp" :activity="activity" />
   </div>
 </template>
