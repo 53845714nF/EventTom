@@ -18,11 +18,7 @@ const testToken = () => AuthService.testAccessToken(authStore);
     <div class="footer-container">
       <p class="light footer-element">LinkedIn</p>
       <p @click="testToken" class="light footer-element pointer">Test Token</p>
-      <a
-        href="https://www.youtube.com/watch?v=xvFZjo5PgG0"
-        class="light footer-element"
-        >YouTube</a
-      >
+      <a href="https://www.youtube.com/watch?v=xvFZjo5PgG0" class="light footer-element">YouTube</a>
     </div>
   </footer>
 </template>

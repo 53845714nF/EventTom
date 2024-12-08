@@ -1,90 +1,63 @@
 import axios from "axios";
-import { ref } from "vue";
 import ToasterService from "./ToasterService";
 import router from "@/router";
 import { Roles } from "@/constants/Roles";
-import { AuthFormText } from "@/constants/AuthFormText";
-import DevVariables from "@/constants/DevVariables";
+import FormValidatorService from "./FormValidatorService";
+import FormTypes from "@/constants/FormTypes";
 
 export default class AuthService {
-  // provides the text values for buttons in the AuthForm depending on whether the user is signing up or logging in
-  static provideDynamicAuthText(isUserSigningUp) {
-    if (isUserSigningUp) {
-      return AuthFormText.SIGN_UP;
-    } else {
-      return AuthFormText.SIGN_IN;
-    }
-  }
-
   // provides an empty user object to bind to the AuthForm
-  static provideEmptyUser() {
-    return ref({
-      username: "",
+  static provideEmptySignUpUser() {
+    return {
+      full_name: "",
       email: "",
       password: "",
-      passwordRepeat: "",
-    });
+      password_repeat: "",
+    };
   }
 
-  // checks if input values from AuthForm are correct
-  // logic depends on if user is signing up (signUp = true) or logging in (signUp = false)
-  static _checkIfInputValuesCorrect(user, isUserSigningUp) {
-    if (!(user.value.username && user.value.password)) {
-      return { isValid: false, message: "Keine leeren Felder erlaubt." };
-    }
-
-    if (isUserSigningUp) {
-      if (!(user.value.password === user.value.passwordRepeat)) {
-        return {
-          isValid: false,
-          message: "Passwörter stimmen nicht überein.",
-        };
-      }
-
-      if (!(user.value.password.length >= 8)) {
-        return {
-          isValid: false,
-          message: "Passwort zu kurz. Mindestens 8 Zeichen.",
-        };
-      }
-
-      if (!user.value.email) {
-        return {
-          isValid: false,
-          message: "Bitte geben Sie eine gültige E-Mail Adresse an.",
-        };
-      }
-    }
-
-    return { isValid: true, message: "" };
+  static provideEmptyLoginUser() {
+    return {
+      email: "",
+      password: "",
+    };
   }
 
   // sends a POST request to the backend with the user data
   // Either logs in user (signUp = false) or signs up user (signUp = true)
-  static postUser(user, isUserSigningUp, redirectPath, store) {
-    const validationResult = this._checkIfInputValuesCorrect(
-      user,
-      isUserSigningUp,
-    );
+  static trySignUpUser(user, authStore) {
+    const validationRules = FormValidatorService.getValidationRules(FormTypes.SIGNUP);
+    const validationError = FormValidatorService.validateForm(user.value, validationRules);
 
-    if (!validationResult.isValid) {
-      ToasterService.createToasterPopUp("error", validationResult.message);
+    if (validationError) {
+      ToasterService.createToasterPopUp("error", validationError);
       return;
     }
 
-    if (isUserSigningUp) {
-      this._postSignupData(user, redirectPath);
-    } else {
-      this._postLoginData(user, redirectPath, store);
+    // check for matching passwords separately
+    if (user.value.password !== user.value.password_repeat) {
+      ToasterService.createToasterPopUp("error", "Passwörter stimmen nicht überein.");
+      return;
     }
+
+    ToasterService.createToasterPopUp("error", "Sign up not implemented yet.");
+    console.log(authStore);
   }
 
   // sends a POST request to the backend to log in the user
   // if successful, saves the access token to the local storage and redirects to the provided redirectPath
-  static async _postLoginData(user, redirectPath, authStore) {
+  static async tryLoginUser(user, authStore) {
+    const validationRules = FormValidatorService.getValidationRules(FormTypes.LOGIN);
+    const validationError = FormValidatorService.validateForm(user.value, validationRules);
+
+    if (validationError) {
+      ToasterService.createToasterPopUp("error", validationError);
+      return;
+    }
+
     const data = new URLSearchParams();
     data.append("grant_type", "password");
-    data.append("username", user.value.username); // beachte die URL-kodierte Form
+    data.append("username", user.value.email); // beachte die URL-kodierte Form
     data.append("password", user.value.password);
     data.append("scope", "");
     data.append("client_id", "string");
@@ -100,22 +73,18 @@ export default class AuthService {
       })
       .then((response) => {
         authStore.setAccessToken(response.data.access_token);
-        authStore.setRole(DevVariables.INITIAL_ROLE);
+        authStore.setRole(import.meta.env.VITE_INITIAL_ROLE);
+
+        // set the redirect path to the first item in the navItems array
+        const redirectPath = authStore.navItems.items[0].path;
         router.push(redirectPath);
+
         ToasterService.createToasterPopUp("success", "Login erfolgreich!");
       })
       .catch((error) => {
         console.log(error);
-        ToasterService.createToasterPopUp(
-          "error",
-          "Falscher Username oder Passwort.",
-        );
+        ToasterService.createToasterPopUp("error", "Falsche Email oder Passwort.");
       });
-  }
-
-  static _postSignupData() {
-    console.log("not implemented yet");
-    ToasterService.createToasterPopUp("error", "Sign up not implemented yet.");
   }
 
   // logs out the user by removing the access token and role from the local storage
@@ -133,10 +102,7 @@ export default class AuthService {
       .post("/api/v1/login/test-token", data, AuthService.getConfig(store))
       .then((response) => {
         console.log(response);
-        ToasterService.createToasterPopUp(
-          "success",
-          `Token valid. Role: ${store.role}`,
-        );
+        ToasterService.createToasterPopUp("success", `Token valid. Role: ${store.role}`);
       })
       .catch((error) => {
         console.log(error);
@@ -145,11 +111,12 @@ export default class AuthService {
   }
 
   static getConfig(authStore) {
-    return {
+    const config = {
       headers: {
         Accept: "application/json",
-        Authorization: `bearer ${authStore.accessToken}`,
+        Authorization: `Bearer ${authStore.accessToken}`,
       },
     };
+    return config;
   }
 }

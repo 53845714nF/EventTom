@@ -48,20 +48,13 @@ export default class EventManagerService {
       ];
     } else {
       await axios
-        .post(
-          `/api/v1/events/event-manager/${eventManagerId}`,
-          {},
-          AuthService.getConfig(authStore.accessToken),
-        )
+        .post(`/api/v1/events/event-manager/${eventManagerId}`, {}, AuthService.getConfig(authStore.accessToken))
         .then((response) => {
           return response.data;
         })
         .catch((error) => {
           console.log(error);
-          ToasterService.createToasterPopUp(
-            "error",
-            "Something went wrong while fetching the events.",
-          );
+          ToasterService.createToasterPopUp("error", "Something went wrong while fetching the events.");
         });
     }
   }
@@ -73,15 +66,9 @@ export default class EventManagerService {
   }
 
   // returns how many tickets are sold in relation to the threshold as a percentage
-  static getPercentageOfTicketsSoldComparedToExpected(
-    noTickets,
-    noTicketsSold,
-    threshold,
-  ) {
+  static getPercentageOfTicketsSoldComparedToExpected(noTickets, noTicketsSold, threshold) {
     const expectedNoTicketsSold = noTickets * threshold;
-    return Math.round(
-      ((noTicketsSold - expectedNoTicketsSold) / expectedNoTicketsSold) * 100,
-    );
+    return Math.round(((noTicketsSold - expectedNoTicketsSold) / expectedNoTicketsSold) * 100);
   }
 
   static getHighlightClass(percentage) {
