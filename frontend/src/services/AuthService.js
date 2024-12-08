@@ -83,7 +83,7 @@ export default class AuthService {
       })
       .catch((error) => {
         console.log(error);
-        ToasterService.createToasterPopUp("error", "Falscher Username oder Passwort.");
+        ToasterService.createToasterPopUp("error", "Falsche Email oder Passwort.");
       });
   }
 
