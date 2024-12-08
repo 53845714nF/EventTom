@@ -71,7 +71,7 @@ describe("AuthService handling user data", () => {
 
     await AuthService.tryLoginUser(testUser, testStore);
 
-    expect(spyOnCreateToasterPopUp).toBeCalledWith("error", "Falscher Username oder Passwort.");
+    expect(spyOnCreateToasterPopUp).toBeCalledWith("error", "Falsche Email oder Passwort.");
     expect(spyOnCreateToasterPopUp).toBeCalledTimes(1);
   });
 
