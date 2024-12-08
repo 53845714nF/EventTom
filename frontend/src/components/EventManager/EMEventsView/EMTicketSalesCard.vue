@@ -13,10 +13,7 @@ const showPercentage = ref(true);
 const switchView = () => (showPercentage.value = !showPercentage.value);
 
 const percentageSold = computed(() => {
-  return EventManagerService.getPercentageOfTicketsSold(
-    props.event.tickets,
-    props.event.tickets_sold,
-  );
+  return EventManagerService.getPercentageOfTicketsSold(props.event.tickets, props.event.tickets_sold);
 });
 
 const percentageComparedToExpected = computed(() =>
@@ -27,21 +24,15 @@ const percentageComparedToExpected = computed(() =>
   ),
 );
 
-const highLightClass = computed(() =>
-  EventManagerService.getHighlightClass(percentageComparedToExpected.value),
-);
+const highLightClass = computed(() => EventManagerService.getHighlightClass(percentageComparedToExpected.value));
 
-const comparisonText = computed(() =>
-  EventManagerService.getComparisonText(percentageComparedToExpected.value),
-);
+const comparisonText = computed(() => EventManagerService.getComparisonText(percentageComparedToExpected.value));
 </script>
 
 <template>
   <div class="sales-card-body">
     <div v-if="showPercentage" class="sales-card-text-container">
-      <p class="white p-large small-margin">
-        {{ props.event.tickets_sold }} Tickets verkauft
-      </p>
+      <p class="white p-large small-margin">{{ props.event.tickets_sold }} Tickets verkauft</p>
       <p class="white small-margin">
         <span :class="[highLightClass.text, 'p-bold']"
           >{{ Math.abs(percentageComparedToExpected) }}% {{ comparisonText }}
@@ -51,14 +42,9 @@ const comparisonText = computed(() =>
     </div>
 
     <div v-else class="sales-card-text-container">
-      <p class="white p-large small-margin">
-        {{ props.event.tickets_sold }} / {{ props.event.tickets }} Tickets
-      </p>
+      <p class="white p-large small-margin">{{ props.event.tickets_sold }} / {{ props.event.tickets }} Tickets</p>
       <div class="progress-bar small-margin">
-        <div
-          :class="['progress-bar-fill', highLightClass.bar]"
-          :style="{ width: percentageSold + '%' }"
-        ></div>
+        <div :class="['progress-bar-fill', highLightClass.bar]" :style="{ width: percentageSold + '%' }"></div>
       </div>
     </div>
 

@@ -6,7 +6,6 @@ import FormValidatorService from "./FormValidatorService";
 import FormTypes from "@/constants/FormTypes";
 
 export default class AuthService {
-
   // provides an empty user object to bind to the AuthForm
   static provideEmptySignUpUser() {
     return {
@@ -16,7 +15,7 @@ export default class AuthService {
       password_repeat: "",
     };
   }
-  
+
   static provideEmptyLoginUser() {
     return {
       email: "",
@@ -27,7 +26,6 @@ export default class AuthService {
   // sends a POST request to the backend with the user data
   // Either logs in user (signUp = false) or signs up user (signUp = true)
   static trySignUpUser(user, authStore) {
-
     const validationRules = FormValidatorService.getValidationRules(FormTypes.SIGNUP);
     const validationError = FormValidatorService.validateForm(user.value, validationRules);
 
@@ -49,7 +47,6 @@ export default class AuthService {
   // sends a POST request to the backend to log in the user
   // if successful, saves the access token to the local storage and redirects to the provided redirectPath
   static async tryLoginUser(user, authStore) {
-
     const validationRules = FormValidatorService.getValidationRules(FormTypes.LOGIN);
     const validationError = FormValidatorService.validateForm(user.value, validationRules);
 
@@ -86,10 +83,7 @@ export default class AuthService {
       })
       .catch((error) => {
         console.log(error);
-        ToasterService.createToasterPopUp(
-          "error",
-          "Falscher Username oder Passwort.",
-        );
+        ToasterService.createToasterPopUp("error", "Falscher Username oder Passwort.");
       });
   }
 
@@ -108,10 +102,7 @@ export default class AuthService {
       .post("/api/v1/login/test-token", data, AuthService.getConfig(store))
       .then((response) => {
         console.log(response);
-        ToasterService.createToasterPopUp(
-          "success",
-          `Token valid. Role: ${store.role}`,
-        );
+        ToasterService.createToasterPopUp("success", `Token valid. Role: ${store.role}`);
       })
       .catch((error) => {
         console.log(error);

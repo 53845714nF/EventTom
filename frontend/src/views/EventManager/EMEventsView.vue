@@ -10,10 +10,7 @@ const eventManagerId = 1;
 const events = ref([]);
 
 onBeforeMount(async () => {
-  await EventManagerService.getEventsForEventManager(
-    eventManagerId,
-    authStore,
-  ).then((data) => {
+  await EventManagerService.getEventsForEventManager(eventManagerId, authStore).then((data) => {
     events.value = data;
   });
 });
@@ -22,10 +19,6 @@ onBeforeMount(async () => {
 <template>
   <PageTitleContainer title="Anstehende Events" />
   <div class="content-container">
-    <EMEventCard
-      v-for="event in events"
-      :key="event.title"
-      :event="event"
-    ></EMEventCard>
+    <EMEventCard v-for="event in events" :key="event.title" :event="event"></EMEventCard>
   </div>
 </template>

@@ -50,8 +50,6 @@ const updateValue = (event) => {
 </template>
 
 <style scoped>
-
-
 input,
 textarea,
 select {

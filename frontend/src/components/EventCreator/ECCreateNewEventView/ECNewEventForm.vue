@@ -17,17 +17,12 @@ onBeforeMount(async () => {
   });
 });
 
-const eventManagerEmailOptions = computed(() =>
-    eventManagers.value.map((eventManager) => eventManager.email),
-);
+const eventManagerEmailOptions = computed(() => eventManagers.value.map((eventManager) => eventManager.email));
 
 watch(
   () => event.value.event_manager_email,
   (newEmail) => {
-    event.value.event_manager_id = EventCreatorService.getEventManagerIdByEmail(
-      newEmail,
-      eventManagers.value,
-    );
+    event.value.event_manager_id = EventCreatorService.getEventManagerIdByEmail(newEmail, eventManagers.value);
   },
 );
 
@@ -37,30 +32,10 @@ const tryPostEvent = () => EventCreatorService.tryPostNewEvent(event, authStore)
 <template>
   <div class="form-background">
     <div class="form-container">
-      <FormInput
-        v-model="event.title"
-        title="Name des Events"
-        placeholder="Name des Events"
-        type="text"
-      />
-      <FormInput
-        v-model="event.description"
-        title="Beschreibung"
-        placeholder="Beschreibung"
-        type="textarea"
-      />
-      <FormInput
-        v-model="event.base_price"
-        title="Preis"
-        placeholder="Preis"
-        type="number"
-      />
-      <FormInput
-        v-model="event.threshold"
-        title="Threshold"
-        placeholder="Threshold"
-        type="number"
-      />
+      <FormInput v-model="event.title" title="Name des Events" placeholder="Name des Events" type="text" />
+      <FormInput v-model="event.description" title="Beschreibung" placeholder="Beschreibung" type="textarea" />
+      <FormInput v-model="event.base_price" title="Preis" placeholder="Preis" type="number" />
+      <FormInput v-model="event.threshold" title="Threshold" placeholder="Threshold" type="number" />
       <FormInput
         v-model="event.event_manager_email"
         title="Event Manager"
@@ -70,11 +45,7 @@ const tryPostEvent = () => EventCreatorService.tryPostNewEvent(event, authStore)
       />
     </div>
     <div class="button-container">
-      <PrimaryButton
-        :onClick="tryPostEvent"
-        text="Event erstellen"
-        :type="PrimaryButtonTypes.BLACK"
-      />
+      <PrimaryButton :onClick="tryPostEvent" text="Event erstellen" :type="PrimaryButtonTypes.BLACK" />
     </div>
   </div>
 </template>

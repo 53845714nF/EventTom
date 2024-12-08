@@ -9,27 +9,9 @@ describe("EventManagerService", () => {
   });
 
   test("getPercentageOfTicketsSoldComparedToExpected() returns correct result", async () => {
-    expect(
-      EventManagerService.getPercentageOfTicketsSoldComparedToExpected(
-        100,
-        80,
-        0.8,
-      ),
-    ).toBe(0);
-    expect(
-      EventManagerService.getPercentageOfTicketsSoldComparedToExpected(
-        100,
-        88,
-        0.8,
-      ),
-    ).toBe(10);
-    expect(
-      EventManagerService.getPercentageOfTicketsSoldComparedToExpected(
-        100,
-        72,
-        0.8,
-      ),
-    ).toBe(-10);
+    expect(EventManagerService.getPercentageOfTicketsSoldComparedToExpected(100, 80, 0.8)).toBe(0);
+    expect(EventManagerService.getPercentageOfTicketsSoldComparedToExpected(100, 88, 0.8)).toBe(10);
+    expect(EventManagerService.getPercentageOfTicketsSoldComparedToExpected(100, 72, 0.8)).toBe(-10);
   });
 
   test("getHighlightClass() returns correct class given a percentage", async () => {

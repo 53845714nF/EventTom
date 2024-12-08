@@ -15,9 +15,7 @@ describe("FormInput", () => {
     });
 
     expect(wrapper.find("p").text()).toContain("Test Form Input");
-    expect(wrapper.find("input").attributes().placeholder).toBe(
-      "Test Placeholder",
-    );
+    expect(wrapper.find("input").attributes().placeholder).toBe("Test Placeholder");
     expect(wrapper.find("input").attributes().type).toBe("text");
     expect(wrapper.find("input").attributes().value).toBe("Test Model Value");
   });

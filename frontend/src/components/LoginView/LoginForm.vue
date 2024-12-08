@@ -5,10 +5,7 @@ import PrimaryButton from "../Basic/PrimaryButton.vue";
 import SecondaryButton from "../Basic/SecondaryButton.vue";
 import AuthService from "@/services/AuthService";
 import { useAuthStore } from "@/stores/AuthStore";
-import {
-  PrimaryButtonTypes,
-  SecondaryButtonTypes,
-} from "@/constants/ButtonTypes";
+import { PrimaryButtonTypes, SecondaryButtonTypes } from "@/constants/ButtonTypes";
 
 const user = ref(AuthService.provideEmptyLoginUser());
 const authStore = useAuthStore();
@@ -20,30 +17,12 @@ const tryLoginUser = () => AuthService.tryLoginUser(user, authStore);
   <div class="form-background">
     <h3 class="heading-margin">Login</h3>
     <div class="form-container">
-      <FormInput
-        v-model="user.email"
-        title="Name"
-        placeholder="Email"
-        type="text"
-      />
-      <FormInput
-        v-model="user.password"
-        title="Passwort"
-        placeholder="Passwort"
-        type="password"
-      />
+      <FormInput v-model="user.email" title="Name" placeholder="Email" type="text" />
+      <FormInput v-model="user.password" title="Passwort" placeholder="Passwort" type="password" />
     </div>
     <div class="button-container">
-      <PrimaryButton
-        :onClick="tryLoginUser"
-        text="Login"
-        :type="PrimaryButtonTypes.GREEN"
-      />
-      <SecondaryButton
-        to="/signup"
-        text="Ich habe noch kein Konto"
-        :type="SecondaryButtonTypes.BLACK"
-      />
+      <PrimaryButton :onClick="tryLoginUser" text="Login" :type="PrimaryButtonTypes.GREEN" />
+      <SecondaryButton to="/signup" text="Ich habe noch kein Konto" :type="SecondaryButtonTypes.BLACK" />
     </div>
   </div>
 </template>

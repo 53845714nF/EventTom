@@ -16,17 +16,12 @@ onBeforeMount(async () => {
   });
 });
 
-const ownerEmailOptions = computed(() =>
-  users.value.map((owner) => owner.email),
-);
+const ownerEmailOptions = computed(() => users.value.map((owner) => owner.email));
 
 watch(
   () => voucher.value.owner_email,
   (newEmail) => {
-    voucher.value.owner_id = AdminService.getUserIdByEmail(
-      newEmail,
-      users.value,
-    );
+    voucher.value.owner_id = AdminService.getUserIdByEmail(newEmail, users.value);
   },
 );
 
@@ -36,18 +31,8 @@ const tryPostVoucher = () => AdminService.tryPostNewVoucher(voucher, authStore);
 <template>
   <div class="form-background">
     <div class="form-container">
-      <FormInput
-        v-model="voucher.amount"
-        title="Betrag (€)"
-        placeholder="Betrag"
-        type="number"
-      />
-      <FormInput
-        v-model="voucher.code"
-        title="Gutscheincode"
-        placeholder="Gutscheincode"
-        type="text"
-      />
+      <FormInput v-model="voucher.amount" title="Betrag (€)" placeholder="Betrag" type="number" />
+      <FormInput v-model="voucher.code" title="Gutscheincode" placeholder="Gutscheincode" type="text" />
       <FormInput
         v-model="voucher.owner_email"
         title="Kunden Email"
@@ -57,11 +42,7 @@ const tryPostVoucher = () => AdminService.tryPostNewVoucher(voucher, authStore);
       />
     </div>
     <div class="button-container">
-      <PrimaryButton
-        :onClick="tryPostVoucher"
-        text="Gutschein erstellen"
-        :type="PrimaryButtonTypes.BLACK"
-      />
+      <PrimaryButton :onClick="tryPostVoucher" text="Gutschein erstellen" :type="PrimaryButtonTypes.BLACK" />
     </div>
   </div>
 </template>

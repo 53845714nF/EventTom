@@ -1,12 +1,11 @@
 import { test, expect, vi, describe } from "vitest";
 import { mount } from "@vue/test-utils";
 
-import AuthForm from "@/components/AuthView/LoginForm.vue";
+import SignUpForm from "@/components/SignUpView/SignUpForm.vue";
 import AuthService from "@/services/AuthService";
-import { AuthFormText } from "@/constants/AuthFormText";
 import { createCorrectUserSignUp } from "../../../utils/testUtils";
 
-describe("AuthForm", () => {
+describe("SingUpForm", () => {
   // MOCKING
   vi.mock("@/stores/AuthStore", () => {
     return {
@@ -23,13 +22,6 @@ describe("AuthForm", () => {
         props: ["to"],
         template: "<a :href='to'> <slot /> </a>",
       },
-      useRoute: vi.fn(() => {
-        return {
-          params: {
-            type: "signup",
-          },
-        };
-      }),
     };
   });
 
@@ -39,40 +31,26 @@ describe("AuthForm", () => {
       ...actual, // Export all original exports
       default: {
         // override other exports
-        provideEmptyUser: vi.fn(() => ({
-          username: "",
+        provideEmptySignUpUser: vi.fn(() => ({
+          full_name: "",
           email: "",
           password: "",
-          passwordRepeat: "",
+          password_repeat: "",
         })),
-        postUser: vi.fn(),
-        provideDynamicAuthText: vi.fn(() => AuthFormText.SIGN_UP),
+        trySignUpUser: vi.fn(),
       },
     };
   });
 
   // TESTS
-  test("Sets computed properties correctly", async () => {
-    const wrapper = mount(AuthForm);
-
-    expect(wrapper.vm.signUp).toBeTruthy();
-    expect(wrapper.vm.secondaryButtonRedirect).toBe("signin");
-    expect(wrapper.vm.dynamicAuthText).toBe(AuthFormText.SIGN_UP);
-  });
 
   test("Initializes Form correctly for empty user", async () => {
-    const wrapper = mount(AuthForm);
+    const wrapper = mount(SignUpForm);
 
-    const usernameInput = wrapper
-      .findAllComponents({ name: "FormInput" })
-      .at(0);
+    const usernameInput = wrapper.findAllComponents({ name: "FormInput" }).at(0);
     const emailInput = wrapper.findAllComponents({ name: "FormInput" }).at(1);
-    const passwordInput = wrapper
-      .findAllComponents({ name: "FormInput" })
-      .at(2);
-    const passwordRepeatInput = wrapper
-      .findAllComponents({ name: "FormInput" })
-      .at(3);
+    const passwordInput = wrapper.findAllComponents({ name: "FormInput" }).at(2);
+    const passwordRepeatInput = wrapper.findAllComponents({ name: "FormInput" }).at(3);
 
     expect(usernameInput.props().modelValue).toBe("");
     expect(emailInput.props().modelValue).toBe("");
@@ -81,34 +59,28 @@ describe("AuthForm", () => {
   });
 
   test("Working binding to user object", async () => {
-    const wrapper = mount(AuthForm);
+    const wrapper = mount(SignUpForm);
 
     const testUser = createCorrectUserSignUp();
 
-    const usernameInput = wrapper
-      .findAllComponents({ name: "FormInput" })
-      .at(0);
-    usernameInput.setValue(testUser.value.username);
+    const usernameInput = wrapper.findAllComponents({ name: "FormInput" }).at(0);
+    usernameInput.setValue(testUser.value.full_name);
 
     const emailInput = wrapper.findAllComponents({ name: "FormInput" }).at(1);
     emailInput.setValue(testUser.value.email);
 
-    const passwordInput = wrapper
-      .findAllComponents({ name: "FormInput" })
-      .at(2);
+    const passwordInput = wrapper.findAllComponents({ name: "FormInput" }).at(2);
     passwordInput.setValue(testUser.value.password);
 
-    const passwordRepeatInput = wrapper
-      .findAllComponents({ name: "FormInput" })
-      .at(3);
-    passwordRepeatInput.setValue(testUser.value.passwordRepeat);
+    const passwordRepeatInput = wrapper.findAllComponents({ name: "FormInput" }).at(3);
+    passwordRepeatInput.setValue(testUser.value.password_repeat);
 
     expect(wrapper.vm.user).toStrictEqual(testUser.value);
   });
 
   test("Post User after clicking PrimaryButton", async () => {
-    const wrapper = mount(AuthForm);
-    const spyOnPostUser = vi.spyOn(AuthService, "postUser");
+    const wrapper = mount(SignUpForm);
+    const spyOnPostUser = vi.spyOn(AuthService, "trySignUpUser");
 
     expect(spyOnPostUser).toHaveBeenCalledTimes(0);
 
