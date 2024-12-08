@@ -17,12 +17,12 @@ import {
       </p>
       <div class="button-container">
         <PrimaryButton
-          to="/auth/signup"
+          to="/signup"
           text="Registrieren"
           :type="PrimaryButtonTypes.GREEN"
         />
         <SecondaryButton
-          to="/auth/signin"
+          to="/login"
           text="Login"
           :type="SecondaryButtonTypes.WHITE"
         />

@@ -5,7 +5,7 @@ export const NavItems = {
       { title: "About", path: "/not_implemented" },
       { title: "Dashboard", path: "/not_implemented" },
     ],
-    button: { title: "Login", path: "/auth/signin" },
+    button: { title: "Login", path: "/login" },
   },
 
   CUSTOMER: {

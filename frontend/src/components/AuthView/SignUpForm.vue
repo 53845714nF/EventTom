@@ -1,6 +1,5 @@
 <script setup>
-import { ref, computed, watch } from "vue";
-import { useRoute } from "vue-router";
+import { ref } from "vue";
 import FormInput from "../Basic/FormInput.vue";
 import PrimaryButton from "../Basic/PrimaryButton.vue";
 import SecondaryButton from "../Basic/SecondaryButton.vue";
@@ -11,49 +10,23 @@ import {
   SecondaryButtonTypes,
 } from "@/constants/ButtonTypes";
 
-// use the route to get the type parameter
-const route = useRoute();
-const type = ref(route.params.type);
-const user = AuthService.provideEmptyUser();
+const user = ref(AuthService.provideEmptySignUpUser());
 const authStore = useAuthStore();
 
-// watch for changes in route.params.type
-watch(
-  () => route.params.type,
-  (newType) => {
-    type.value = newType;
-  },
-);
-
-// computed value für `signUp` und `secondaryButtonRedirect`
-// computed is used to derive a value from other reactive values
-// in this case, `type` is a reactive value and `signUp` and `secondaryButtonRedirect` are derived from it
-// `signUp` and `secondaryButtonRedirect` are reactive values as well
-const signUp = computed(() => type.value === "signup");
-const secondaryButtonRedirect = computed(() =>
-  signUp.value ? "signin" : "signup",
-);
-
-// get text for title, PrimaryButton, SecondaryButton based on whether the user is logged in or not
-const dynamicAuthText = computed(() =>
-  AuthService.provideDynamicAuthText(signUp.value),
-);
-
-const postUser = () => AuthService.postUser(user, signUp.value, authStore);
+const trySignUpUser = () => AuthService.trySignUpUser(user, authStore);
 </script>
 
 <template>
   <div class="form-background">
-    <h3 class="heading-margin">{{ dynamicAuthText.title }}</h3>
+    <h3 class="heading-margin">Willkommen bei EvenTom!</h3>
     <div class="form-container">
       <FormInput
-        v-model="user.username"
+        v-model="user.full_name"
         title="Name"
         placeholder="Nutzername"
         type="text"
       />
       <FormInput
-        v-if="signUp"
         v-model="user.email"
         title="E-Mail"
         placeholder="E-Mail"
@@ -66,8 +39,7 @@ const postUser = () => AuthService.postUser(user, signUp.value, authStore);
         type="password"
       />
       <FormInput
-        v-if="signUp"
-        v-model="user.passwordRepeat"
+        v-model="user.password_repeat"
         title="Passwort wiederholen"
         placeholder="Passwort"
         type="password"
@@ -75,13 +47,13 @@ const postUser = () => AuthService.postUser(user, signUp.value, authStore);
     </div>
     <div class="button-container">
       <PrimaryButton
-        :onClick="postUser"
-        :text="dynamicAuthText.primaryButtonText"
+        :onClick="trySignUpUser"
+        text="Registrieren"
         :type="PrimaryButtonTypes.GREEN"
       />
       <SecondaryButton
-        :to="`/auth/${secondaryButtonRedirect}`"
-        :text="dynamicAuthText.secondaryButtonText"
+        to="/login"
+        text="Ich habe schon ein Konto"
         :type="SecondaryButtonTypes.BLACK"
       />
     </div>

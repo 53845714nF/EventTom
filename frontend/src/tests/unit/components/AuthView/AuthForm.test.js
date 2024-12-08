@@ -1,7 +1,7 @@
 import { test, expect, vi, describe } from "vitest";
 import { mount } from "@vue/test-utils";
 
-import AuthForm from "@/components/AuthView/AuthForm.vue";
+import AuthForm from "@/components/AuthView/LoginForm.vue";
 import AuthService from "@/services/AuthService";
 import { AuthFormText } from "@/constants/AuthFormText";
 import { createCorrectUserSignUp } from "../../../utils/testUtils";

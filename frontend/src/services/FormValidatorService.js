@@ -50,28 +50,34 @@ export default class FormValidatorService {
     static getValidationRules(formType) {
         switch (formType) {
 
+            case FormTypes.SIGNUP: 
+                return {
+                    full_name: [
+                        FormValidatorService.rules.isRequired("Name darf nicht leer sein."),
+                    ],
+                    email: [
+                        FormValidatorService.rules.isRequired("Email darf nicht leer sein"),
+                        FormValidatorService.rules.isValidEmail("Email ist nicht gültig."),
+                    ],
+                    password: [
+                        FormValidatorService.rules.isRequired("Passwort darf nicht leer sein."),
+                        FormValidatorService.rules.minLength(8, "Passwort muss eine Mindestlänge von 8 Zeichen haben."),
+                    ],
+                    password: [
+                        FormValidatorService.rules.isRequired("Passwort darf nicht leer sein."),
+                        FormValidatorService.rules.minLength(8, "Passwort muss eine Mindestlänge von 8 Zeichen haben."),
+                    ],
+                }
+            
             case FormTypes.LOGIN: 
                 return {
-                    title: [
-                        FormValidatorService.rules.isRequired("Name darf nicht leer sein"),
+                    email: [
+                        FormValidatorService.rules.isRequired("Email darf nicht leer sein"),
+                        FormValidatorService.rules.isValidEmail("Email ist nicht gültig"),
                     ],
-                    description: [
-                        FormValidatorService.rules.isRequired("Beschreibung darf nicht leer sein."),
+                    password: [
+                        FormValidatorService.rules.isRequired("Passwort darf nicht leer sein."),
                     ],
-                    base_price: [
-                        FormValidatorService.rules.isRequired("Preis darf nicht leer sein."),
-                        FormValidatorService.rules.isNumeric("Preis muss eine Zahl sein."),
-                        FormValidatorService.rules.largerThan(0, "Preis muss größer als 0 sein."),
-                    ],
-                    threshold: [
-                        FormValidatorService.rules.isRequired("Threshold darf nicht leer sein."),
-                        FormValidatorService.rules.isNumeric("Threshold muss eine Zahl sein."),
-                        FormValidatorService.rules.largerOrEqualThan(0, "Threshold muss größer gleich 0 sein."),
-                        FormValidatorService.rules.smallerOrEqualThan(1, "Threshold muss kleiner gleich 1 sein."),
-                    ],
-                    event_manager_email: [
-                        FormValidatorService.rules.isRequired("Event Manager darf nicht leer sein."),
-                    ]
                 }
             
             case FormTypes.NEW_EVENT: 

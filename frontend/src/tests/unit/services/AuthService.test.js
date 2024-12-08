@@ -24,7 +24,7 @@ describe("AuthService validating User Input", () => {
 
   test("Expect empty user object to be returned", async () => {
     const expectedUser = createEmptyUser();
-    const user = AuthService.provideEmptyUser();
+    const user = AuthService.provideEmptyLoginUser();
     expect(user).toEqual(expectedUser);
   });
 
@@ -106,7 +106,7 @@ describe("AuthService handling user data", () => {
       "createToasterPopUp",
     );
 
-    await AuthService._postLoginData(testUser, testStore);
+    await AuthService.tryLoginUser(testUser, testStore);
 
     expect(spyOnCreateToasterPopUp).toBeCalledWith(
       "success",
@@ -129,7 +129,7 @@ describe("AuthService handling user data", () => {
       "createToasterPopUp",
     );
 
-    await AuthService._postLoginData(testUser, testStore);
+    await AuthService.tryLoginUser(testUser, testStore);
 
     expect(spyOnCreateToasterPopUp).toBeCalledWith(
       "error",
