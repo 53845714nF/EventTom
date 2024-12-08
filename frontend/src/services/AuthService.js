@@ -154,8 +154,6 @@ export default class AuthService {
         Authorization: `Bearer ${authStore.accessToken}`,
       },
     };
-
-    console.log(config);
     return config;
   }
 }

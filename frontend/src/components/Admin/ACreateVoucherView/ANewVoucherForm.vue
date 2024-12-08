@@ -30,7 +30,7 @@ watch(
   },
 );
 
-const postVoucher = () => AdminService.postNewVoucher(voucher, authStore);
+const tryPostVoucher = () => AdminService.tryPostNewVoucher(voucher, authStore);
 </script>
 
 <template>
@@ -58,7 +58,7 @@ const postVoucher = () => AdminService.postNewVoucher(voucher, authStore);
     </div>
     <div class="button-container">
       <PrimaryButton
-        :onClick="postVoucher"
+        :onClick="tryPostVoucher"
         text="Gutschein erstellen"
         :type="PrimaryButtonTypes.BLACK"
       />

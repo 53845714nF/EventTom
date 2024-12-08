@@ -31,7 +31,7 @@ watch(
   },
 );
 
-const postEvent = () => EventCreatorService.postNewEvent(event, authStore);
+const tryPostEvent = () => EventCreatorService.tryPostNewEvent(event, authStore);
 </script>
 
 <template>
@@ -71,7 +71,7 @@ const postEvent = () => EventCreatorService.postNewEvent(event, authStore);
     </div>
     <div class="button-container">
       <PrimaryButton
-        :onClick="postEvent"
+        :onClick="tryPostEvent"
         text="Event erstellen"
         :type="PrimaryButtonTypes.BLACK"
       />

@@ -1,4 +1,6 @@
 import ToasterService from "./ToasterService";
+import FormValidatorService from "./FormValidatorService";
+import FormTypes from "@/constants/FormTypes";
 
 export default class EventCreatorService {
 
@@ -38,7 +40,15 @@ export default class EventCreatorService {
     ]
   }
 
-  static async postNewEvent(event, authStore) {
+  static async tryPostNewEvent(event, authStore) {
+    const validationRules = FormValidatorService.getValidationRules(FormTypes.NEW_EVENT);
+    const validationError = FormValidatorService.validateForm(event.value, validationRules);
+
+    if (validationError) {
+      ToasterService.createToasterPopUp("error", validationError);
+      return;
+    }
+    
     console.log(event)
     ToasterService.createToasterPopUp("error", "postNewEvent() not implemented yet.");
   }

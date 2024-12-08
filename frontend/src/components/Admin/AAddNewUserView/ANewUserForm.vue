@@ -8,7 +8,7 @@ import { useAuthStore } from "@/stores/AuthStore";
 const authStore = useAuthStore();
 const user = AdminService.provideEmptyUser();
 const roleOptions = AdminService.provideRoleOptions();
-const postUser = () => AdminService.postNewUser(user, authStore);
+const tryPostUser = () => AdminService.tryPostNewUser(user, authStore);
 </script>
 
 <template>
@@ -42,7 +42,7 @@ const postUser = () => AdminService.postNewUser(user, authStore);
     </div>
     <div class="button-container">
       <PrimaryButton
-        :onClick="postUser"
+        :onClick="tryPostUser"
         text="User hinzufügen"
         :type="PrimaryButtonTypes.BLACK"
       />
