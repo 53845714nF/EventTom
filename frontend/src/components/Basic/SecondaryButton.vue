@@ -14,9 +14,7 @@ const props = defineProps({
   },
 });
 
-const textCssClass = computed(() =>
-  SecondaryButtonService.provideTextCssClass(props.type),
-);
+const textCssClass = computed(() => SecondaryButtonService.provideTextCssClass(props.type));
 </script>
 
 <template>

@@ -3,9 +3,7 @@ import { PrimaryButtonTypes } from "@/constants/ButtonTypes";
 import { describe, test, expect } from "vitest";
 describe("PrimaryButtonService", () => {
   test("Provides correct div CSS class for given button type", async () => {
-    const expectedClass = PrimaryButtonService.provideDivCssClass(
-      PrimaryButtonTypes.GREEN,
-    );
+    const expectedClass = PrimaryButtonService.provideDivCssClass(PrimaryButtonTypes.GREEN);
     expect(expectedClass).toBe("button-green");
   });
 
@@ -15,9 +13,7 @@ describe("PrimaryButtonService", () => {
   });
 
   test("Provides correct text CSS class for given button type", async () => {
-    const expectedClass = PrimaryButtonService.provideTextCssClass(
-      PrimaryButtonTypes.BLACK,
-    );
+    const expectedClass = PrimaryButtonService.provideTextCssClass(PrimaryButtonTypes.BLACK);
     expect(expectedClass).toBe("p-white");
   });
 

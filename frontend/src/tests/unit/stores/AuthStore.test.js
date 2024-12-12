@@ -17,10 +17,7 @@ describe("AuthStore", () => {
 
   test("Initial Role set correctly", () => {
     const getItemSpy = vi.spyOn(Storage.prototype, "getItem");
-    const store = setLocalStorageItemsAndCreateAuthStore(
-      Roles.CUSTOMER,
-      "testToken",
-    );
+    const store = setLocalStorageItemsAndCreateAuthStore(Roles.CUSTOMER, "testToken");
 
     expect(store.role).toBe(Roles.CUSTOMER);
     expect(getItemSpy).toHaveBeenCalledWith(LocalStorageKeys.USER_ROLE);
@@ -29,38 +26,26 @@ describe("AuthStore", () => {
   test("Initial AccessToken set correctly", () => {
     const tokenValue = "testToken";
     const getItemSpy = vi.spyOn(Storage.prototype, "getItem");
-    const store = setLocalStorageItemsAndCreateAuthStore(
-      Roles.CUSTOMER,
-      tokenValue,
-    );
+    const store = setLocalStorageItemsAndCreateAuthStore(Roles.CUSTOMER, tokenValue);
 
     expect(store.accessToken).toBe(tokenValue);
     expect(getItemSpy).toHaveBeenCalledWith(LocalStorageKeys.ACCESS_TOKEN);
   });
 
   test("NavItems computed correctly after initialization for User", () => {
-    const store = setLocalStorageItemsAndCreateAuthStore(
-      Roles.CUSTOMER,
-      "testToken",
-    );
+    const store = setLocalStorageItemsAndCreateAuthStore(Roles.CUSTOMER, "testToken");
 
     expect(store.navItems).toBe(NavItems.CUSTOMER);
   });
 
   test("NavItems computed correctly after initialization for Eventcreator", () => {
-    const store = setLocalStorageItemsAndCreateAuthStore(
-      Roles.EVENT_CREATOR,
-      "testToken",
-    );
+    const store = setLocalStorageItemsAndCreateAuthStore(Roles.EVENT_CREATOR, "testToken");
 
     expect(store.navItems).toBe(NavItems.EVENT_CREATOR);
   });
 
   test("NavItems computed correctly after initialization for Eventmanager", () => {
-    const store = setLocalStorageItemsAndCreateAuthStore(
-      Roles.EVENT_MANAGER,
-      "testToken",
-    );
+    const store = setLocalStorageItemsAndCreateAuthStore(Roles.EVENT_MANAGER, "testToken");
 
     expect(store.navItems).toBe(NavItems.EVENT_MANAGER);
   });
@@ -70,17 +55,11 @@ describe("AuthStore", () => {
     const newRole = Roles.CUSTOMER;
     const setItemSpy = vi.spyOn(Storage.prototype, "setItem");
 
-    const store = setLocalStorageItemsAndCreateAuthStore(
-      initialRole,
-      "testToken",
-    );
+    const store = setLocalStorageItemsAndCreateAuthStore(initialRole, "testToken");
     store.setRole(newRole);
 
     expect(store.role).toBe(newRole);
-    expect(setItemSpy).toHaveBeenCalledWith(
-      LocalStorageKeys.USER_ROLE,
-      newRole,
-    );
+    expect(setItemSpy).toHaveBeenCalledWith(LocalStorageKeys.USER_ROLE, newRole);
   });
 
   test("setAccessToken() sets accessToken correctly", () => {
@@ -94,10 +73,7 @@ describe("AuthStore", () => {
     store.setAccessToken(newToken);
 
     expect(store.accessToken).toBe(newToken);
-    expect(setItemSpy).toHaveBeenCalledWith(
-      LocalStorageKeys.ACCESS_TOKEN,
-      newToken,
-    );
+    expect(setItemSpy).toHaveBeenCalledWith(LocalStorageKeys.ACCESS_TOKEN, newToken);
   });
 
   test("removeAccessToken() removed AccessToken correctly", () => {
@@ -111,9 +87,6 @@ describe("AuthStore", () => {
     store.removeAccessToken();
 
     expect(store.accessToken).toBe(removedToken);
-    expect(setItemSpy).toHaveBeenCalledWith(
-      LocalStorageKeys.ACCESS_TOKEN,
-      removedToken,
-    );
+    expect(setItemSpy).toHaveBeenCalledWith(LocalStorageKeys.ACCESS_TOKEN, removedToken);
   });
 });
