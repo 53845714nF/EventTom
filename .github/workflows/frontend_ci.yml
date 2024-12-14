@@ -3,9 +3,12 @@ name: Frontend Build and Test
 on:
   push:
     branches: [ "main", "frontend-dev"]
+    paths:
+      - 'frontend/**'
   pull_request:
     branches: [ "main", "frontend-dev"]
-
+    paths:
+      - 'frontend/**'
 jobs:
   build_and_test:
     runs-on: ubuntu-latest

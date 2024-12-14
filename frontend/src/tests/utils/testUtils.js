@@ -6,47 +6,54 @@ import { LocalStorageKeys } from "@/constants/LocalStorageKeys";
 import { useAuthStore } from "@/stores/AuthStore";
 // Different Users for testing
 
-export function createCorrectUserSignUp() {
+export function createCorrectUserLogin() {
   return ref({
-    username: "testName",
     email: "test@mail.com",
     password: "testPassword",
-    passwordRepeat: "testPassword",
+  });
+}
+
+export function createCorrectUserSignUp() {
+  return ref({
+    full_name: "testName",
+    email: "test@mail.com",
+    password: "testPassword",
+    password_repeat: "testPassword",
   });
 }
 
 export function createUserWithPasswordsDontMatch() {
   return ref({
-    username: "testName",
+    full_name: "testName",
     email: "test@mail.com",
     password: "testPassword1",
-    passwordRepeat: "testPassword2",
+    password_repeat: "testPassword2",
   });
 }
 
 export function createUserWithPasswordTooShort() {
   return ref({
-    username: "testName",
+    full_name: "testName",
     email: "test@mail.com",
     password: "shortPw",
-    passwordRepeat: "shortPw",
+    password_repeat: "shortPw",
   });
 }
 
-export function createCorrectUserSignIn() {
-  return ref({
-    username: "testName",
-    password: "testPassword",
-  });
-}
-
-export function createEmptyUser() {
-  return ref({
-    username: "",
+export function createEmptySignUpUser() {
+  return {
+    full_name: "",
     email: "",
     password: "",
-    passwordRepeat: "",
-  });
+    password_repeat: "",
+  };
+}
+
+export function createEmptyLoginUser() {
+  return {
+    email: "",
+    password: "",
+  };
 }
 
 // Different AuthStores for testing
@@ -87,8 +94,21 @@ export function createAuthStoreLoggedInUser() {
   };
 }
 
+// LocalStorage functions for testing
+
 export function setLocalStorageItemsAndCreateAuthStore(role, token) {
   localStorage.setItem(LocalStorageKeys.USER_ROLE, role);
   localStorage.setItem(LocalStorageKeys.ACCESS_TOKEN, token);
   return useAuthStore();
+}
+
+// Test Event Objects
+
+export function getTestEvent() {
+  return {
+    title: "Test Event",
+    description: "Test Description",
+    tickets: 100,
+    tickets_sold: 80,
+  };
 }

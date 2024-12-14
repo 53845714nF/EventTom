@@ -3,9 +3,7 @@ import { SecondaryButtonTypes } from "@/constants/ButtonTypes";
 import { describe, test, expect } from "vitest";
 describe("SecondaryButtonService", () => {
   test("Provides correct text CSS class for given button type", async () => {
-    const expectedClass = SecondaryButtonService.provideTextCssClass(
-      SecondaryButtonTypes.WHITE,
-    );
+    const expectedClass = SecondaryButtonService.provideTextCssClass(SecondaryButtonTypes.WHITE);
     expect(expectedClass).toBe("p-white");
   });
 

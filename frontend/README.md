@@ -20,8 +20,8 @@
 ### Basics
 
 - Create your Views and Components according to the [Design Guideline](/frontend/src/assets/Design_Guideline.pdf)
-- Use the [Color Variables](/frontend/src/assets/base.css)
-- Basic styling classes which can be reused all accross the page are implemented inside the [main.css](/frontend/src/assets/main.css)
+- Use the [Color Variables](/frontend/src/assets/colors.css)
+- Basic styling classes which can be reused all accross the page are implemented inside the [main.css](/frontend/src/assets/main.css). They can be used for Text, Margins, Containers, highlighting and much more.
 
 ### Icons
 
@@ -99,7 +99,14 @@ const myBooks = [
 </template>
 ```
 
-New Views should be placed inside the [Views](/frontend/src/views/) directory and should append the **View**-suffix to its name e.g. "LandingPage**View**" or "CutomerManagement**View**".
+New Views should be placed inside the [Views](/frontend/src/views/) directory and should append the **View**-suffix to its name e.g. "LandingPage**View**" or "CutomerManagement**View**". If a View is only accessible for a user with a specific role (e.g. Customer, Event Manager, Event Creator, Admin) it should be put in a separate directory named after the role of the user and should include an equivalent prefix in its filename:
+
+- C -> Customer
+- EM -> Event Manager
+- EC -> Event Creator
+- A -> Admin
+
+**Example:** The View **EMEventsView** is only accessibe for Event Managers (EM) and is therefore placed inside a separate directory called **EventManager** and also includes the **EM** prefix in its filename (**EM**EventsView.vue).
 
 ### Components
 
@@ -108,7 +115,15 @@ Components are **small parts** of the UI (e.g. Buttons, Containers, etc.) which 
 - contain no to minimal logic
 - be placed inside the components folder: /frontend/src/components
 
-New components are placed inside the [Components directory](/frontend/src/components/) and should be named after what they do and ideally have a fitting **suffix** such as "Event**Form**" or "Submit**Button**". If a component belongs to a certain View, make sure to put it in a directory named after the view. If a component which is made up of more than 2 smaller components, place the relevant files inside a separate directory named after the parent component.
+New components are placed inside the [Components directory](/frontend/src/components/) and should be named after what they do and ideally have a fitting **suffix** such as "Event**Form**" or "Submit**Button**". If a component belongs to a certain View, make sure to put it in a directory named after the view. If Views are only accessible for a user with a specific role (e.g. Customer, EventManager, EventCreator, Admin), make sure to put the components for those Views inside a directory named after the Role of the user itself. Also make sure to add one of the following prefix to the filename of the component:
+
+- C -> Customer
+- EM -> Event Manager
+- EC -> Event Creator
+- A -> Admin
+  If a component which is made up of more than 2 smaller components, place the relevant files inside a separate directory named after the parent component.
+
+**Example:** The View **EMEventsView** View contains the **EMEventCard** component. Since EMEventCard is part of the EMEventView, it should be placed inside a directory named _EMEventsView_. Since the EMEventsView View is only acessible for EventManagers, this directory itself should be put in a directory called **EventManager**. And since the EMEventCard ist part of a View for a user with a specific role, its filename should contain the equivalent prefix -> **EM**EventCard
 
 To Pass information from a View to a component or from a component to another, you can use props. An example of how to define props for a component and how to pass them to another component is given here below. Here, the component "BookList" gets an Array of books from its View "BookView" (View above).
 
@@ -249,10 +264,7 @@ export default class BookService {
       })
       .catch((error) => {
         console.log(error);
-        ToasterService.createToasterPopUp(
-          "error",
-          "Something went wrong while fetching your books.",
-        );
+        ToasterService.createToasterPopUp("error", "Something went wrong while fetching your books.");
       });
 
     return books;
@@ -268,10 +280,32 @@ At the moment, we only use the [AuthStore](/frontend/src/stores/AuthStore.js) to
 
 ```javascript
 <script setup>
-  import AuthService from "@/services/AuthService"; const authStore =
-  useAuthStore(); console.log(authStore.role) // access attributes directly
-  AuthService.logoutUser(authStore) // pass store to Service
+  import AuthService from "@/services/AuthService"; const authStore = useAuthStore(); console.log(authStore.role) //
+  access attributes directly AuthService.logoutUser(authStore) // pass store to Service
 </script>
+```
+
+### Environmant Variables
+
+Fronted environment Variables are defined inside the [.env file](/frontend/.env) and follow the following naming conventions:
+
+- contain the prefix "VITE" and are written in all caps and in snake-case, e.g. `VITE_VARIABLE`
+
+They have to be accessed in in different ways depending on where you need them:
+
+**At runtime** (after building process, in components, services, ...):
+
+```javascript
+const variable = import.meta.env.VITE_VARIABLE;
+```
+
+**During build process** (in .config files):
+
+```javascript
+import dotenv from "dotenv";
+dotenv.config();
+
+const variable = process.env.VITE_VARIABLE;
 ```
 
 ### Testing

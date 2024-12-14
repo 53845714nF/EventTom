@@ -5,7 +5,7 @@ export const NavItems = {
       { title: "About", path: "/not_implemented" },
       { title: "Dashboard", path: "/not_implemented" },
     ],
-    button: { title: "Login", path: "/auth/signin" },
+    button: { title: "Login", path: "/login" },
   },
 
   CUSTOMER: {
@@ -26,16 +26,17 @@ export const NavItems = {
 
   EVENT_CREATOR: {
     items: [
-      { title: "Meine Events", path: "/not_implemented" },
-      { title: "Neues Event", path: "/not_implemented" },
+      { title: "Meine Events", path: "/eventcreator/events" },
+      { title: "Neues Event", path: "/eventcreator/new_event" },
     ],
     button: { title: "Logout", path: "/" },
   },
 
   ADMIN: {
     items: [
-      { title: "Benutzerübersicht", path: "/not_implemented" },
-      { title: "Neuer Benutzer", path: "/not_implemented" },
+      { title: "Benutzer Liste", path: "/admin/users" },
+      { title: "Neuer Benutzer", path: "/admin/new_user" },
+      { title: "Neuer Gutschein", path: "/admin/create_voucher" },
     ],
     button: { title: "Logout", path: "/" },
   },

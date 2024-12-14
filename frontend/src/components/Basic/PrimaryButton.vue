@@ -18,12 +18,8 @@ const props = defineProps({
   },
 });
 
-const divCssClass = computed(() =>
-  PrimaryButtonService.provideDivCssClass(props.type),
-);
-const textCssClass = computed(() =>
-  PrimaryButtonService.provideTextCssClass(props.type),
-);
+const divCssClass = computed(() => PrimaryButtonService.provideDivCssClass(props.type));
+const textCssClass = computed(() => PrimaryButtonService.provideTextCssClass(props.type));
 
 const onClick = () => {
   if (props.onClick) {

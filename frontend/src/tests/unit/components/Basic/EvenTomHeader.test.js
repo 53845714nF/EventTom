@@ -35,9 +35,7 @@ describe("EvenTomHeader", () => {
     });
     expect(wrapper.find("nav").exists()).toBeTruthy();
     expect(wrapper.findComponent({ name: "RouterLink" }).exists()).toBeTruthy();
-    expect(
-      wrapper.findComponent({ name: "PrimaryButton" }).exists(),
-    ).toBeTruthy();
+    expect(wrapper.findComponent({ name: "PrimaryButton" }).exists()).toBeTruthy();
   });
 
   test("Renders correct navItems", async () => {
@@ -48,9 +46,7 @@ describe("EvenTomHeader", () => {
     expect(wrapper.text()).toContain("Gutscheine");
 
     // correct number of RouterLinks
-    const navRouterLinks = wrapper
-      .find("nav")
-      .findAllComponents({ name: "RouterLink" });
+    const navRouterLinks = wrapper.find("nav").findAllComponents({ name: "RouterLink" });
     expect(navRouterLinks).toHaveLength(NavItems.CUSTOMER.items.length);
   });
 });
