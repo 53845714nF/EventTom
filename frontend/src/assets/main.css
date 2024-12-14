@@ -34,7 +34,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Text */
+/* Headings */
 
 h1 {
   font-family: FunnelDisplay;
@@ -68,6 +68,8 @@ h4 {
   color: var(--color-text-dark);
 }
 
+/* Text */
+
 p {
   font-family: FunnelDisplay;
   font-size: 14px;
@@ -92,9 +94,15 @@ p {
   color: var(--color-text-white);
 }
 
-.bg-white {
-  background-color: var(--color-text-white);
+a {
+  font-family: FunnelDisplay;
+  text-decoration: none;
+  transition: 0.4s;
+  padding: 3px;
+  color: var(--color-text-black);
 }
+
+/* Margin Options */
 
 .no-margin {
   margin: 0;
@@ -110,6 +118,12 @@ p {
 
 .form-heading-margin {
   margin-bottom: 5px;
+}
+
+/* Color Classes */
+
+.bg-white {
+  background-color: var(--color-text-white);
 }
 
 .nav-item-active {
@@ -130,14 +144,6 @@ p {
 
 .bg-highlight-green {
   background-color: var(--cp-highlight-green);
-}
-
-a {
-  font-family: FunnelDisplay;
-  text-decoration: none;
-  transition: 0.4s;
-  padding: 3px;
-  color: var(--color-text-black);
 }
 
 /* Containers */

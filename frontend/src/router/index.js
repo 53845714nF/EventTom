@@ -7,6 +7,8 @@ import LandingPageView from "@/views/LandingPageView.vue";
 import SignUpView from "@/views/SignUpView.vue";
 import LoginView from "@/views/LoginView.vue";
 
+import CEventsView from "@/views/Customer/CEventsView.vue";
+
 import EMEventsView from "@/views/EventManager/EMEventsView.vue";
 import EMActivitiesView from "@/views/EventManager/EMActivitiesView.vue";
 
@@ -16,6 +18,7 @@ import ECCreateNewEventView from "@/views/EventCreator/ECCreateNewEventView.vue"
 import NotImplementedView from "@/views/Errors/NotImplementedView.vue";
 import NotFoundView from "@/views/Errors/NotFoundView.vue";
 import NotAllowedView from "@/views/Errors/NotAllowedView.vue";
+import CTicketPurchaseView from "@/views/Customer/CTicketPurchaseView.vue";
 
 import AAddNewUserView from "@/views/Admin/AAddNewUserView.vue";
 import ACreateVoucherView from "@/views/Admin/ACreateVoucherView.vue";
@@ -71,6 +74,20 @@ const router = createRouter({
       path: "/admin/create_voucher",
       name: "AdminCreateVoucher",
       component: ACreateVoucherView,
+    },
+
+    // Customer
+    {
+      path: "/customer/events",
+      name: "CEvents",
+      component: CEventsView,
+      beforeEnter: requireRole(Roles.CUSTOMER),
+    },
+    {
+      path: "/customer/ticket-purchase",
+      name: "CTicketPurchase",
+      component: CTicketPurchaseView,
+      beforeEnter: requireRole(Roles.CUSTOMER),
     },
 
     // Event Manager

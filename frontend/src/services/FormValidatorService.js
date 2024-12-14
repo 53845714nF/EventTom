@@ -1,6 +1,10 @@
 import FormTypes from "@/constants/FormTypes";
 
 export default class FormValidatorService {
+  // Rules for form fields.
+  // Each rule is a function that returns an object with a rule and a message.
+  // The rule is a function that returns true if the value is valid, otherwise false.
+  // The message is the error message that will be displayed if the value is invalid.
   static rules = {
     isRequired: (message) => ({
       rule: (value) => !!value,
@@ -46,8 +50,17 @@ export default class FormValidatorService {
     }),
   };
 
+  // this method procides the validation rules for the form fields with the corresponding attributes
   static getValidationRules(formType) {
     switch (formType) {
+      case FormTypes.PURCHASE_TICKET:
+        // TODO: provide the correct validation rules here, you cal also add new rules if needed (e.g. for the cityZip you can add a regex or whatever)
+        return {
+          address: [],
+          cityZip: [],
+          ticketCount: [],
+          voucherCode: [],
+        };
       case FormTypes.SIGNUP:
         return {
           full_name: [FormValidatorService.rules.isRequired("Name darf nicht leer sein.")],
@@ -116,6 +129,7 @@ export default class FormValidatorService {
     }
   }
 
+  // this method validates the form data with the given validation rules
   static validateForm(formData, validationRules) {
     for (const attribute in validationRules) {
       const attributeRules = validationRules[attribute];
