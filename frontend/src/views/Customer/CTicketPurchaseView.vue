@@ -1,8 +1,11 @@
 <script setup>
 import PageTitleContainer from "@/components/Basic/PageTitleContainer.vue";
 import TicketPurchaseForm from "@/components/Customer/CTicketPurchaseView/TicketPurchaseForm.vue";
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 
+// TODO: the event should not be provided here.
+// Instead, you should be able to click on the PrimaryButton in the CEventCard.vue and then navigate to the TicketPurchaseView for the selected event.
+// see how to pass the event via router here: https://router.vuejs.org/guide/essentials/passing-props
 const event = ref({
   id: 1,
   title: "Summer Festival",

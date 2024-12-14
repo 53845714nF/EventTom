@@ -84,6 +84,12 @@ const router = createRouter({
       component: CEventsView,
       beforeEnter: requireRole(Roles.CUSTOMER),
     },
+    {
+      path: "/customer/ticket-purchase",
+      name: "CTicketPurchase",
+      component: CTicketPurchaseView,
+      beforeEnter: requireRole(Roles.CUSTOMER),
+    },
 
     // Event Manager
     {
@@ -131,12 +137,6 @@ const router = createRouter({
       meta: {
         title: "404 - Not Found",
       },
-    },
-    {
-      path: "/customer/ticket-purchase",
-      name: "CTicketPurchase",
-      component: CTicketPurchaseView,
-      beforeEnter: requireRole(Roles.CUSTOMER),
     },
     
   ],

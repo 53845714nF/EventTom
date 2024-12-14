@@ -12,6 +12,7 @@ const props = defineProps({
   },
 });
 
+// TODO: should be provided by CustomerService. See: AdminService.provideEmptyVoucher
 const form = ref({
   name: "",
   address: "",
@@ -35,7 +36,24 @@ const priceBreakdown = computed(() => {
   return breakdown;
 });
 
+// TODO: put this logic in CustomerService
+// TODO: this method should validate the form fields (like not having empty values or invalid ticket count)
+// -> you can use the FormValidatorService for this
 const handlePurchase = async () => {
+
+  // Try this logic for validating the form and try to comprehend what this does.
+  // I implemented the baseline structure for the getValidationRules(), you just have to add the rules you need
+
+  // VALIDATION LOGIC STARTS HERE
+  // const validationRules = FormValidatorService.getValidationRules(FormTypes.NEW_USER);
+  // const validationError = FormValidatorService.validateForm(user.value, validationRules);
+
+  // if (validationError) {
+  //   ToasterService.createToasterPopUp("error", validationError);
+  //   return;
+  // }
+  // VALIDATION LOGIC ENDS HERE  
+
   try {
     const ticketData = {
       eventId: props.event.id,
@@ -47,20 +65,34 @@ const handlePurchase = async () => {
     };
 
     await TicketPurchaseService.purchaseTicket(ticketData);
+
+    // TODO: dont use alert, use a toast notification. See: ToasterService
     alert("Ticket purchase successful! 🎉");
   } catch (error) {
+
+    // TODO: dont use alert, use a toast notification. See: ToasterService
     alert(error.message);
   }
 };
 
+// TODO: put this logic in CustomerService
+// ideally, this method should fetch all available voucher for the CURRENT CUSTOMER and check if the code matches with one of those
+// at the moment you can only check if the code is valid for any given voucher. You have to put the customer id in the request
+// But this is not possible at the moment since the backend does not provide the necessary endpoint yet. 
+// I will get in touch with you as soon as you can implement this.
 const validateVoucher = async () => {
+
   try {
     const response = await TicketPurchaseService.validateVoucherCode(form.value.voucherCode);
     if (response.valid) {
       discount.value = response.discount;
+
+      // TODO: dont use alert, use a toast notification. See: ToasterService
       alert(`Voucher applied: -${response.discount}€`);
     } else {
       discount.value = 0;
+
+      // TODO: dont use alert, use a toast notification. See: ToasterService
       alert("Invalid voucher code");
     }
   } catch (error) {
@@ -77,6 +109,8 @@ const validateVoucher = async () => {
         <p>{{ props.event.organizer }}</p>
         <p>{{ props.event.description }}</p>
       </div>
+
+      <!--TODO: Try if you can find another way of showing the available tickets without a button. I know, in the Design Guideline it looks like a button, but it looks kinda confusing to have a button that you cant interact with. Its my fault, sorry -->
       <PrimaryButton
         :text="`Noch ${props.event.availableTickets} Tickets`"
         :disabled="props.event.availableTickets <= 0"
@@ -109,6 +143,9 @@ const validateVoucher = async () => {
         />
         <p class="base-price">Basispreis: {{ props.event.price }}€</p>
       </div>
+
+      <!--TODO: You can include the validateVoucher() method as an extra step inside the handlePurchase() method, 
+      I think this should be easier to implement since you have to verify if the voucher is valid before making the request anyways-->
       <FormInput
         v-model="form.voucherCode"
         title="Gutscheincode"
