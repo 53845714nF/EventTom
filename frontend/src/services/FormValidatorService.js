@@ -1,8 +1,7 @@
 import FormTypes from "@/constants/FormTypes";
 
 export default class FormValidatorService {
-
-  // Rules for form fields. 
+  // Rules for form fields.
   // Each rule is a function that returns an object with a rule and a message.
   // The rule is a function that returns true if the value is valid, otherwise false.
   // The message is the error message that will be displayed if the value is invalid.
@@ -132,7 +131,6 @@ export default class FormValidatorService {
 
   // this method validates the form data with the given validation rules
   static validateForm(formData, validationRules) {
-
     for (const attribute in validationRules) {
       const attributeRules = validationRules[attribute];
       const attributeValue = formData[attribute];

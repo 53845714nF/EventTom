@@ -20,7 +20,6 @@ import NotFoundView from "@/views/Errors/NotFoundView.vue";
 import NotAllowedView from "@/views/Errors/NotAllowedView.vue";
 import CTicketPurchaseView from "@/views/Customer/CTicketPurchaseView.vue";
 
-
 import AAddNewUserView from "@/views/Admin/AAddNewUserView.vue";
 import ACreateVoucherView from "@/views/Admin/ACreateVoucherView.vue";
 import AListUsersView from "@/views/Admin/AListUsersView.vue";
@@ -129,7 +128,7 @@ const router = createRouter({
       path: "/not_allowed",
       name: "notAllowed",
       component: NotAllowedView,
-    },   
+    },
     {
       path: "/:pathMatch(.*)*",
       name: "notFound",
@@ -138,7 +137,6 @@ const router = createRouter({
         title: "404 - Not Found",
       },
     },
-    
   ],
 });
 

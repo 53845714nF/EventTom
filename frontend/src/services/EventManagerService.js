@@ -66,15 +66,9 @@ export default class EventManagerService {
   }
 
   // returns how many tickets are sold in relation to the threshold as a percentage
-  static getPercentageOfTicketsSoldComparedToExpected(
-    noTickets,
-    noTicketsSold,
-    threshold,
-  ) {
+  static getPercentageOfTicketsSoldComparedToExpected(noTickets, noTicketsSold, threshold) {
     const expectedNoTicketsSold = noTickets * threshold;
-    return Math.round(
-      ((noTicketsSold - expectedNoTicketsSold) / expectedNoTicketsSold) * 100,
-    );
+    return Math.round(((noTicketsSold - expectedNoTicketsSold) / expectedNoTicketsSold) * 100);
   }
 
   static getHighlightClass(percentage) {

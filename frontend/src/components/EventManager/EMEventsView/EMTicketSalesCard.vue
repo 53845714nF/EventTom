@@ -42,9 +42,7 @@ const comparisonText = computed(() => EventManagerService.getComparisonText(perc
     </div>
 
     <div v-else class="sales-card-text-container">
-      <p class="white p-large small-margin">
-        {{ props.event.tickets_sold }} / {{ props.event.tickets }} Tickets
-      </p>
+      <p class="white p-large small-margin">{{ props.event.tickets_sold }} / {{ props.event.tickets }} Tickets</p>
       <div class="progress-bar small-margin">
         <div :class="['progress-bar-fill', highLightClass.bar]" :style="{ width: percentageSold + '%' }"></div>
       </div>

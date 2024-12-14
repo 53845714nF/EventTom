@@ -40,7 +40,6 @@ const priceBreakdown = computed(() => {
 // TODO: this method should validate the form fields (like not having empty values or invalid ticket count)
 // -> you can use the FormValidatorService for this
 const handlePurchase = async () => {
-
   // Try this logic for validating the form and try to comprehend what this does.
   // I implemented the baseline structure for the getValidationRules(), you just have to add the rules you need
 
@@ -52,7 +51,7 @@ const handlePurchase = async () => {
   //   ToasterService.createToasterPopUp("error", validationError);
   //   return;
   // }
-  // VALIDATION LOGIC ENDS HERE  
+  // VALIDATION LOGIC ENDS HERE
 
   try {
     const ticketData = {
@@ -69,7 +68,6 @@ const handlePurchase = async () => {
     // TODO: dont use alert, use a toast notification. See: ToasterService
     alert("Ticket purchase successful! 🎉");
   } catch (error) {
-
     // TODO: dont use alert, use a toast notification. See: ToasterService
     alert(error.message);
   }
@@ -78,10 +76,9 @@ const handlePurchase = async () => {
 // TODO: put this logic in CustomerService
 // ideally, this method should fetch all available voucher for the CURRENT CUSTOMER and check if the code matches with one of those
 // at the moment you can only check if the code is valid for any given voucher. You have to put the customer id in the request
-// But this is not possible at the moment since the backend does not provide the necessary endpoint yet. 
+// But this is not possible at the moment since the backend does not provide the necessary endpoint yet.
 // I will get in touch with you as soon as you can implement this.
 const validateVoucher = async () => {
-
   try {
     const response = await TicketPurchaseService.validateVoucherCode(form.value.voucherCode);
     if (response.valid) {
@@ -122,25 +119,10 @@ const validateVoucher = async () => {
     <!-- Form Fields -->
     <div class="form-fields">
       <FormInput v-model="form.name" title="Name" placeholder="Name" type="text" />
-      <FormInput
-        v-model="form.address"
-        title="Straße, Hausnummer"
-        placeholder="Straße, Hausnummer"
-        type="text"
-      />
-      <FormInput
-        v-model="form.cityZip"
-        title="PLZ, Ort"
-        placeholder="PLZ, Ort"
-        type="text"
-      />
+      <FormInput v-model="form.address" title="Straße, Hausnummer" placeholder="Straße, Hausnummer" type="text" />
+      <FormInput v-model="form.cityZip" title="PLZ, Ort" placeholder="PLZ, Ort" type="text" />
       <div class="tickets-container">
-        <FormInput
-          v-model="form.ticketCount"
-          title="Anzahl Tickets"
-          placeholder="Anzahl Tickets"
-          type="number"
-        />
+        <FormInput v-model="form.ticketCount" title="Anzahl Tickets" placeholder="Anzahl Tickets" type="number" />
         <p class="base-price">Basispreis: {{ props.event.price }}€</p>
       </div>
 
@@ -165,11 +147,7 @@ const validateVoucher = async () => {
 
     <!-- Buttons -->
     <div class="button-container">
-      <PrimaryButton
-        :text="'Jetzt kaufen'"
-        @click="handlePurchase"
-        type="black"
-      />
+      <PrimaryButton :text="'Jetzt kaufen'" @click="handlePurchase" type="black" />
       <SecondaryButton :text="'Abbrechen'" />
     </div>
   </div>

@@ -14,8 +14,6 @@ const event = ref({
   price: 38,
   availableTickets: 69,
 });
-
-
 </script>
 
 <template>
@@ -25,6 +23,4 @@ const event = ref({
   </div>
 </template>
 
-<style scoped>
- 
-</style>
+<style scoped></style>

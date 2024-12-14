@@ -23,9 +23,7 @@ const props = defineProps({
     </div>
     <div class="button-container">
       <PrimaryButton
-        :text="
-          event.available ? `Noch ${event.tickets} Tickets` : 'Ausverkauft'
-        "
+        :text="event.available ? `Noch ${event.tickets} Tickets` : 'Ausverkauft'"
         :disabled="!event.available"
         type="black"
         class="primary-button"
