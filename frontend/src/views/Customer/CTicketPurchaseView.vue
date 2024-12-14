@@ -1,6 +1,6 @@
 <script setup>
 import PageTitleContainer from "@/components/Basic/PageTitleContainer.vue";
-import TicketPurchaseForm from "@/components/Customer/CTicketPurchaseView/TicketPurchaseForm.vue";
+import CTicketPurchaseForm from "@/components/Customer/CTicketPurchaseView/CTicketPurchaseForm.vue";
 import { ref } from "vue";
 
 // TODO: the event should not be provided here.
@@ -21,7 +21,7 @@ const event = ref({
 <template>
   <PageTitleContainer title="Ticket kaufen" />
   <div class="content-container">
-    <TicketPurchaseForm :event="event" />
+    <CTicketPurchaseForm :event="event" />
   </div>
 </template>
 
