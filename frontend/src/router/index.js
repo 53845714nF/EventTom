@@ -14,6 +14,8 @@ import EMActivitiesView from "@/views/EventManager/EMActivitiesView.vue";
 import NotImplementedView from "@/views/Errors/NotImplementedView.vue";
 import NotFoundView from "@/views/Errors/NotFoundView.vue";
 import NotAllowedView from "@/views/Errors/NotAllowedView.vue";
+import CTicketPurchaseView from "@/views/Customer/CTicketPurchaseView.vue";
+
 
 // Middleware, which checks if the user has the required role
 function requireRole(requiredRole) {
@@ -75,7 +77,7 @@ const router = createRouter({
       path: "/not_allowed",
       name: "notAllowed",
       component: NotAllowedView,
-    },
+    },   
     {
       path: "/:pathMatch(.*)*",
       name: "notFound",
@@ -84,6 +86,13 @@ const router = createRouter({
         title: "404 - Not Found",
       },
     },
+    {
+      path: "/customer/ticket-purchase",
+      name: "CTicketPurchase",
+      component: CTicketPurchaseView,
+      beforeEnter: requireRole(Roles.CUSTOMER),
+    },
+    
   ],
 });
 
