@@ -48,6 +48,7 @@ def read_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
 
     return UsersPublic(data=users, count=count)
 
+
 @router.get(
     "/manager",
     dependencies=[Depends(get_current_active_employee)],
@@ -58,13 +59,23 @@ def read_event_manager(session: SessionDep, skip: int = 0, limit: int = 100) -> 
     Retrieve users.
     """
 
-    count_statement = select(func.count()).select_from(User).where(User.role == EmployeeRole.EVENTMANAGER)
+    count_statement = (
+        select(func.count())
+        .select_from(User)
+        .where(User.role == EmployeeRole.EVENTMANAGER)
+    )
     count = session.exec(count_statement).one()
 
-    statement = select(User).where(User.role == EmployeeRole.EVENTMANAGER).offset(skip).limit(limit)
+    statement = (
+        select(User)
+        .where(User.role == EmployeeRole.EVENTMANAGER)
+        .offset(skip)
+        .limit(limit)
+    )
     users = session.exec(statement).all()
 
     return UsersPublic(data=users, count=count)
+
 
 @router.post(
     "/", dependencies=[Depends(get_current_active_employee)], response_model=UserPublic

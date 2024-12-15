@@ -63,3 +63,20 @@ def authenticate(*, session: Session, email: str, password: str) -> User | None:
     if not verify_password(password, db_user.hashed_password):
         return None
     return db_user
+
+
+# This function is needed for Testing (Creating random Events for test)
+def create_event(
+    *,
+    session: Session,
+    event_in: EventCreate,
+    manager_id: uuid.UUID,
+    creator_id: uuid.UUID,
+) -> Event:
+    db_event = Event.model_validate(
+        event_in, update={"manager_id": manager_id, "creator_id": creator_id}
+    )
+    session.add(db_event)
+    session.commit()
+    session.refresh(db_event)
+    return db_event

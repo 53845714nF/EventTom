@@ -44,35 +44,53 @@ def read_event(session: SessionDep, id: uuid.UUID) -> Any:
 
     return event
 
+
 @router.get("/manager/{manager_id}", response_model=EventsPublic)
-def read_event_by_manager(session: SessionDep, manager_id: uuid.UUID, skip: int = 0, limit: int = 100) -> Any:
+def read_event_by_manager(
+    session: SessionDep, manager_id: uuid.UUID, skip: int = 0, limit: int = 100
+) -> Any:
     """
     Get events by manager.
     """
-    count_statement = select(func.count()).select_from(Event).where(Event.manager_id == manager_id)
+    count_statement = (
+        select(func.count()).select_from(Event).where(Event.manager_id == manager_id)
+    )
     count = session.exec(count_statement).one()
 
-    statement = select(Event).where(Event.manager_id == manager_id).offset(skip).limit(limit)
+    statement = (
+        select(Event).where(Event.manager_id == manager_id).offset(skip).limit(limit)
+    )
     events = session.exec(statement).all()
 
     if not events:
-        raise HTTPException(status_code=404, detail=f"No events found for manager {manager_id}")
+        raise HTTPException(
+            status_code=404, detail=f"No events found for manager {manager_id}"
+        )
 
     return EventsPublic(data=events, count=count)
 
+
 @router.get("/creator/{creator_id}", response_model=EventsPublic)
-def read_event_by_creator(session: SessionDep, creator_id: uuid.UUID, skip: int = 0, limit: int = 100) -> Any:
+def read_event_by_creator(
+    session: SessionDep, creator_id: uuid.UUID, skip: int = 0, limit: int = 100
+) -> Any:
     """
     Get events by creator.
     """
-    count_statement = select(func.count()).select_from(Event).where(Event.creator_id == creator_id)
+    count_statement = (
+        select(func.count()).select_from(Event).where(Event.creator_id == creator_id)
+    )
     count = session.exec(count_statement).one()
 
-    statement = select(Event).where(Event.creator_id == creator_id).offset(skip).limit(limit)
+    statement = (
+        select(Event).where(Event.creator_id == creator_id).offset(skip).limit(limit)
+    )
     events = session.exec(statement).all()
 
     if not events:
-        raise HTTPException(status_code=404, detail=f"No events found for manager {creator_id}")
+        raise HTTPException(
+            status_code=404, detail=f"No events found for manager {creator_id}"
+        )
 
     return EventsPublic(data=events, count=count)
 
@@ -126,7 +144,9 @@ def update_event(
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
 
-    if not (current_user.id == event.manager_id) or (current_user.id == event.creator_id):
+    if not (current_user.id == event.manager_id) or (
+        current_user.id == event.creator_id
+    ):
         raise HTTPException(
             status_code=400,
             detail="Only the Event Manager or Creator of this Event has enough permissions",
@@ -151,7 +171,9 @@ def delete_event(
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
 
-    if not (current_user.id == event.manager_id) or (current_user.id == event.creator_id):
+    if not (current_user.id == event.manager_id) or (
+        current_user.id == event.creator_id
+    ):
         raise HTTPException(
             status_code=400,
             detail="Only the Event Manager or Creator of this Event has enough permissions",

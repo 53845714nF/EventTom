@@ -1,6 +1,6 @@
+from crud import create_event
 from sqlmodel import Session
 
-from app import crud
 from app.models import Event, EventCreate
 from app.tests.utils.user import create_random_customer
 from app.tests.utils.utils import random_lower_string
@@ -9,6 +9,7 @@ from app.tests.utils.utils import random_lower_string
 def create_random_event(db: Session) -> Event:
     user = create_random_customer(db)
     manager_id = user.id
+    creator_id = user.id
     assert manager_id is not None
 
     title = random_lower_string()
@@ -25,4 +26,6 @@ def create_random_event(db: Session) -> Event:
         base_price=base_price,
         pay_fee=pay_fee,
     )
-    return crud.create_event(session=db, event_in=event_in, manager_id=manager_id)
+    return create_event(
+        session=db, event_in=event_in, manager_id=manager_id, creator_id=creator_id
+    )

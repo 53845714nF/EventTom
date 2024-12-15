@@ -116,6 +116,7 @@ class Event(EventBase, table=True):
     manager_id: UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
     creator_id: UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
 
+
 # Singel Event must be Public
 class EventPublic(EventBase):
     id: UUID
