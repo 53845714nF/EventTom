@@ -2,9 +2,12 @@
 import PrimaryButton from "@/components/Basic/PrimaryButton.vue";
 import SecondaryButton from "@/components/Basic/SecondaryButton.vue";
 import FormInput from "@/components/Basic/FormInput.vue";
-import TicketPurchaseService from "@/services/TicketPurchaseService.js";
+import { validateVoucher, provideEmptyForm } from "@/services/CustomerService";
+import TicketPurchaseService from "@/services/TicketPurchaseService";
+import ToasterService from "@/services/ToasterService";
 import { ref, computed } from "vue";
 
+// Props: The event details are passed as props from the parent component
 const props = defineProps({
   event: {
     type: Object,
@@ -12,48 +15,35 @@ const props = defineProps({
   },
 });
 
-// TODO: should be provided by CustomerService. See: AdminService.provideEmptyVoucher
-const form = ref({
-  name: "",
-  address: "",
-  cityZip: "",
-  ticketCount: 1,
-  voucherCode: "",
-});
+// Form data: Initialized using the `provideEmptyForm` method from CustomerService
+const form = ref(provideEmptyForm());
 
+// Reactive variable to track discount value
 const discount = ref(0);
 
+// Computed property: Calculates the total price based on ticket count and discount
 const totalPrice = computed(() => {
   return form.value.ticketCount * props.event.price - discount.value;
 });
 
+// Computed property: Provides a breakdown of the price details
 const priceBreakdown = computed(() => {
   let breakdown = [];
-  breakdown.push(`${form.value.ticketCount}x ${props.event.title} Ticket: je ${props.event.price}€`);
+  breakdown.push(
+    `${form.value.ticketCount}x ${props.event.title} Ticket: je ${props.event.price}€`
+  );
   if (discount.value > 0) {
-    breakdown.push(`1x Gutschein ${form.value.voucherCode}: -${discount.value}€`);
+    breakdown.push(
+      `1x Gutschein ${form.value.voucherCode}: -${discount.value}€`
+    );
   }
   return breakdown;
 });
 
-// TODO: put this logic in CustomerService
-// TODO: this method should validate the form fields (like not having empty values or invalid ticket count)
-// -> you can use the FormValidatorService for this
+// Method: Handles the ticket purchase
 const handlePurchase = async () => {
-  // Try this logic for validating the form and try to comprehend what this does.
-  // I implemented the baseline structure for the getValidationRules(), you just have to add the rules you need
-
-  // VALIDATION LOGIC STARTS HERE
-  // const validationRules = FormValidatorService.getValidationRules(FormTypes.NEW_USER);
-  // const validationError = FormValidatorService.validateForm(user.value, validationRules);
-
-  // if (validationError) {
-  //   ToasterService.createToasterPopUp("error", validationError);
-  //   return;
-  // }
-  // VALIDATION LOGIC ENDS HERE
-
   try {
+    // Build the ticket purchase data
     const ticketData = {
       eventId: props.event.id,
       name: form.value.name,
@@ -63,43 +53,52 @@ const handlePurchase = async () => {
       voucherCode: form.value.voucherCode,
     };
 
+    // Call the service to purchase tickets
     await TicketPurchaseService.purchaseTicket(ticketData);
 
-    // TODO: dont use alert, use a toast notification. See: ToasterService
-    alert("Ticket purchase successful! 🎉");
+    // Show success toast notification
+    ToasterService.createToasterPopUp(
+      "success",
+      "Ticket purchase successful! 🎉"
+    );
+
+    // Reset form after successful purchase
+    form.value = provideEmptyForm();
+    discount.value = 0;
   } catch (error) {
-    // TODO: dont use alert, use a toast notification. See: ToasterService
-    alert(error.message);
+    // Show error toast notification
+    ToasterService.createToasterPopUp("error", error.message);
   }
 };
 
-// TODO: put this logic in CustomerService
-// ideally, this method should fetch all available voucher for the CURRENT CUSTOMER and check if the code matches with one of those
-// at the moment you can only check if the code is valid for any given voucher. You have to put the customer id in the request
-// But this is not possible at the moment since the backend does not provide the necessary endpoint yet.
-// I will get in touch with you as soon as you can implement this.
-const validateVoucher = async () => {
+// Method: Validates the voucher code
+const validateVoucherCode = async () => {
   try {
-    const response = await TicketPurchaseService.validateVoucherCode(form.value.voucherCode);
+    // Call the service to validate the voucher code
+    const response = await validateVoucher(form.value.voucherCode);
+
     if (response.valid) {
+      // Apply discount if voucher is valid
       discount.value = response.discount;
-
-      // TODO: dont use alert, use a toast notification. See: ToasterService
-      alert(`Voucher applied: -${response.discount}€`);
+      ToasterService.createToasterPopUp(
+        "success",
+        `Voucher applied: -${response.discount}€`
+      );
     } else {
+      // Reset discount if voucher is invalid
       discount.value = 0;
-
-      // TODO: dont use alert, use a toast notification. See: ToasterService
-      alert("Invalid voucher code");
+      ToasterService.createToasterPopUp("error", "Invalid voucher code");
     }
   } catch (error) {
     console.error("Voucher validation failed:", error);
+    ToasterService.createToasterPopUp("error", "Error validating voucher");
   }
 };
 </script>
 
 <template>
   <div class="ticket-purchase-card">
+    <!-- Event Header -->
     <div class="header-container">
       <div class="heading-container">
         <h2>{{ props.event.title }}</h2>
@@ -107,33 +106,42 @@ const validateVoucher = async () => {
         <p>{{ props.event.description }}</p>
       </div>
 
-      <!--TODO: Try if you can find another way of showing the available tickets without a button. I know, in the Design Guideline it looks like a button, but it looks kinda confusing to have a button that you cant interact with. Its my fault, sorry -->
-      <PrimaryButton
-        :text="`Noch ${props.event.availableTickets} Tickets`"
-        :disabled="props.event.availableTickets <= 0"
-        type="black"
-        class="availability-button"
-      />
+      <!-- Available tickets: Styled as text instead of a button -->
+      <div class="available-tickets">
+        Noch {{ props.event.availableTickets }} Tickets
+      </div>
     </div>
 
     <!-- Form Fields -->
     <div class="form-fields">
       <FormInput v-model="form.name" title="Name" placeholder="Name" type="text" />
-      <FormInput v-model="form.address" title="Straße, Hausnummer" placeholder="Straße, Hausnummer" type="text" />
-      <FormInput v-model="form.cityZip" title="PLZ, Ort" placeholder="PLZ, Ort" type="text" />
+      <FormInput
+        v-model="form.address"
+        title="Straße, Hausnummer"
+        placeholder="Straße, Hausnummer"
+        type="text"
+      />
+      <FormInput
+        v-model="form.cityZip"
+        title="PLZ, Ort"
+        placeholder="PLZ, Ort"
+        type="text"
+      />
       <div class="tickets-container">
-        <FormInput v-model="form.ticketCount" title="Anzahl Tickets" placeholder="Anzahl Tickets" type="number" />
+        <FormInput
+          v-model="form.ticketCount"
+          title="Anzahl Tickets"
+          placeholder="Anzahl Tickets"
+          type="number"
+        />
         <p class="base-price">Basispreis: {{ props.event.price }}€</p>
       </div>
-
-      <!--TODO: You can include the validateVoucher() method as an extra step inside the handlePurchase() method, 
-      I think this should be easier to implement since you have to verify if the voucher is valid before making the request anyways-->
       <FormInput
         v-model="form.voucherCode"
         title="Gutscheincode"
         placeholder="Gutscheincode"
         type="text"
-        @blur="validateVoucher"
+        @blur="validateVoucherCode"
       />
     </div>
 
@@ -154,6 +162,7 @@ const validateVoucher = async () => {
 </template>
 
 <style scoped>
+/* Styles for the ticket purchase card */
 .ticket-purchase-card {
   margin: 25px 40px;
   border-radius: 20px;
@@ -176,13 +185,14 @@ const validateVoucher = async () => {
   gap: 5px;
 }
 
-.availability-button {
+.available-tickets {
   margin-left: auto;
-  background-color: var(--color-primary-button-black);
-}
-
-.availability-button:hover {
-  background-color: var(--color-primary-button-black-hover);
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--cp-white);
+  background-color: var(--color-text-dark);
+  padding: 10px 20px;
+  border-radius: 15px;
 }
 
 .tickets-container {
