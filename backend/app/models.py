@@ -70,6 +70,7 @@ class UserUpdate(SQLModel):
 
 class UserPublic(UserBase):
     id: UUID
+    role: EmployeeRole | None = Field(default=None)
 
 
 class UsersPublic(SQLModel):
@@ -101,7 +102,7 @@ class EventBase(SQLModel):
 
 # Properties to receive on event creation
 class EventCreate(EventBase):
-    manager_id: UUID
+    manager_id: UUID = Field(foreign_key="user.id")
 
 
 # Properties to receive on event update
@@ -113,6 +114,7 @@ class EventUpdate(EventBase):
 class Event(EventBase, table=True):
     id: UUID = Field(default_factory=uuid4, primary_key=True)
     manager_id: UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
+    creator_id: UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
 
 
 # Singel Event must be Public
