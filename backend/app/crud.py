@@ -67,6 +67,7 @@ def authenticate(*, session: Session, email: str, password: str) -> User | None:
         return None
     return db_user
 
+
 def create_event(
     *, session: Session, event_in: EventCreate, manager_id: uuid.UUID
 ) -> Event:

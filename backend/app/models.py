@@ -73,7 +73,6 @@ class UserPublic(UserBase):
     role: EmployeeRole | None = Field(default=None)
 
 
-
 class UsersPublic(SQLModel):
     data: list[UserPublic]
     count: int
@@ -116,6 +115,7 @@ class Event(EventBase, table=True):
     id: UUID = Field(default_factory=uuid4, primary_key=True)
     manager_id: UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
     creator_id: UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
+
 
 # Singel Event must be Public
 class EventPublic(EventBase):
