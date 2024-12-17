@@ -73,6 +73,7 @@ class UserPublic(UserBase):
     role: EmployeeRole | None = Field(default=None)
 
 
+
 class UsersPublic(SQLModel):
     data: list[UserPublic]
     count: int

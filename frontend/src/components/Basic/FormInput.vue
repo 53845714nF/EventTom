@@ -4,6 +4,10 @@ const props = defineProps({
   placeholder: String,
   modelValue: String,
   type: String,
+  options: {
+    type: Array,
+    reqired: false,
+  },
 });
 
 // if the v-model is changed, the child component will emit an event to update the parent's modelValue
@@ -16,22 +20,40 @@ const updateValue = (event) => {
 <template>
   <div class="form-input">
     <p class="p-large form-heading-margin">{{ props.title }}</p>
+
+    <!--Normal Input field-->
     <input
+      v-if="props.type === 'text' || props.type === 'number' || props.type === 'password'"
       :value="modelValue"
       @input="updateValue"
       :type="props.type"
       :placeholder="props.placeholder"
     />
+
+    <!-- Textarea if type is textarea -->
+    <textarea
+      v-if="props.type === 'textarea'"
+      :value="modelValue"
+      @input="updateValue"
+      :placeholder="props.placeholder"
+      rows="4"
+      cols="50"
+    ></textarea>
+
+    <!--Drop down menu if options are provided-->
+    <select v-if="props.type === 'select'" :value="modelValue" @change="updateValue">
+      <option v-for="option in props.options" :key="option" :value="option">
+        {{ option }}
+      </option>
+    </select>
   </div>
 </template>
 
 <style scoped>
-.form-input {
-  max-width: 50%;
-}
-
-input {
-  width: 100%;
+input,
+textarea,
+select {
+  width: 50%;
   padding: 10px;
   border-radius: 10px;
   border: none;
@@ -40,9 +62,25 @@ input {
   font-size: 14px;
 }
 
+textarea {
+  width: 70%;
+  resize: none;
+}
+
 input::placeholder {
   color: var(--color-text-light);
   font-family: FunnelDisplay;
   font-size: 14px;
+}
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+select:focus {
+  outline: none;
+  box-shadow: 0 0 5px var(--color-primary);
 }
 </style>

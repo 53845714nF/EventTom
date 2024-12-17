@@ -5,6 +5,8 @@ from sqlmodel import Session, select
 from app.core.security import get_password_hash, verify_password
 from app.models import (
     EmployeeCreate,
+    Event,
+    EventCreate,
     User,
     UserCreate,
     UserType,
@@ -63,3 +65,12 @@ def authenticate(*, session: Session, email: str, password: str) -> User | None:
     if not verify_password(password, db_user.hashed_password):
         return None
     return db_user
+
+def create_event(
+    *, session: Session, event_in: EventCreate, manager_id: uuid.UUID
+) -> Event:
+    db_event = Event.model_validate(event_in, update={"ownemanager_id": manager_id})
+    session.add(db_event)
+    session.commit()
+    session.refresh(db_event)
+    return db_event

@@ -155,6 +155,8 @@ def delete_event(
         raise HTTPException(
             status_code=400,
             detail="Only the Event Manager or Creator of this Event has enough permissions",
+
+
         )
     session.delete(event)
     session.commit()
