@@ -55,6 +55,27 @@ export default class AuthService {
       return;
     }
 
+    const response = await AuthService.postLoginData(user);
+    
+    if (!response.success) {
+      ToasterService.createToasterPopUp("error", "Falsche Email oder Passwort.");
+      return;
+    }
+    
+    // set accessToken first since it is needed to fetch the user info
+    authStore.setAccessToken(response.access_token);
+    
+    const userInfo = await AuthService.getUserMe(authStore);
+
+    authStore.setRole(userInfo.role);
+    authStore.setId(userInfo.id);
+
+    // set the redirect path to the first item in the navItems array
+    const redirectPath = authStore.navItems.items[0].path;
+    router.push(redirectPath);
+  }
+
+  static async postLoginData(user) {
     const data = new URLSearchParams();
     data.append("grant_type", "password");
     data.append("username", user.value.email); // beachte die URL-kodierte Form
@@ -63,8 +84,10 @@ export default class AuthService {
     data.append("client_id", "string");
     data.append("client_secret", "string");
 
+    //return {success: true}
+
     // send api request of type application/x-www-form-urlencoded
-    await axios
+    return await axios
       .post("/api/v1/login/access-token", data, {
         headers: {
           accept: "application/json",
@@ -72,18 +95,12 @@ export default class AuthService {
         },
       })
       .then((response) => {
-        authStore.setAccessToken(response.data.access_token);
-        authStore.setRole(import.meta.env.VITE_INITIAL_ROLE);
-
-        // set the redirect path to the first item in the navItems array
-        const redirectPath = authStore.navItems.items[0].path;
-        router.push(redirectPath);
-
-        ToasterService.createToasterPopUp("success", "Login erfolgreich!");
+        return {success: true, access_token: response.data.access_token}
       })
       .catch((error) => {
         console.log(error);
         ToasterService.createToasterPopUp("error", "Falsche Email oder Passwort.");
+        return {success: false}
       });
   }
 
@@ -92,16 +109,26 @@ export default class AuthService {
   static logoutUser(authStore) {
     authStore.removeAccessToken();
     authStore.setRole(Roles.GUEST);
+    authStore.removeId();
     ToasterService.createToasterPopUp("success", "Logout erfolgreich!");
   }
 
-  static async testAccessToken(store) {
-    const data = {};
-
-    await axios
-      .post("/api/v1/login/test-token", data, AuthService.getConfig(store))
+  static async getUserMe(store) {
+    return await axios
+      .get("/api/v1/users/me", AuthService.getConfig(store))
       .then((response) => {
-        console.log(response);
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+        ToasterService.createToasterPopUp("error", "Could not fetch current user.");
+      });
+  }
+
+  static async testAccessToken(store) {
+    await axios
+      .post("/api/v1/login/test-token", {}, AuthService.getConfig(store))
+      .then(() => {
         ToasterService.createToasterPopUp("success", `Token valid. Role: ${store.role}`);
       })
       .catch((error) => {
