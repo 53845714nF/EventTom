@@ -48,7 +48,11 @@ export default class EventManagerService {
       ];
     } else {
       await axios
-        .post(`/api/v1/events/event-manager/${eventManagerId}`, {}, AuthService.getConfig(authStore.accessToken))
+        .post(
+          `/api/v1/events/event-manager/${eventManagerId}`,
+          {},
+          AuthService.getAuthorizedConfig(authStore.accessToken),
+        )
         .then((response) => {
           return response.data;
         })

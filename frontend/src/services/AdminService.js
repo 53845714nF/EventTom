@@ -56,7 +56,7 @@ export default class AdminService {
     };
 
     return axios
-      .post("/api/v1/users/", data, AuthService.getConfig(authStore))
+      .post("/api/v1/users/", data, AuthService.getAuthorizedConfig(authStore))
       .then(() => {
         user.value = AdminService.provideEmptyUser();
         ToasterService.createToasterPopUp("success", "User erfolgreich hinzugefügt");
@@ -69,7 +69,7 @@ export default class AdminService {
 
   static async getAllUsers(authStore) {
     return axios
-      .get("/api/v1/users/", AuthService.getConfig(authStore))
+      .get("/api/v1/users/", AuthService.getAuthorizedConfig(authStore))
       .then((response) => {
         return response.data.data;
       })
@@ -81,7 +81,7 @@ export default class AdminService {
 
   static async deleteUser(userId, authStore) {
     return axios
-      .delete(`/api/v1/users/${userId}`, AuthService.getConfig(authStore))
+      .delete(`/api/v1/users/${userId}`, AuthService.getAuthorizedConfig(authStore))
       .then(() => {
         ToasterService.createToasterPopUp("success", "User erfolgreich gelöscht");
       })

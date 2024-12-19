@@ -23,9 +23,11 @@ export default class AuthService {
     };
   }
 
+  // ### Handling Login and Sign Up ###
+
   // sends a POST request to the backend with the user data
   // Either logs in user (signUp = false) or signs up user (signUp = true)
-  static trySignUpUser(user, authStore) {
+  static async trySignUpUser(user, authStore) {
     const validationRules = FormValidatorService.getValidationRules(FormTypes.SIGNUP);
     const validationError = FormValidatorService.validateForm(user.value, validationRules);
 
@@ -40,8 +42,15 @@ export default class AuthService {
       return;
     }
 
-    ToasterService.createToasterPopUp("error", "Sign up not implemented yet.");
-    console.log(authStore);
+    const response = await AuthService.postSignUpData(user);
+
+    if (!response.success) {
+      ToasterService.createToasterPopUp("error", "Sign up failed.");
+      return;
+    }
+
+    // log in user after successful sign up
+    await AuthService.tryLoginUser(user, authStore);
   }
 
   // sends a POST request to the backend to log in the user
@@ -56,24 +65,26 @@ export default class AuthService {
     }
 
     const response = await AuthService.postLoginData(user);
-    
+
     if (!response.success) {
       ToasterService.createToasterPopUp("error", "Falsche Email oder Passwort.");
       return;
     }
-    
+
     // set accessToken first since it is needed to fetch the user info
     authStore.setAccessToken(response.access_token);
-    
+
     const userInfo = await AuthService.getUserMe(authStore);
 
-    authStore.setRole(userInfo.role);
+    authStore.setRole(userInfo.role ? userInfo.role : userInfo.user_type);
     authStore.setId(userInfo.id);
 
     // set the redirect path to the first item in the navItems array
     const redirectPath = authStore.navItems.items[0].path;
     router.push(redirectPath);
   }
+
+  // ### API Calls ###
 
   static async postLoginData(user) {
     const data = new URLSearchParams();
@@ -84,8 +95,6 @@ export default class AuthService {
     data.append("client_id", "string");
     data.append("client_secret", "string");
 
-    //return {success: true}
-
     // send api request of type application/x-www-form-urlencoded
     return await axios
       .post("/api/v1/login/access-token", data, {
@@ -95,27 +104,36 @@ export default class AuthService {
         },
       })
       .then((response) => {
-        return {success: true, access_token: response.data.access_token}
+        return { success: true, access_token: response.data.access_token };
       })
       .catch((error) => {
         console.log(error);
-        ToasterService.createToasterPopUp("error", "Falsche Email oder Passwort.");
-        return {success: false}
+        return { success: false };
       });
   }
 
-  // logs out the user by removing the access token and role from the local storage
-  // no redirect is needed, because it is implemented by giving path to the logout button in the header
-  static logoutUser(authStore) {
-    authStore.removeAccessToken();
-    authStore.setRole(Roles.GUEST);
-    authStore.removeId();
-    ToasterService.createToasterPopUp("success", "Logout erfolgreich!");
+  static async postSignUpData(user) {
+    const data = {
+      full_name: user.value.full_name,
+      email: user.value.email,
+      password: user.value.password,
+    };
+
+    // send api request of type application/x-www-form-urlencoded
+    return await axios
+      .post("/api/v1/users/signup", data, AuthService.getBasicConfig())
+      .then(() => {
+        return { success: true };
+      })
+      .catch((error) => {
+        console.log(error);
+        return { success: false };
+      });
   }
 
   static async getUserMe(store) {
     return await axios
-      .get("/api/v1/users/me", AuthService.getConfig(store))
+      .get("/api/v1/users/me", AuthService.getAuthorizedConfig(store))
       .then((response) => {
         return response.data;
       })
@@ -127,7 +145,7 @@ export default class AuthService {
 
   static async testAccessToken(store) {
     await axios
-      .post("/api/v1/login/test-token", {}, AuthService.getConfig(store))
+      .post("/api/v1/login/test-token", {}, AuthService.getAuthorizedConfig(store))
       .then(() => {
         ToasterService.createToasterPopUp("success", `Token valid. Role: ${store.role}`);
       })
@@ -137,11 +155,31 @@ export default class AuthService {
       });
   }
 
-  static getConfig(authStore) {
+  // ### Utils ###
+
+  // logs out the user by removing the access token and role from the local storage
+  // no redirect is needed, because it is implemented by giving path to the logout button in the header
+  static logoutUser(authStore) {
+    authStore.removeAccessToken();
+    authStore.setRole(Roles.GUEST);
+    authStore.removeId();
+    ToasterService.createToasterPopUp("success", "Logout erfolgreich!");
+  }
+
+  static getAuthorizedConfig(authStore) {
     const config = {
       headers: {
         Accept: "application/json",
         Authorization: `Bearer ${authStore.accessToken}`,
+      },
+    };
+    return config;
+  }
+
+  static getBasicConfig() {
+    const config = {
+      headers: {
+        Accept: "application/json",
       },
     };
     return config;

@@ -88,7 +88,11 @@ export default class EventCreatorService {
       ];
     } else {
       await axios
-        .post(`/api/v1/events/event-creator/${eventCreatorId}`, {}, AuthService.getConfig(authStore.accessToken))
+        .post(
+          `/api/v1/events/event-creator/${eventCreatorId}`,
+          {},
+          AuthService.getAuthorizedConfig(authStore.accessToken),
+        )
         .then((response) => {
           return response.data;
         })

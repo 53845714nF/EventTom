@@ -45,7 +45,7 @@ export const useAuthStore = defineStore("role", () => {
     localStorage.setItem(LocalStorageKeys.USER_ID, newId);
     user_id.value = newId;
   }
-  
+
   function removeId() {
     localStorage.setItem(LocalStorageKeys.USER_ID, "");
     user_id.value = "";
