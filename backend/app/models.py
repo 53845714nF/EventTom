@@ -2,7 +2,7 @@ from enum import Enum
 from uuid import UUID, uuid4
 
 from pydantic import EmailStr
-from sqlmodel import Field, Relationship, SQLModel
+from sqlmodel import Field, SQLModel
 
 
 #
@@ -35,14 +35,6 @@ class User(UserBase, table=True):
 
     # Employee specific fields
     role: EmployeeRole | None = Field(default=None)
-
-    # Customer specific fields
-    vouchers: list["Voucher"] | None = Relationship(
-        back_populates="owner",
-        sa_relationship_kwargs={
-            "primaryjoin": "and_(User.id==Voucher.owner_id, User.user_type=='customer')"
-        },
-    )
 
 
 class UserCreate(SQLModel):
@@ -143,14 +135,23 @@ class VoucherCreate(VoucherBase):
     owner_id: UUID
 
 
-class VoucherUpdate(EventBase):
-    amount: float
+class VoucherUpdate(VoucherBase):
+    owner_id: UUID
+
+
+class VoucherPublic(VoucherBase):
+    id: UUID
+    owner_id: UUID
+
+
+class VouchersPublic(SQLModel):
+    data: list[VoucherPublic]
+    count: int
 
 
 class Voucher(VoucherBase, table=True):
     id: UUID = Field(default_factory=uuid4, primary_key=True)
     owner_id: UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
-    owner: User | None = Relationship(back_populates="vouchers")
     amount: float
 
 
