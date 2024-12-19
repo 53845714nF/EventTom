@@ -411,7 +411,7 @@ def test_delete_customer_me(client: TestClient, db: Session) -> None:
     assert user_db is None
 
 
-def test_delete_user_me_as_superuser(
+def test_delete_user_me_as_employe(
     client: TestClient, superuser_token_headers: dict[str, str]
 ) -> None:
     r = client.delete(
@@ -420,7 +420,7 @@ def test_delete_user_me_as_superuser(
     )
     assert r.status_code == 403
     response = r.json()
-    assert response["detail"] == "Super users are not allowed to delete themselves"
+    assert response["detail"] == "Employes are not allowed to delete themselves"
 
 
 def test_delete_employee_admin(
