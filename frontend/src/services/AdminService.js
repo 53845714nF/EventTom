@@ -33,6 +33,12 @@ export default class AdminService {
   }
 
   static getUserIdByEmail(email, users) {
+    
+    // when voucher gets resettet after submitting, email is empty, but this method is called since email is watched
+    if (!email) {
+      return "";
+    }
+
     const user = users.find((user) => user.email === email);
     return user.id;
   }
@@ -91,7 +97,7 @@ export default class AdminService {
       });
   }
 
-  static tryPostNewVoucher(voucher) {
+  static async tryPostNewVoucher(voucher, authStore) {
     const validationRules = FormValidatorService.getValidationRules(FormTypes.NEW_VOUCHER);
     const validationError = FormValidatorService.validateForm(voucher.value, validationRules);
 
@@ -100,7 +106,26 @@ export default class AdminService {
       return;
     }
 
-    console.log(voucher.value);
-    ToasterService.createToasterPopUp("error", "Not implemented yet.");
+    await AdminService.postVoucherData(voucher, authStore);
+    
+  }
+
+  static async postVoucherData(voucher, authStore) {
+    const data = {
+      //code: voucher.value.code, TODO: wait until code as a property of voucher in the data model
+      amount: voucher.value.amount,
+      owner_id: voucher.value.owner_id,
+    };
+
+    return axios
+      .post("/api/v1/vouchers/", data, AuthService.getAuthorizedConfig(authStore))
+      .then(() => {
+        voucher.value = AdminService.provideEmptyVoucher();
+        ToasterService.createToasterPopUp("success", "Gutschein erfolgreich hinzugefügt");
+      })
+      .catch((error) => {
+        console.log(error);
+        ToasterService.createToasterPopUp("error", "Etwas ist schief gelaufen.");
+      });
   }
 }

@@ -76,7 +76,7 @@ export default class AuthService {
 
     const userInfo = await AuthService.getUserMe(authStore);
 
-    authStore.setRole(userInfo.role ? userInfo.role : userInfo.user_type);
+    authStore.setRole(userInfo.role ? userInfo.role : userInfo.user_type); // TODO: change after role is provided to customer
     authStore.setId(userInfo.id);
 
     // set the redirect path to the first item in the navItems array

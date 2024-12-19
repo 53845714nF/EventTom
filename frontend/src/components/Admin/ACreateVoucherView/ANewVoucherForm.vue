@@ -18,6 +18,8 @@ onBeforeMount(async () => {
 
 const ownerEmailOptions = computed(() => users.value.map((owner) => owner.email));
 
+// compute the correct user_id for the selected email
+// selecting the user_id itself would not be beneficial since it is too complex
 watch(
   () => voucher.value.owner_email,
   (newEmail) => {
@@ -25,7 +27,7 @@ watch(
   },
 );
 
-const tryPostVoucher = () => AdminService.tryPostNewVoucher(voucher, authStore);
+const tryPostVoucher = async () => await AdminService.tryPostNewVoucher(voucher, authStore);
 </script>
 
 <template>
