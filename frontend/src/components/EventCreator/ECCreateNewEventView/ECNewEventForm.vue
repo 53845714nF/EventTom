@@ -25,7 +25,7 @@ watch(
   },
 );
 
-const tryPostEvent = () => EventCreatorService.tryPostNewEvent(event, authStore);
+const tryPostEvent = async () => await EventCreatorService.tryPostNewEvent(event, authStore);
 </script>
 
 <template>

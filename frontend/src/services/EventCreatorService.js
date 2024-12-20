@@ -20,6 +20,12 @@ export default class EventCreatorService {
   }
 
   static getEventManagerIdByEmail(email, eventManagers) {
+    
+    // email changes to "" after event is created
+    if (!email) {
+      return "";
+    }
+
     const eventManager = eventManagers.find((eventManager) => eventManager.email === email);
     return eventManager.id;
   }
@@ -52,10 +58,11 @@ export default class EventCreatorService {
       return;
     }
 
-    const result = EventCreatorService.postEvent(event, authStore);
+    const result = await EventCreatorService.postEvent(event, authStore);
 
     if (result.success) {
       event.value = EventCreatorService.provideEmptyEvent();
+      ToasterService.createToasterPopUp("success", "Event erfolgreich erstellt.");
     }
   }
 
@@ -71,28 +78,8 @@ export default class EventCreatorService {
       manager_id: event.value.event_manager_id,
     }
 
-    console.log(data);
-
-    console.log(AuthService.getAuthorizedHeaders(authStore));
-
-    const url = 'http://localhost:8000/api/v1/events/';
-
-    const headers = {
-      'Accept': 'application/json',
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzUzNzc1NjQsInN1YiI6ImZjYWJhMDA1LTg4M2EtNGYzYS1iZWNiLWJlNTY5NDY0ZWRmZCJ9.hsaCB1z-PGsXC48BSY7VFnmYdkqUVvFWFQD00AuwwRY',
-      'Content-Type': 'application/json'
-    };
-
-    return await axios.post(url, data, { headers })
-      .then(response => {
-        console.log(response.data); // Antwortdaten verarbeiten
-      })
-      .catch(error => {
-        console.error('Fehler:', error.response ? error.response.data : error.message);
-      });
-
-    return await axios.post("/api/v1/events", data, {
-      headers: AuthService.getAuthorizedHeaders(authStore),
+    return await axios.post("/api/v1/events/", data, {
+      headers: AuthService.getAuthorizedHeaders(authStore)
     })
       .then(() => {
         return {success: true};
@@ -101,8 +88,7 @@ export default class EventCreatorService {
         ToasterService.createToasterPopUp("error", "Something went wrong while creating the event.");
         console.error(error);
         return {success: false};
-      })
-
+      });
   }
 
   static async getEventsForEventCreator(eventCreatorId, authStore) {
