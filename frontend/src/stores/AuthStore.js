@@ -6,7 +6,7 @@ import { NavItems } from "@/constants/NavItems";
 
 export const useAuthStore = defineStore("role", () => {
   const role = ref(localStorage.getItem(LocalStorageKeys.USER_ROLE) || Roles.GUEST);
-  const user_id = ref(localStorage.getItem(LocalStorageKeys.USER_ID) || "");
+  const userId = ref(localStorage.getItem(LocalStorageKeys.USER_ID) || "");
   const accessToken = ref(localStorage.getItem(LocalStorageKeys.ACCESS_TOKEN) || "");
 
   const userAuthenticated = computed(() => !!accessToken.value);
@@ -43,18 +43,18 @@ export const useAuthStore = defineStore("role", () => {
 
   function setId(newId) {
     localStorage.setItem(LocalStorageKeys.USER_ID, newId);
-    user_id.value = newId;
+    userId.value = newId;
   }
 
   function removeId() {
     localStorage.setItem(LocalStorageKeys.USER_ID, "");
-    user_id.value = "";
+    userId.value = "";
   }
 
   // you have to return every state property in order for pinia to work properly
   return {
     role,
-    user_id,
+    userId: userId,
     accessToken,
     userAuthenticated,
     navItems,

@@ -167,13 +167,12 @@ export default class AuthService {
   }
 
   static getAuthorizedConfig(authStore) {
-    const config = {
+    return {
       headers: {
         Accept: "application/json",
         Authorization: `Bearer ${authStore.accessToken}`,
       },
     };
-    return config;
   }
 
   static getBasicConfig() {
@@ -183,5 +182,18 @@ export default class AuthService {
       },
     };
     return config;
+  }
+
+  static getAuthorizedHeaders(authStore) {
+    return {
+      Accept: "application/json",
+      Authorization: `Bearer ${authStore.accessToken}`,
+    }
+  }
+
+  static getBasicHeaders() {
+    return {
+      Accept: "application/json",
+    }
   }
 }

@@ -103,7 +103,7 @@ def create_event(
     Create new event.
     """
 
-    if current_user.role == EmployeeRole.EVENTCREATOR:
+    if current_user.role != EmployeeRole.EVENTCREATOR:
         raise HTTPException(
             status_code=400, detail="Not enough permissions to create events"
         )
