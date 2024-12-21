@@ -8,6 +8,7 @@ from app.models import (
     EmployeeCreate,
     Event,
     EventCreate,
+    Role,
     User,
     UserCreate,
     UserType,
@@ -31,6 +32,7 @@ def create_customer(*, session: Session, user_create: UserCreate) -> User:
         update={
             "hashed_password": get_password_hash(user_create.password),
             "user_type": UserType.CUSTOMER,
+            "role": Role.CUSTOMER,
         },
     )
     session.add(db_obj)

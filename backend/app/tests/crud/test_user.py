@@ -3,7 +3,7 @@ from sqlmodel import Session
 
 from app import crud
 from app.core.security import verify_password
-from app.models import EmployeeCreate, EmployeeRole, User, UserCreate, UserUpdate
+from app.models import EmployeeCreate, Role, User, UserCreate, UserUpdate
 from app.tests.utils.utils import random_email, random_lower_string
 
 
@@ -19,7 +19,7 @@ def test_create_customer(db: Session) -> None:
 def test_crate_employee(db: Session) -> None:
     email = random_email()
     password = random_lower_string()
-    role = EmployeeRole.EVENTMANAGER
+    role = Role.EVENTMANAGER
     user_in = EmployeeCreate(email=email, password=password, role=role)
     user = crud.create_employee(session=db, user_create=user_in)
     assert user.email == email
@@ -39,7 +39,7 @@ def test_authenticate_customer(db: Session) -> None:
 def test_authenticate_employee(db: Session) -> None:
     email = random_email()
     password = random_lower_string()
-    role = EmployeeRole.EVENTMANAGER
+    role = Role.EVENTMANAGER
     user_in = EmployeeCreate(email=email, password=password, role=role)
     user = crud.create_employee(session=db, user_create=user_in)
     authenticated_user = crud.authenticate(session=db, email=email, password=password)
@@ -73,19 +73,19 @@ def test_check_if_customer_is_active_inactive(db: Session) -> None:
 def test_check_if_employee_is_admin(db: Session) -> None:
     email = random_email()
     password = random_lower_string()
-    role = EmployeeRole.ADMIN
+    role = Role.ADMIN
     user_in = EmployeeCreate(email=email, password=password, role=role)
     user = crud.create_employee(session=db, user_create=user_in)
-    assert user.role is EmployeeRole.ADMIN
+    assert user.role is Role.ADMIN
 
 
 def test_check_if_employee_is_not_admin(db: Session) -> None:
     username = random_email()
     password = random_lower_string()
-    role = EmployeeRole.EVENTMANAGER
+    role = Role.EVENTMANAGER
     user_in = EmployeeCreate(email=username, password=password, role=role)
     user = crud.create_employee(session=db, user_create=user_in)
-    assert user.role is not EmployeeRole.ADMIN
+    assert user.role is not Role.ADMIN
 
 
 def test_get_customer(db: Session) -> None:
