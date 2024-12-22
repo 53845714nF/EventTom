@@ -52,6 +52,18 @@ export default class AdminService {
       return;
     }
 
+    const result = await AdminService.postNewUser(user, authStore);
+
+    if (result.success) {
+      ToasterService.createToasterPopUp("success", "User erfolgreich hinzugefügt.");
+      user.value = AdminService.provideEmptyUser();
+    }
+    else {
+      ToasterService.createToasterPopUp("error", "Fehler beim Hinzufügen des Users.");
+    }
+  }
+
+  static async postNewUser(user, authStore) {
     const data = {
       full_name: user.value.full_name,
       email: user.value.email,
@@ -61,39 +73,73 @@ export default class AdminService {
       password: user.value.password,
     };
 
-    return axios
-      .post("/api/v1/users/", data, AuthService.getAuthorizedConfig(authStore))
+    console.log(data);
+
+    return await axios.post("/api/v1/users/", data, {
+        headers: AuthService.getAuthorizedHeaders(authStore)
+      })
       .then(() => {
-        user.value = AdminService.provideEmptyUser();
-        ToasterService.createToasterPopUp("success", "User erfolgreich hinzugefügt");
+        return { success: true };
       })
       .catch((error) => {
         console.log(error);
-        ToasterService.createToasterPopUp("error", "Etwas ist schief gelaufen.");
+        return { success: false };
       });
+  }
+
+  static async tryGetAllUsers(authStore) {
+    const result = await AdminService.getAllUsers(authStore);
+
+    if (result.success) {
+      return result.data;
+    }
+    else {
+      ToasterService.createToasterPopUp("error", "Fehler beim Laden der User.");
+    }
   }
 
   static async getAllUsers(authStore) {
     return axios
-      .get("/api/v1/users/", AuthService.getAuthorizedConfig(authStore))
+      .get("/api/v1/users/", {
+        headers: AuthService.getAuthorizedHeaders(authStore)
+      })
       .then((response) => {
-        return response.data.data;
+        return { success: true, data: response.data.data };
       })
       .catch((error) => {
         console.log(error);
-        ToasterService.createToasterPopUp("error", "Fehler beim Laden der User.");
+        return { success: false };
       });
   }
 
-  static async deleteUser(userId, authStore) {
-    return axios
-      .delete(`/api/v1/users/${userId}`, AuthService.getAuthorizedConfig(authStore))
+  static async tryDeleteUser(user, authStore) {
+    if (user.id === authStore.userId) {
+      ToasterService.createToasterPopUp("error", "Du kannst dich nicht selbst löschen.");
+      return;
+    }
+
+    const result = await AdminService.deleteUser(user, authStore);
+
+    if (result.success) {
+      ToasterService.createToasterPopUp("success", "User erfolgreich gelöscht.");
+      window.location.reload(); // TODO: more elegant solution
+    }
+    else {
+      ToasterService.createToasterPopUp("error", "Fehler beim Löschen des Users.");
+    }
+  }
+
+  static async deleteUser(user, authStore) {
+    return await axios
+      .delete(`/api/v1/users/${user.id}`, {
+        headers: AuthService.getAuthorizedHeaders(authStore)
+    })
       .then(() => {
-        ToasterService.createToasterPopUp("success", "User erfolgreich gelöscht");
+        return { success: true };
       })
       .catch((error) => {
         console.log(error);
-        ToasterService.createToasterPopUp("error", "Fehler beim Löschen des Users.");
+        return { success: false };
       });
   }
 
