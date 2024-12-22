@@ -5,13 +5,6 @@ import ToasterService from "./ToasterService";
 export default class EventManagerService {
   // ### EMEventsView.vue
   static async getEventsForEventManager(eventManagerId, authStore) {
-  
-        // {
-        //   title: "Event 1",
-        //   description: "Description 1",
-        //   tickets: 100,
-        //   tickets_sold: 80,
-        // },
         
     return await axios.get(`/api/v1/events/manager/${eventManagerId}`,{
       headers: AuthService.getAuthorizedConfig(authStore.accessToken)

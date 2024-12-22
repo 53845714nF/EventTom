@@ -9,6 +9,7 @@ const props = defineProps({
   },
 });
 
+props.event.tickets_sold = Math.round(Math.random() * props.event.count); //TODO: tickets_sold as attribute
 const showPercentage = ref(true);
 const switchView = () => (showPercentage.value = !showPercentage.value);
 
@@ -18,7 +19,7 @@ const percentageSold = computed(() => {
 
 const percentageComparedToExpected = computed(() =>
   EventManagerService.getPercentageOfTicketsSoldComparedToExpected(
-    props.event.tickets_sold ? props.event.tickets_sold : 0, //TODO: tickets_sold as attribute
+    props.event.tickets_sold, //TODO: tickets_sold as attribute
     props.event.threshold,
   ),
 );
