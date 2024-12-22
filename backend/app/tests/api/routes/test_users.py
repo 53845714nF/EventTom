@@ -7,7 +7,7 @@ from sqlmodel import Session, select
 from app import crud
 from app.core.config import settings
 from app.core.security import verify_password
-from app.models import EmployeeCreate, EmployeeRole, User, UserCreate
+from app.models import EmployeeCreate, Role, User, UserCreate
 from app.tests.utils.utils import random_email, random_lower_string
 
 
@@ -428,7 +428,7 @@ def test_delete_employee_admin(
 ) -> None:
     username = random_email()
     password = random_lower_string()
-    role = EmployeeRole.ADMIN
+    role = Role.ADMIN
     user_in = EmployeeCreate(email=username, password=password, role=role)
     user = crud.create_employee(session=db, user_create=user_in)
     user_id = user.id
