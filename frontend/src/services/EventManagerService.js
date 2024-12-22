@@ -5,10 +5,10 @@ import ToasterService from "./ToasterService";
 export default class EventManagerService {
   // ### EMEventsView.vue
   static async getEventsForEventManager(eventManagerId, authStore) {
-        
-    return await axios.get(`/api/v1/events/manager/${eventManagerId}`,{
-      headers: AuthService.getAuthorizedConfig(authStore.accessToken)
-    })
+    return await axios
+      .get(`/api/v1/events/manager/${eventManagerId}`, {
+        headers: AuthService.getAuthorizedConfig(authStore.accessToken),
+      })
       .then((response) => {
         return response.data;
       })

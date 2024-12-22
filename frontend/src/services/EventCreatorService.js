@@ -20,7 +20,6 @@ export default class EventCreatorService {
   }
 
   static getEventManagerIdByEmail(email, eventManagers) {
-    
     // email changes to "" after event is created
     if (!email) {
       return "";
@@ -31,25 +30,24 @@ export default class EventCreatorService {
   }
 
   static async getAllEventManagers(authStore) {
-
-    return await axios.get('/api/v1/users/manager', {
-      headers: AuthService.getAuthorizedHeaders(authStore),
-      params: {
-        skip: 0,
-        limit: 100
-      }
-    })
-      .then(response => {
+    return await axios
+      .get("/api/v1/users/manager", {
+        headers: AuthService.getAuthorizedHeaders(authStore),
+        params: {
+          skip: 0,
+          limit: 100,
+        },
+      })
+      .then((response) => {
         return response.data;
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error); // Fehlerbehandlung hier.
         ToasterService.createToasterPopUp("error", "Something went wrong while fetching the event managers.");
       });
   }
 
   static async tryPostNewEvent(event, authStore) {
-    
     const validationRules = FormValidatorService.getValidationRules(FormTypes.NEW_EVENT);
     const validationError = FormValidatorService.validateForm(event.value, validationRules);
 
@@ -67,7 +65,6 @@ export default class EventCreatorService {
   }
 
   static async postEvent(event, authStore) {
-
     const data = {
       title: event.value.title,
       description: event.value.description,
@@ -76,25 +73,27 @@ export default class EventCreatorService {
       base_price: event.value.base_price,
       pay_fee: event.value.pay_fee,
       manager_id: event.value.event_manager_id,
-    }
+    };
 
-    return await axios.post("/api/v1/events/", data, {
-      headers: AuthService.getAuthorizedHeaders(authStore)
-    })
+    return await axios
+      .post("/api/v1/events/", data, {
+        headers: AuthService.getAuthorizedHeaders(authStore),
+      })
       .then(() => {
-        return {success: true};
+        return { success: true };
       })
       .catch((error) => {
         ToasterService.createToasterPopUp("error", "Something went wrong while creating the event.");
         console.error(error);
-        return {success: false};
+        return { success: false };
       });
   }
 
   static async getEventsForEventCreator(eventCreatorId, authStore) {
-    return await axios.get(`/api/v1/events/creator/${eventCreatorId}`,{
-      headers: AuthService.getBasicHeaders(authStore.accessToken),
-    })
+    return await axios
+      .get(`/api/v1/events/creator/${eventCreatorId}`, {
+        headers: AuthService.getBasicHeaders(authStore.accessToken),
+      })
       .then((response) => {
         return response.data;
       })
@@ -110,23 +109,22 @@ export default class EventCreatorService {
     if (result.success) {
       ToasterService.createToasterPopUp("success", "Event erfolgreich gelöscht.");
       window.location.reload(); // TODO: more elegant solution
-    }
-    else {
+    } else {
       ToasterService.createToasterPopUp("error", "Something went wrong while deleting the event.");
     }
   }
 
   static async deleteEvent(event, authStore) {
-    return await axios.delete(`/api/v1/events/${event.id}`, {
-      headers: AuthService.getAuthorizedHeaders(authStore),
-    })
+    return await axios
+      .delete(`/api/v1/events/${event.id}`, {
+        headers: AuthService.getAuthorizedHeaders(authStore),
+      })
       .then(() => {
-        return {success: true};
+        return { success: true };
       })
       .catch((error) => {
         console.error(error);
-        return {success: false};
+        return { success: false };
       });
   }
 }
-

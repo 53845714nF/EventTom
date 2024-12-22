@@ -103,7 +103,8 @@ export default class FormValidatorService {
             FormValidatorService.rules.isNumeric("Anzahl Tickets muss eine Zahl sein."),
             FormValidatorService.rules.largerThan(0, "Anzahl Tickets muss größer als 0 sein."),
           ],
-          threshold: [ // TODO: Threshold darf nicht größer als die Anzahl der Tickets sein
+          threshold: [
+            // TODO: Threshold darf nicht größer als die Anzahl der Tickets sein
             FormValidatorService.rules.isRequired("Threshold darf nicht leer sein."),
             FormValidatorService.rules.isNumeric("Threshold muss eine Zahl sein."),
             FormValidatorService.rules.largerOrEqualThan(0, "Threshold muss größer gleich 0 sein."),

@@ -33,7 +33,6 @@ export default class AdminService {
   }
 
   static provideVoucherOwnerEmailOptions(users) {
-
     // this function is already executed when users are not loaded yet
     if (users.length === 0) {
       return [];
@@ -50,7 +49,6 @@ export default class AdminService {
   }
 
   static getUserIdByEmail(email, users) {
-    
     // when voucher gets resettet after submitting, email is empty, but this method is called since email is watched
     if (!email) {
       return "";
@@ -74,8 +72,7 @@ export default class AdminService {
     if (result.success) {
       ToasterService.createToasterPopUp("success", "User erfolgreich hinzugefügt.");
       user.value = AdminService.provideEmptyUser();
-    }
-    else {
+    } else {
       ToasterService.createToasterPopUp("error", "Fehler beim Hinzufügen des Users.");
     }
   }
@@ -92,8 +89,9 @@ export default class AdminService {
 
     console.log(data);
 
-    return await axios.post("/api/v1/users/", data, {
-        headers: AuthService.getAuthorizedHeaders(authStore)
+    return await axios
+      .post("/api/v1/users/", data, {
+        headers: AuthService.getAuthorizedHeaders(authStore),
       })
       .then(() => {
         return { success: true };
@@ -109,8 +107,7 @@ export default class AdminService {
 
     if (result.success) {
       return result.data;
-    }
-    else {
+    } else {
       ToasterService.createToasterPopUp("error", "Fehler beim Laden der User.");
     }
   }
@@ -118,7 +115,7 @@ export default class AdminService {
   static async getAllUsers(authStore) {
     return axios
       .get("/api/v1/users/", {
-        headers: AuthService.getAuthorizedHeaders(authStore)
+        headers: AuthService.getAuthorizedHeaders(authStore),
       })
       .then((response) => {
         return { success: true, data: response.data.data };
@@ -140,8 +137,7 @@ export default class AdminService {
     if (result.success) {
       ToasterService.createToasterPopUp("success", "User erfolgreich gelöscht.");
       window.location.reload(); // TODO: more elegant solution
-    }
-    else {
+    } else {
       ToasterService.createToasterPopUp("error", "Fehler beim Löschen des Users.");
     }
   }
@@ -149,8 +145,8 @@ export default class AdminService {
   static async deleteUser(user, authStore) {
     return await axios
       .delete(`/api/v1/users/${user.id}`, {
-        headers: AuthService.getAuthorizedHeaders(authStore)
-    })
+        headers: AuthService.getAuthorizedHeaders(authStore),
+      })
       .then(() => {
         return { success: true };
       })
@@ -170,7 +166,6 @@ export default class AdminService {
     }
 
     await AdminService.postVoucherData(voucher, authStore);
-    
   }
 
   static async postVoucherData(voucher, authStore) {

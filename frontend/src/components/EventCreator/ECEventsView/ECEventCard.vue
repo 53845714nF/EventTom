@@ -1,6 +1,6 @@
 <script setup>
-import EventCreatorService from '@/services/EventCreatorService';
-import { useAuthStore } from '@/stores/AuthStore';
+import EventCreatorService from "@/services/EventCreatorService";
+import { useAuthStore } from "@/stores/AuthStore";
 
 const props = defineProps({
   event: {

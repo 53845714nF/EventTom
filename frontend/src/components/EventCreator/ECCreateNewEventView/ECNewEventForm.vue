@@ -12,7 +12,7 @@ const eventManagers = ref([]);
 
 onBeforeMount(async () => {
   await EventCreatorService.getAllEventManagers(authStore).then((result) => {
-    eventManagers.value = result.data; 
+    eventManagers.value = result.data;
   });
 });
 
