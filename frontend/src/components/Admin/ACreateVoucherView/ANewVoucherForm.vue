@@ -11,12 +11,12 @@ const voucher = ref(AdminService.provideEmptyVoucher());
 const users = ref([]);
 
 onBeforeMount(async () => {
-  AdminService.getAllUsers(authStore).then((options) => {
+  await AdminService.tryGetAllUsers(authStore).then((options) => {
     users.value = options;
   });
 });
 
-const ownerEmailOptions = computed(() => users.value.map((owner) => owner.email));
+const ownerEmailOptions = computed(() => AdminService.provideVoucherOwnerEmailOptions(users.value));
 
 // compute the correct user_id for the selected email
 // selecting the user_id itself would not be beneficial since it is too complex

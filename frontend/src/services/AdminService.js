@@ -32,6 +32,23 @@ export default class AdminService {
     };
   }
 
+  static provideVoucherOwnerEmailOptions(users) {
+
+    // this function is already executed when users are not loaded yet
+    if (users.length === 0) {
+      return [];
+    }
+
+    const possibleOwners = users.filter((user) => user.user_type === Roles.CUSTOMER); // TODO: implement for user.role
+
+    if (possibleOwners.length === 0) {
+      ToasterService.createToasterPopUp("error", "Keine Kunden im System.");
+      return [];
+    }
+
+    return possibleOwners.map((user) => user.email);
+  }
+
   static getUserIdByEmail(email, users) {
     
     // when voucher gets resettet after submitting, email is empty, but this method is called since email is watched
