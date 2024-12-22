@@ -129,6 +129,7 @@ class EventsPublic(SQLModel):
 #
 class VoucherBase(SQLModel):
     amount: float
+    code_name: str
 
 
 class VoucherCreate(VoucherBase):
@@ -152,7 +153,6 @@ class VouchersPublic(SQLModel):
 class Voucher(VoucherBase, table=True):
     id: UUID = Field(default_factory=uuid4, primary_key=True)
     owner_id: UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
-    amount: float
 
 
 # Generic message
