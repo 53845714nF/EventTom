@@ -103,5 +103,30 @@ export default class EventCreatorService {
         ToasterService.createToasterPopUp("error", "Something went wrong while fetching the events.");
       });
   }
+
+  static async tryDeleteEvent(event, authStore) {
+    const result = await EventCreatorService.deleteEvent(event, authStore);
+
+    if (result.success) {
+      ToasterService.createToasterPopUp("success", "Event erfolgreich gelöscht.");
+      window.location.reload(); // TODO: more elegant solution
+    }
+    else {
+      ToasterService.createToasterPopUp("error", "Something went wrong while deleting the event.");
+    }
+  }
+
+  static async deleteEvent(event, authStore) {
+    return await axios.delete(`/api/v1/events/${event.id}`, {
+      headers: AuthService.getAuthorizedHeaders(authStore),
+    })
+      .then(() => {
+        return {success: true};
+      })
+      .catch((error) => {
+        console.error(error);
+        return {success: false};
+      });
+  }
 }
 

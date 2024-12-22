@@ -144,9 +144,9 @@ def update_event(
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
 
-    if not (current_user.id == event.manager_id) or (
+    if not ((current_user.id == event.manager_id) or (
         current_user.id == event.creator_id
-    ):
+    )):
         raise HTTPException(
             status_code=400,
             detail="Only the Event Manager or Creator of this Event has enough permissions",
@@ -171,9 +171,9 @@ def delete_event(
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
 
-    if not (current_user.id == event.manager_id) or (
+    if not ((current_user.id == event.manager_id) or (
         current_user.id == event.creator_id
-    ):
+    )):
         raise HTTPException(
             status_code=400,
             detail="Only the Event Manager or Creator of this Event has enough permissions",
