@@ -33,37 +33,56 @@ jobs:
         working-directory: backend
 
 # Heavily inspired by https://github.com/fastapi/full-stack-fastapi-template/blob/master/.github/workflows/test-backend.yml
-#  testing:
-#    needs: linting
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v4
-#
-#      - name: Set up Python
-#        uses: actions/setup-python@v5
-#        with:
-#          python-version: "3.10"
-#
-#      - name: Install uv
-#        uses: astral-sh/setup-uv@v3
-#        with:
-#          version: "0.4.15"
-#          enable-cache: true
-#
-#      - run: docker compose down -v --remove-orphans
-#      - run: docker compose up -d db mailcatcher
-#      - name: Migrate DB
-#        run: uv run bash scripts/prestart.sh
-#        working-directory: backend
-#
-#      - name: Run tests
-#        run: uv run bash scripts/tests-start.sh "Coverage for ${{ github.sha }}"
-#        working-directory: backend
-#      - run: docker compose down -v --remove-orphans
-#      - name: Store coverage files
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: coverage-html
-#          path: backend/htmlcov
-#          include-hidden-files: true
+  testing:
+    needs: linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "0.4.15"
+          enable-cache: true
+
+      - name: Setup Database and mailcatcher
+        run: docker compose down -v --remove-orphans && docker compose up -d db mailcatcher
+
+      - name: Migrate DB
+        env: 
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_SERVER: localhost
+          POSTGRES_DB: app
+          FIRST_SUPERUSER: admin@me.com
+          FIRST_SUPERUSER_PASSWORD: admin1234
+        run: uv run bash scripts/prestart.sh
+        working-directory: backend
+
+      - name: Run tests
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_SERVER: localhost
+          POSTGRES_DB: app
+          FIRST_SUPERUSER: admin@me.com
+          FIRST_SUPERUSER_PASSWORD: admin1234
+        run: uv run bash scripts/tests-start.sh "Coverage for ${{ github.sha }}"
+        working-directory: backend
+      
+      - name: Destruct Database
+        run: docker compose down -v --remove-orphans
+
+      - name: Store coverage files
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: backend/htmlcov
+          include-hidden-files: true
