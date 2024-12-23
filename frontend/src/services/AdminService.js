@@ -1,4 +1,3 @@
-import { ref } from "vue";
 import { Roles } from "@/constants/Roles";
 import AuthService from "./AuthService";
 import ToasterService from "./ToasterService";
@@ -170,8 +169,7 @@ export default class AdminService {
     if (result.success) {
       ToasterService.createToasterPopUp("success", "Gutschein erfolgreich hinzugefügt.");
       voucher.value = AdminService.provideEmptyVoucher();
-    }
-    else {
+    } else {
       ToasterService.createToasterPopUp("error", "Fehler beim Hinzufügen des Gutscheins.");
     }
   }
@@ -183,9 +181,10 @@ export default class AdminService {
       owner_id: voucher.value.owner_id,
     };
 
-    return axios.post("/api/v1/vouchers/", data, {
-      headers: AuthService.getAuthorizedHeaders(authStore)
-    })
+    return axios
+      .post("/api/v1/vouchers/", data, {
+        headers: AuthService.getAuthorizedHeaders(authStore),
+      })
       .then(() => {
         return { success: true };
       })

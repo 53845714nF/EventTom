@@ -53,7 +53,6 @@ export default class AuthService {
     await AuthService.tryLoginUser(user, authStore);
   }
 
-
   static async tryLoginUser(user, authStore) {
     const validationRules = FormValidatorService.getValidationRules(FormTypes.LOGIN);
     const validationError = FormValidatorService.validateForm(user.value, validationRules);
