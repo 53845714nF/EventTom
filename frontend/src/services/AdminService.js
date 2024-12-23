@@ -8,14 +8,14 @@ import FormTypes from "@/constants/FormTypes";
 
 export default class AdminService {
   static provideEmptyUser() {
-    return ref({
+    return {
       full_name: "",
       email: "",
       is_active: true,
       user_type: "employee",
       role: "",
       password: "",
-    });
+    };
   }
 
   static provideRoleOptions() {
@@ -25,7 +25,7 @@ export default class AdminService {
 
   static provideEmptyVoucher() {
     return {
-      code: "",
+      code_name: "",
       amount: "0",
       owner_id: "",
       owner_email: "",
@@ -38,7 +38,7 @@ export default class AdminService {
       return [];
     }
 
-    const possibleOwners = users.filter((user) => user.user_type === Roles.CUSTOMER); // TODO: implement for user.role
+    const possibleOwners = users.filter((user) => user.role === Roles.CUSTOMER);
 
     if (possibleOwners.length === 0) {
       ToasterService.createToasterPopUp("error", "Keine Kunden im System.");
@@ -165,25 +165,33 @@ export default class AdminService {
       return;
     }
 
-    await AdminService.postVoucherData(voucher, authStore);
+    const result = await AdminService.postVoucherData(voucher, authStore);
+
+    if (result.success) {
+      ToasterService.createToasterPopUp("success", "Gutschein erfolgreich hinzugefügt.");
+      voucher.value = AdminService.provideEmptyVoucher();
+    }
+    else {
+      ToasterService.createToasterPopUp("error", "Fehler beim Hinzufügen des Gutscheins.");
+    }
   }
 
   static async postVoucherData(voucher, authStore) {
     const data = {
-      //code: voucher.value.code, TODO: wait until code as a property of voucher in the data model
+      code_name: voucher.value.code_name,
       amount: voucher.value.amount,
       owner_id: voucher.value.owner_id,
     };
 
-    return axios
-      .post("/api/v1/vouchers/", data, AuthService.getAuthorizedConfig(authStore))
+    return axios.post("/api/v1/vouchers/", data, {
+      headers: AuthService.getAuthorizedHeaders(authStore)
+    })
       .then(() => {
-        voucher.value = AdminService.provideEmptyVoucher();
-        ToasterService.createToasterPopUp("success", "Gutschein erfolgreich hinzugefügt");
+        return { success: true };
       })
       .catch((error) => {
         console.log(error);
-        ToasterService.createToasterPopUp("error", "Etwas ist schief gelaufen.");
+        return { success: false };
       });
   }
 }

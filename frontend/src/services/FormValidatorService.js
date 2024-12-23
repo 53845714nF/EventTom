@@ -119,7 +119,7 @@ export default class FormValidatorService {
             FormValidatorService.rules.isNumeric("Betrag muss eine Zahl sein."),
             FormValidatorService.rules.largerThan(0, "Betrag muss größer als 0 sein."),
           ],
-          code: [FormValidatorService.rules.isRequired("Code darf nicht leer sein")],
+          code_name: [FormValidatorService.rules.isRequired("Code darf nicht leer sein")],
           owner_email: [FormValidatorService.rules.isRequired("Kunden Email darf nicht leer sein.")],
         };
 

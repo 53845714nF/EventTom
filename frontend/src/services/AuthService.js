@@ -53,8 +53,7 @@ export default class AuthService {
     await AuthService.tryLoginUser(user, authStore);
   }
 
-  // sends a POST request to the backend to log in the user
-  // if successful, saves the access token to the local storage and redirects to the provided redirectPath
+
   static async tryLoginUser(user, authStore) {
     const validationRules = FormValidatorService.getValidationRules(FormTypes.LOGIN);
     const validationError = FormValidatorService.validateForm(user.value, validationRules);
@@ -76,7 +75,7 @@ export default class AuthService {
 
     const userInfo = await AuthService.getUserMe(authStore);
 
-    authStore.setRole(userInfo.role ? userInfo.role : userInfo.user_type); // TODO: change after role is provided to customer
+    authStore.setRole(userInfo.role);
     authStore.setId(userInfo.id);
 
     // set the redirect path to the first item in the navItems array
