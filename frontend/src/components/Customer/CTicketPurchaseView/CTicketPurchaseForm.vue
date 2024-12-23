@@ -2,7 +2,7 @@
 import PrimaryButton from "@/components/Basic/PrimaryButton.vue";
 import SecondaryButton from "@/components/Basic/SecondaryButton.vue";
 import FormInput from "@/components/Basic/FormInput.vue";
-import { validateVoucher, provideEmptyForm } from "@/services/CustomerService";
+import CustomerService from "@/services/CustomerService";
 import TicketPurchaseService from "@/services/TicketPurchaseService";
 import ToasterService from "@/services/ToasterService";
 import { ref, computed } from "vue";
