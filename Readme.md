@@ -19,6 +19,12 @@ docker compose down -v --remove-orphans
 docker compose up -d db mailcatcher
 cd backend/ 
 source .venv/bin/activate
+set -x POSTGRES_USER postgres
+set -x POSTGRES_PASSWORD postgres
+set -x POSTGRES_SERVER localhost
+set -x POSTGRES_DB app 
+set -x FIRST_SUPERUSER admin@me.com
+set -x FIRST_SUPERUSER_PASSWORD admin1234
 uv run bash scripts/prestart.sh
 ```
 
@@ -26,6 +32,13 @@ or use [act](https://github.com/nektos/act):
 
 ```bash
 act -W .github/workflows/backend_ci.yml
+```
+
+### Format Code for Linting
+```bash
+cd backend/
+source .venv/bin/activate
+ruff format app
 ```
 
 ## Infrastructure
