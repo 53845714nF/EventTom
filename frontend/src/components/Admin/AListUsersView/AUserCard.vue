@@ -11,7 +11,7 @@ const props = defineProps({
   },
 });
 
-const deleteUser = async () => await AdminService.deleteUser(props.user.id, authStore);
+const deleteUser = async () => await AdminService.tryDeleteUser(props.user, authStore);
 </script>
 
 <template>
