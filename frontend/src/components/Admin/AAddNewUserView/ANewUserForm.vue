@@ -4,9 +4,10 @@ import PrimaryButton from "@/components/Basic/PrimaryButton.vue";
 import AdminService from "@/services/AdminService";
 import { PrimaryButtonTypes } from "@/constants/ButtonTypes";
 import { useAuthStore } from "@/stores/AuthStore";
+import { ref } from "vue";
 
 const authStore = useAuthStore();
-const user = AdminService.provideEmptyUser();
+const user = ref(AdminService.provideEmptyUser());
 const roleOptions = AdminService.provideRoleOptions();
 const tryPostUser = () => AdminService.tryPostNewUser(user, authStore);
 </script>

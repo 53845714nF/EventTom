@@ -5,58 +5,17 @@ import ToasterService from "./ToasterService";
 export default class EventManagerService {
   // ### EMEventsView.vue
   static async getEventsForEventManager(eventManagerId, authStore) {
-    const endpointExists = false;
-
-    if (!endpointExists) {
-      return [
-        {
-          title: "Event 1",
-          description: "Description 1",
-          tickets: 100,
-          tickets_sold: 80,
-        },
-        {
-          title: "Event 1",
-          description: "Description 1",
-          tickets: 100,
-          tickets_sold: 88,
-        },
-        {
-          title: "Event 1",
-          description: "Description 1",
-          tickets: 100,
-          tickets_sold: 72,
-        },
-        {
-          title: "Event 1",
-          description: "Description 1",
-          tickets: 100,
-          tickets_sold: 90,
-        },
-        {
-          title: "Event 2",
-          description: "Description 2",
-          tickets: 100,
-          tickets_sold: 70,
-        },
-        {
-          title: "Event 3",
-          description: "Description 3",
-          tickets: 100,
-          tickets_sold: 10,
-        },
-      ];
-    } else {
-      await axios
-        .post(`/api/v1/events/event-manager/${eventManagerId}`, {}, AuthService.getConfig(authStore.accessToken))
-        .then((response) => {
-          return response.data;
-        })
-        .catch((error) => {
-          console.log(error);
-          ToasterService.createToasterPopUp("error", "Something went wrong while fetching the events.");
-        });
-    }
+    return await axios
+      .get(`/api/v1/events/manager/${eventManagerId}`, {
+        headers: AuthService.getAuthorizedConfig(authStore.accessToken),
+      })
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+        ToasterService.createToasterPopUp("error", "Something went wrong while fetching the events.");
+      });
   }
 
   // ### TicketSalesCard.vue ###
@@ -66,9 +25,8 @@ export default class EventManagerService {
   }
 
   // returns how many tickets are sold in relation to the threshold as a percentage
-  static getPercentageOfTicketsSoldComparedToExpected(noTickets, noTicketsSold, threshold) {
-    const expectedNoTicketsSold = noTickets * threshold;
-    return Math.round(((noTicketsSold - expectedNoTicketsSold) / expectedNoTicketsSold) * 100);
+  static getPercentageOfTicketsSoldComparedToExpected(noTicketsSold, threshold) {
+    return Math.round(((noTicketsSold - threshold) / threshold) * 100);
   }
 
   static getHighlightClass(percentage) {

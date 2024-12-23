@@ -10,7 +10,7 @@ import { PrimaryButtonTypes, SecondaryButtonTypes } from "@/constants/ButtonType
 const user = ref(AuthService.provideEmptySignUpUser());
 const authStore = useAuthStore();
 
-const trySignUpUser = () => AuthService.trySignUpUser(user, authStore);
+const trySignUpUser = async () => await AuthService.trySignUpUser(user, authStore);
 </script>
 
 <template>

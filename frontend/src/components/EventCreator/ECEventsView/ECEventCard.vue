@@ -1,16 +1,28 @@
 <script setup>
+import EventCreatorService from "@/services/EventCreatorService";
+import { useAuthStore } from "@/stores/AuthStore";
+
 const props = defineProps({
   event: {
     type: Object,
     required: true,
   },
 });
+
+const authStore = useAuthStore();
+
+const deleteEvent = async () => await EventCreatorService.tryDeleteEvent(props.event, authStore);
 </script>
 
 <template>
   <div class="card-body">
     <div class="card-content">
-      <h4>{{ event.title }}</h4>
+      <div>
+        <h4>{{ event.title }}</h4>
+        <div @click="deleteEvent" class="icon-button delete-event-button">
+          <i class="fa-solid fa-trash"></i>
+        </div>
+      </div>
       <p class="no-margin">{{ event.description }}</p>
     </div>
   </div>
@@ -34,5 +46,21 @@ const props = defineProps({
   align-items: flex-start;
   flex-wrap: wrap;
   width: 100%;
+}
+
+.card-content > div {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.delete-event-button {
+  background-color: var(--cp-white);
+}
+
+.delete-event-button:hover {
+  background-color: var(--cp-light-grey);
 }
 </style>

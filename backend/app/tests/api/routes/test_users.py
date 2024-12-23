@@ -7,7 +7,7 @@ from sqlmodel import Session, select
 from app import crud
 from app.core.config import settings
 from app.core.security import verify_password
-from app.models import EmployeeCreate, EmployeeRole, User, UserCreate
+from app.models import EmployeeCreate, Role, User, UserCreate
 from app.tests.utils.utils import random_email, random_lower_string
 
 
@@ -411,7 +411,7 @@ def test_delete_customer_me(client: TestClient, db: Session) -> None:
     assert user_db is None
 
 
-def test_delete_user_me_as_superuser(
+def test_delete_user_me_as_employe(
     client: TestClient, superuser_token_headers: dict[str, str]
 ) -> None:
     r = client.delete(
@@ -420,7 +420,7 @@ def test_delete_user_me_as_superuser(
     )
     assert r.status_code == 403
     response = r.json()
-    assert response["detail"] == "Super users are not allowed to delete themselves"
+    assert response["detail"] == "Employes are not allowed to delete themselves"
 
 
 def test_delete_employee_admin(
@@ -428,7 +428,7 @@ def test_delete_employee_admin(
 ) -> None:
     username = random_email()
     password = random_lower_string()
-    role = EmployeeRole.ADMIN
+    role = Role.ADMIN
     user_in = EmployeeCreate(email=username, password=password, role=role)
     user = crud.create_employee(session=db, user_create=user_in)
     user_id = user.id

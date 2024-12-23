@@ -3,7 +3,7 @@ from sqlmodel import Session
 
 from app import crud
 from app.core.config import settings
-from app.models import EmployeeCreate, EmployeeRole
+from app.models import EmployeeCreate, Role
 from app.tests.utils.utils import random_email, random_lower_string
 
 
@@ -12,7 +12,7 @@ def test_create_event(
 ) -> None:
     username = random_email()
     password = random_lower_string()
-    role = EmployeeRole.EVENTMANAGER
+    role = Role.EVENTMANAGER
     employee = EmployeeCreate(email=username, password=password, role=role)
     manager = crud.create_employee(session=db, user_create=employee)
     manager_id = manager.id

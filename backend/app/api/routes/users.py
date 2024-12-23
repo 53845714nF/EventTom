@@ -14,8 +14,8 @@ from app.core.config import settings
 from app.core.security import get_password_hash, verify_password
 from app.models import (
     EmployeeCreate,
-    EmployeeRole,
     Message,
+    Role,
     UpdatePassword,
     User,
     UserCreate,
@@ -60,17 +60,12 @@ def read_event_manager(session: SessionDep, skip: int = 0, limit: int = 100) -> 
     """
 
     count_statement = (
-        select(func.count())
-        .select_from(User)
-        .where(User.role == EmployeeRole.EVENTMANAGER)
+        select(func.count()).select_from(User).where(User.role == Role.EVENTMANAGER)
     )
     count = session.exec(count_statement).one()
 
     statement = (
-        select(User)
-        .where(User.role == EmployeeRole.EVENTMANAGER)
-        .offset(skip)
-        .limit(limit)
+        select(User).where(User.role == Role.EVENTMANAGER).offset(skip).limit(limit)
     )
     users = session.exec(statement).all()
 
@@ -86,7 +81,7 @@ def create_employee(
     """
     Create new Employee.
     """
-    if current_user.role != EmployeeRole.ADMIN:
+    if current_user.role != Role.ADMIN:
         raise HTTPException(
             status_code=403,
             detail="Only administrators can create new users",

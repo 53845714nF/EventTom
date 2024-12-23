@@ -13,10 +13,11 @@ class UserType(str, Enum):
     CUSTOMER = "customer"
 
 
-class EmployeeRole(str, Enum):
+class Role(str, Enum):
     EVENTCREATOR = "eventcreator"
     EVENTMANAGER = "eventmanager"
     ADMIN = "admin"
+    CUSTOMER = "customer"
 
 
 class UserBase(SQLModel):
@@ -30,11 +31,9 @@ class User(UserBase, table=True):
     id: UUID = Field(default_factory=uuid4, primary_key=True)
     hashed_password: str
 
-    # Discriminator column für den Benutzertyp
-    user_type: UserType = Field(default=None)
-
-    # Employee specific fields
-    role: EmployeeRole | None = Field(default=None)
+    # Discriminator column for the user type
+    user_type: UserType
+    role: Role
 
 
 class UserCreate(SQLModel):
@@ -45,7 +44,7 @@ class UserCreate(SQLModel):
 
 class EmployeeCreate(UserCreate):
     user_type: UserType = UserType.EMPLOYEE
-    role: EmployeeRole | None = Field(default=None)
+    role: Role
 
 
 class CustomerCreate(UserCreate):
@@ -57,12 +56,12 @@ class UserUpdate(SQLModel):
     email: EmailStr | None = Field(default=None, max_length=255)
     password: str | None = Field(default=None, min_length=8, max_length=40)
     user_type: UserType = Field(default=None)
-    role: EmployeeRole | None | None = Field(default=None)
+    role: Role | None | None = Field(default=None)
 
 
 class UserPublic(UserBase):
     id: UUID
-    role: EmployeeRole | None = Field(default=None)
+    role: Role | None = Field(default=None)
 
 
 class UsersPublic(SQLModel):
@@ -129,6 +128,7 @@ class EventsPublic(SQLModel):
 #
 class VoucherBase(SQLModel):
     amount: float
+    code_name: str
 
 
 class VoucherCreate(VoucherBase):
@@ -152,7 +152,6 @@ class VouchersPublic(SQLModel):
 class Voucher(VoucherBase, table=True):
     id: UUID = Field(default_factory=uuid4, primary_key=True)
     owner_id: UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
-    amount: float
 
 
 # Generic message

@@ -6,13 +6,13 @@ from sqlmodel import func, select
 
 from app.api.deps import CurrentUser, SessionDep
 from app.models import (
-    EmployeeRole,
     Event,
     EventCreate,
     EventPublic,
     EventsPublic,
     EventUpdate,
     Message,
+    Role,
     User,
 )
 
@@ -103,7 +103,7 @@ def create_event(
     Create new event.
     """
 
-    if current_user.role == EmployeeRole.EVENTCREATOR:
+    if current_user.role != Role.EVENTCREATOR:
         raise HTTPException(
             status_code=400, detail="Not enough permissions to create events"
         )
@@ -116,7 +116,7 @@ def create_event(
             status_code=400, detail="The selected Event Manager dose not exsit."
         )
 
-    if not (selected_user.role == EmployeeRole.EVENTMANAGER):
+    if not (selected_user.role == Role.EVENTMANAGER):
         raise HTTPException(
             status_code=400, detail="The selected user is not an event manager."
         )
@@ -144,9 +144,9 @@ def update_event(
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
 
-    if not (current_user.id == event.manager_id) or (
+    if not ((current_user.id == event.manager_id) or (
         current_user.id == event.creator_id
-    ):
+    )):
         raise HTTPException(
             status_code=400,
             detail="Only the Event Manager or Creator of this Event has enough permissions",
@@ -171,9 +171,9 @@ def delete_event(
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
 
-    if not (current_user.id == event.manager_id) or (
+    if not ((current_user.id == event.manager_id) or (
         current_user.id == event.creator_id
-    ):
+    )):
         raise HTTPException(
             status_code=400,
             detail="Only the Event Manager or Creator of this Event has enough permissions",
