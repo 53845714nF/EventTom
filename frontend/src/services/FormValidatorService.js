@@ -101,11 +101,21 @@ export default class FormValidatorService {
             FormValidatorService.rules.isNumeric("Preis muss eine Zahl sein."),
             FormValidatorService.rules.largerThan(0, "Preis muss größer als 0 sein."),
           ],
+          pay_fee: [
+            FormValidatorService.rules.isRequired("Gebühr darf nicht leer sein."),
+            FormValidatorService.rules.isNumeric("Gebühr muss eine Zahl sein."),
+            FormValidatorService.rules.largerOrEqualThan(1, "Gebühr muss größer oder gleich 1 sein."),
+          ],
+          count: [
+            FormValidatorService.rules.isRequired("Anzahl Tickets darf nicht leer sein."),
+            FormValidatorService.rules.isNumeric("Anzahl Tickets muss eine Zahl sein."),
+            FormValidatorService.rules.largerThan(0, "Anzahl Tickets muss größer als 0 sein."),
+          ],
           threshold: [
+            // TODO: Threshold darf nicht größer als die Anzahl der Tickets sein
             FormValidatorService.rules.isRequired("Threshold darf nicht leer sein."),
             FormValidatorService.rules.isNumeric("Threshold muss eine Zahl sein."),
             FormValidatorService.rules.largerOrEqualThan(0, "Threshold muss größer gleich 0 sein."),
-            FormValidatorService.rules.smallerOrEqualThan(1, "Threshold muss kleiner gleich 1 sein."),
           ],
           event_manager_email: [FormValidatorService.rules.isRequired("Event Manager darf nicht leer sein.")],
         };
@@ -117,7 +127,7 @@ export default class FormValidatorService {
             FormValidatorService.rules.isNumeric("Betrag muss eine Zahl sein."),
             FormValidatorService.rules.largerThan(0, "Betrag muss größer als 0 sein."),
           ],
-          code: [FormValidatorService.rules.isRequired("Code darf nicht leer sein")],
+          code_name: [FormValidatorService.rules.isRequired("Code darf nicht leer sein")],
           owner_email: [FormValidatorService.rules.isRequired("Kunden Email darf nicht leer sein.")],
         };
 

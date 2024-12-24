@@ -13,6 +13,7 @@ export default [
         console: "readonly",
         URLSearchParams: "readonly",
         setTimeout: "readonly",
+        window: "readonly",
       },
     },
   },
