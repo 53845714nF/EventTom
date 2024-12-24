@@ -28,6 +28,7 @@ const props = defineProps({
         :text="`Noch ${Math.round(event.count * Math.random())} Tickets`"
         type="black"
         class="primary-button"
+        to="/customer/purchase_ticket"
       />
     </div>
   </div>
