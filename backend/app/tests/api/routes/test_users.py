@@ -41,7 +41,7 @@ def test_create_user_new_email(
     ):
         username = random_email()
         password = random_lower_string()
-        data = {"email": username, "password": password}
+        data = {"email": username, "password": password, "role": Role.EVENTCREATOR}
         r = client.post(
             f"{settings.API_V1_STR}/users/",
             headers=superuser_token_headers,
@@ -119,7 +119,7 @@ def test_create_customer_existing_username(
     password = random_lower_string()
     user_in = UserCreate(email=username, password=password)
     crud.create_customer(session=db, user_create=user_in)
-    data = {"email": username, "password": password}
+    data = {"email": username, "password": password, "role": Role.EVENTCREATOR}
     r = client.post(
         f"{settings.API_V1_STR}/users/",
         headers=superuser_token_headers,
