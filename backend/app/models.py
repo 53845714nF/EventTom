@@ -1,5 +1,6 @@
 from enum import Enum
 from uuid import UUID, uuid4
+import datetime
 
 from pydantic import EmailStr
 from sqlmodel import Field, SQLModel
@@ -89,6 +90,8 @@ class EventBase(SQLModel):
     threshold: int
     base_price: float
     pay_fee: float
+    total_tickets: int = Field(default=0)
+    sold_tickets: int = Field(default=0)
 
 
 # Properties to receive on event creation
@@ -108,7 +111,7 @@ class Event(EventBase, table=True):
     creator_id: UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
 
 
-# Singel Event must be Public
+# Single Event must be Public
 class EventPublic(EventBase):
     id: UUID
     title: str
@@ -116,12 +119,20 @@ class EventPublic(EventBase):
     count: int
     base_price: float
     pay_fee: float
+    total_tickets: int
+    sold_tickets: int
 
 
 class EventsPublic(SQLModel):
     data: list[EventPublic]
     count: int
 
+# Ticket Models
+
+class Ticket(SQLModel):
+    ticket_id: UUID = Field(default_factory=uuid4, primary_key=True)
+    event_id: UUID = Field(foreign_key="event.id", nullable=False)
+    user_id: UUID = Field(foreign_key="user.id", nullable=False)
 
 #
 # Voucher Models
