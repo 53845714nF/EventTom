@@ -1,22 +1,19 @@
 <script setup>
 import PageTitleContainer from "@/components/Basic/PageTitleContainer.vue";
 import CVoucherCard from "@/components/Customer/CVouchersView/CVoucherCard.vue";
-import { fetchAllVouchersForUser } from "@/services/VoucherService";  
-import { ref, onMounted } from "vue";
+import VoucherService from "@/services/VoucherService";
+import { ref, onBeforeMount } from "vue";
 import { useAuthStore } from "@/stores/AuthStore";  
 
 const vouchers = ref([]);
 const authStore = useAuthStore(); // Initialize auth store
-console.log("Auth Store Debug:", authStore); // Debugging auth store
 
-onMounted(async () => {
-  try {
-    const userId = authStore.roleId; // Dynamically fetch user ID
-    const result = await fetchAllVouchersForUser(userId, authStore);  
-    vouchers.value = result; // Populate vouchers
-  } catch (error) {
-    console.error("Failed to fetch vouchers:", error);
-  }
+onBeforeMount(async () => {
+    await VoucherService.fetchAllVouchersForUser(authStore)
+    .then((result) => {
+      console.log(result);
+      vouchers.value = result; // Populate vouchers
+    })
 });
 </script>
 
