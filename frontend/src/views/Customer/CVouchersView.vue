@@ -9,7 +9,7 @@ const vouchers = ref([]);
 const authStore = useAuthStore(); // Initialize auth store
 
 onBeforeMount(async () => {
-    await VoucherService.fetchAllVouchersForUser(authStore)
+    await VoucherService.tryGetAllVouchersForUser(authStore)
     .then((result) => {
       console.log(result);
       vouchers.value = result; // Populate vouchers
