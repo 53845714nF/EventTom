@@ -1,31 +1,13 @@
+import axios from "axios";
+import AuthService from "@/services/AuthService"; 
 export const fetchAllVouchersForUser = async (userId) => {
   try {
-    // Static mock data for demonstration
-    const mockVouchers = [
-      {
-        id: 1,
-        code: "ASDFLOFVNFDVO",
-        amount: 20,
-        expiryDate: "2025.01.21",
-      },
-      {
-        id: 2,
-        code: "ÜUUOIPTZUGHJM",
-        amount: 200,
-        expiryDate: "2025.01.21",
-      },
-      {
-        id: 3,
-        code: "UTJDF4567FSGBS",
-        amount: 20,
-        expiryDate: "2025.01.21",
-      },
-    ];
-
-    // Simulating an API delay
-    return new Promise((resolve) => setTimeout(() => resolve(mockVouchers), 500));
+    // Include the authorization headers
+    const headers = AuthService.getAuthorizedHeaders();
+    const response = await axios.get(`/api/v1/vouchers/user/${userId}`, { headers });
+    return response.data.data; 
   } catch (error) {
-    console.error("Error fetching vouchers:", error);
-    return []; // Return an empty array if an error occurs
+    console.error("Error fetching vouchers:", error);  // Debugging
+    return []; // Return an empty array on error
   }
 };
