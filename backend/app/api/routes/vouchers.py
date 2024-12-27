@@ -23,7 +23,9 @@ router = APIRouter()
     "/",
     response_model=VoucherPublic,
 )
-def create_voucher(*, session: SessionDep, current_user: CurrentUser, voucher_in: VoucherCreate) -> Any:
+def create_voucher(
+    *, session: SessionDep, current_user: CurrentUser, voucher_in: VoucherCreate
+) -> Any:
     """
     Create new voucher.
     """
@@ -109,7 +111,9 @@ def update_voucher(
 
 
 @router.delete("/{id}")
-def delete_voucher(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> Message:
+def delete_voucher(
+    session: SessionDep, current_user: CurrentUser, id: uuid.UUID
+) -> Message:
     """
     Delete an voucher.
     """
@@ -133,7 +137,11 @@ def delete_voucher(session: SessionDep, current_user: CurrentUser, id: uuid.UUID
     response_model=VouchersPublic,
 )
 def read_voucher_by_user(
-    session: SessionDep, current_user: CurrentUser, user_id: uuid.UUID, skip: int = 0, limit: int = 100
+    session: SessionDep,
+    current_user: CurrentUser,
+    user_id: uuid.UUID,
+    skip: int = 0,
+    limit: int = 100,
 ) -> Any:
     """
     Get voucher by user.

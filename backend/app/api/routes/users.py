@@ -31,7 +31,9 @@ router = APIRouter()
     "/",
     response_model=UsersPublic,
 )
-def read_users(session: SessionDep, current_user: CurrentUser, skip: int = 0, limit: int = 100) -> UsersPublic:
+def read_users(
+    session: SessionDep, current_user: CurrentUser, skip: int = 0, limit: int = 100
+) -> UsersPublic:
     """
     Retrieve users.
     """
@@ -55,7 +57,9 @@ def read_users(session: SessionDep, current_user: CurrentUser, skip: int = 0, li
     "/manager",
     response_model=UsersPublic,
 )
-def read_event_manager(session: SessionDep, current_user: CurrentUser, skip: int = 0, limit: int = 100) -> UsersPublic:
+def read_event_manager(
+    session: SessionDep, current_user: CurrentUser, skip: int = 0, limit: int = 100
+) -> UsersPublic:
     """
     Retrieve all event managers.
     """
@@ -79,9 +83,7 @@ def read_event_manager(session: SessionDep, current_user: CurrentUser, skip: int
     return UsersPublic(data=users, count=count)
 
 
-@router.post(
-    "/", response_model=UserPublic
-)
+@router.post("/", response_model=UserPublic)
 def create_employee(
     *, session: SessionDep, user_in: UserCreate, current_user: CurrentUser
 ) -> User:
@@ -238,9 +240,7 @@ def update_user(
     """
 
     if current_user.role == Role.CUSTOMER:
-        raise HTTPException(
-            status_code=403, detail="Customers cannot update users"
-        )
+        raise HTTPException(status_code=403, detail="Customers cannot update users")
 
     db_user = session.get(User, user_id)
     if not db_user:
@@ -268,9 +268,7 @@ def delete_user(
     """
 
     if current_user.role == Role.CUSTOMER:
-        raise HTTPException(
-            status_code=403, detail="Customers cannot delete users"
-        )
+        raise HTTPException(status_code=403, detail="Customers cannot delete users")
 
     user = session.get(User, user_id)
     if not user:

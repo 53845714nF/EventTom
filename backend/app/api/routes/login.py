@@ -102,7 +102,9 @@ def reset_password(session: SessionDep, body: NewPassword) -> Message:
     "/password-recovery-html-content/{email}",
     response_class=HTMLResponse,
 )
-def recover_password_html_content(current_user: CurrentUser, email: str, session: SessionDep) -> Any:
+def recover_password_html_content(
+    current_user: CurrentUser, email: str, session: SessionDep
+) -> Any:
     """
     HTML Content for Password Recovery
     """
