@@ -37,7 +37,7 @@ def test_create_event(
     content = response.json()
     assert content["title"] == data["title"]
     assert content["description"] == data["description"]
-    assert content["count"] == data["count"]
+    assert content["total_tickets"] == data["total_tickets"]
     assert "id" in content
 
 
