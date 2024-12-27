@@ -20,7 +20,7 @@ def test_create_event(
     data = {
         "title": "38C3",
         "description": "Biggest hacker party in Europe",
-        "count": 13000,
+        "total_tickets": 13000,
         "threshold": 0,
         "base_price": 130,
         "pay_fee": 0,
