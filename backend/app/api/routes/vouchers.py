@@ -1,14 +1,14 @@
 import uuid
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException
 from sqlmodel import func, select
 
-from app.api.deps import SessionDep, get_current_active_employee
+from app.api.deps import CurrentUser, SessionDep
 from app.models import (
     Message,
+    Role,
     User,
-    UserType,
     Voucher,
     VoucherCreate,
     VoucherPublic,
@@ -21,26 +21,30 @@ router = APIRouter()
 
 @router.post(
     "/",
-    dependencies=[Depends(get_current_active_employee)],
     response_model=VoucherPublic,
 )
-def create_voucher(*, session: SessionDep, voucher_in: VoucherCreate) -> Any:
+def create_voucher(*, session: SessionDep, current_user: CurrentUser, voucher_in: VoucherCreate) -> Any:
     """
     Create new voucher.
     """
+
+    if current_user.role == Role.CUSTOMER:
+        raise HTTPException(
+            status_code=400, detail="Customers are not allowed to create vouchers."
+        )
 
     # Get the customer who is intended for the voucher
     selected_user = session.get(User, voucher_in.owner_id)
 
     if selected_user is None:
         raise HTTPException(
-            status_code=400, detail="The selected customer dose not exsit."
+            status_code=400, detail="The selected customer does not exist."
         )
 
-    if selected_user.user_type != UserType.CUSTOMER:
+    if selected_user.role != Role.CUSTOMER:
         raise HTTPException(
             status_code=400,
-            detail=f"The selected user is not an customer. User: {selected_user.email}",
+            detail=f"The selected user is not a customer. User: {selected_user.email}",
         )
 
     voucher = Voucher.model_validate(voucher_in)
@@ -52,13 +56,18 @@ def create_voucher(*, session: SessionDep, voucher_in: VoucherCreate) -> Any:
 
 @router.get(
     "/{id}",
-    dependencies=[Depends(get_current_active_employee)],
     response_model=VoucherPublic,
 )
-def read_voucher(session: SessionDep, id: uuid.UUID) -> Any:
+def read_voucher(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> Any:
     """
     Get voucher by ID.
     """
+
+    if current_user.role == Role.CUSTOMER:
+        raise HTTPException(
+            status_code=400, detail="Customers are not allowed to view vouchers."
+        )
+
     voucher = session.get(Voucher, id)
     if not voucher:
         raise HTTPException(status_code=404, detail="Event not found")
@@ -68,18 +77,24 @@ def read_voucher(session: SessionDep, id: uuid.UUID) -> Any:
 
 @router.put(
     "/{id}",
-    dependencies=[Depends(get_current_active_employee)],
     response_model=VoucherPublic,
 )
 def update_voucher(
     *,
     session: SessionDep,
+    current_user: CurrentUser,
     id: uuid.UUID,
     voucher_in: VoucherUpdate,
 ) -> Any:
     """
     Update an voucher.
     """
+
+    if current_user.role == Role.CUSTOMER:
+        raise HTTPException(
+            status_code=400, detail="Customers are not allowed to update vouchers."
+        )
+
     voucher = session.get(Voucher, id)
 
     if not voucher:
@@ -93,11 +108,17 @@ def update_voucher(
     return voucher
 
 
-@router.delete("/{id}", dependencies=[Depends(get_current_active_employee)])
-def delete_voucher(session: SessionDep, id: uuid.UUID) -> Message:
+@router.delete("/{id}")
+def delete_voucher(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> Message:
     """
     Delete an voucher.
     """
+
+    if current_user.role == Role.CUSTOMER:
+        raise HTTPException(
+            status_code=400, detail="Customers are not allowed to delete vouchers."
+        )
+
     voucher = session.get(Voucher, id)
     if not voucher:
         raise HTTPException(status_code=404, detail="Voucher not found")
@@ -109,15 +130,20 @@ def delete_voucher(session: SessionDep, id: uuid.UUID) -> Message:
 
 @router.get(
     "/user/{user_id}",
-    dependencies=[Depends(get_current_active_employee)],
     response_model=VouchersPublic,
 )
 def read_voucher_by_user(
-    session: SessionDep, user_id: uuid.UUID, skip: int = 0, limit: int = 100
+    session: SessionDep, current_user: CurrentUser, user_id: uuid.UUID, skip: int = 0, limit: int = 100
 ) -> Any:
     """
     Get voucher by user.
     """
+
+    if current_user.role == Role.CUSTOMER:
+        raise HTTPException(
+            status_code=400, detail="Customers are not allowed to view vouchers."
+        )
+
     count_statement = (
         select(func.count()).select_from(Voucher).where(Voucher.owner_id == user_id)
     )

@@ -1,19 +1,17 @@
 import uuid
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException
 from sqlmodel import func, select
 
 from app import crud
 from app.api.deps import (
     CurrentUser,
     SessionDep,
-    get_current_active_employee,
 )
 from app.core.config import settings
 from app.core.security import get_password_hash, verify_password
 from app.models import (
-    EmployeeCreate,
     Message,
     Role,
     UpdatePassword,
@@ -21,7 +19,6 @@ from app.models import (
     UserCreate,
     UserPublic,
     UsersPublic,
-    UserType,
     UserUpdate,
     UserUpdateMe,
 )
@@ -32,13 +29,18 @@ router = APIRouter()
 
 @router.get(
     "/",
-    dependencies=[Depends(get_current_active_employee)],
     response_model=UsersPublic,
 )
-def read_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
+def read_users(session: SessionDep, current_user: CurrentUser, skip: int = 0, limit: int = 100) -> UsersPublic:
     """
     Retrieve users.
     """
+
+    if current_user.role == Role.CUSTOMER:
+        raise HTTPException(
+            status_code=403,
+            detail="Customers are not allowed to view all users",
+        )
 
     count_statement = select(func.count()).select_from(User)
     count = session.exec(count_statement).one()
@@ -51,13 +53,18 @@ def read_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
 
 @router.get(
     "/manager",
-    dependencies=[Depends(get_current_active_employee)],
     response_model=UsersPublic,
 )
-def read_event_manager(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
+def read_event_manager(session: SessionDep, current_user: CurrentUser, skip: int = 0, limit: int = 100) -> UsersPublic:
     """
-    Retrieve users.
+    Retrieve all event managers.
     """
+
+    if current_user.role == Role.CUSTOMER:
+        raise HTTPException(
+            status_code=403,
+            detail="Customers are not allowed to view all event managers",
+        )
 
     count_statement = (
         select(func.count()).select_from(User).where(User.role == Role.EVENTMANAGER)
@@ -73,14 +80,15 @@ def read_event_manager(session: SessionDep, skip: int = 0, limit: int = 100) -> 
 
 
 @router.post(
-    "/", dependencies=[Depends(get_current_active_employee)], response_model=UserPublic
+    "/", response_model=UserPublic
 )
 def create_employee(
-    *, session: SessionDep, user_in: EmployeeCreate, current_user: CurrentUser
-) -> Any:
+    *, session: SessionDep, user_in: UserCreate, current_user: CurrentUser
+) -> User:
     """
     Create new Employee.
     """
+
     if current_user.role != Role.ADMIN:
         raise HTTPException(
             status_code=403,
@@ -94,7 +102,7 @@ def create_employee(
             detail="The user with this email already exists in the system.",
         )
 
-    user = crud.create_employee(session=session, user_create=user_in)
+    user = crud.create_user(session=session, user_create=user_in)
     if settings.emails_enabled and user_in.email:
         email_data = generate_new_account_email(
             email_to=user_in.email, username=user_in.email, password=user_in.password
@@ -162,7 +170,7 @@ def delete_user_me(session: SessionDep, current_user: CurrentUser) -> Any:
     """
     Delete own user.
     """
-    if current_user.user_type == UserType.EMPLOYEE:
+    if current_user.role != Role.CUSTOMER:
         raise HTTPException(
             status_code=403, detail="Employes are not allowed to delete themselves"
         )
@@ -182,8 +190,17 @@ def register_user(session: SessionDep, user_in: UserCreate) -> Any:
             status_code=400,
             detail="The user with this email already exists in the system",
         )
-    user_create = UserCreate.model_validate(user_in)
-    user = crud.create_customer(session=session, user_create=user_create)
+    user_create = UserCreate.model_validate(user_in, update={"role": Role.CUSTOMER})
+    user = crud.create_user(session=session, user_create=user_create)
+    if settings.emails_enabled and user_in.email:
+        email_data = generate_new_account_email(
+            email_to=user_in.email, username=user_in.email, password=user_in.password
+        )
+        send_email(
+            email_to=user_in.email,
+            subject=email_data.subject,
+            html_content=email_data.html_content,
+        )
     return user
 
 
@@ -197,7 +214,7 @@ def read_user_by_id(
     user = session.get(User, user_id)
     if user == current_user:
         return user
-    if not current_user.user_type == UserType.EMPLOYEE:
+    if current_user.role == Role.CUSTOMER:
         raise HTTPException(
             status_code=403,
             detail="The user doesn't have enough privileges",
@@ -207,18 +224,23 @@ def read_user_by_id(
 
 @router.patch(
     "/{user_id}",
-    dependencies=[Depends(get_current_active_employee)],
     response_model=UserPublic,
 )
 def update_user(
     *,
     session: SessionDep,
+    current_user: CurrentUser,
     user_id: uuid.UUID,
     user_in: UserUpdate,
 ) -> Any:
     """
     Update a user.
     """
+
+    if current_user.role == Role.CUSTOMER:
+        raise HTTPException(
+            status_code=403, detail="Customers cannot update users"
+        )
 
     db_user = session.get(User, user_id)
     if not db_user:
@@ -237,13 +259,19 @@ def update_user(
     return db_user
 
 
-@router.delete("/{user_id}", dependencies=[Depends(get_current_active_employee)])
+@router.delete("/{user_id}")
 def delete_user(
     session: SessionDep, current_user: CurrentUser, user_id: uuid.UUID
 ) -> Message:
     """
     Delete a user.
     """
+
+    if current_user.role == Role.CUSTOMER:
+        raise HTTPException(
+            status_code=403, detail="Customers cannot delete users"
+        )
+
     user = session.get(User, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")

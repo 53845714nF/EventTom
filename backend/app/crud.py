@@ -5,34 +5,19 @@ from sqlmodel import Session, select
 
 from app.core.security import get_password_hash, verify_password
 from app.models import (
-    EmployeeCreate,
     Event,
     EventCreate,
-    Role,
     User,
     UserCreate,
-    UserType,
     UserUpdate,
 )
 
 
-def create_employee(*, session: Session, user_create: EmployeeCreate) -> User:
-    db_obj = User.model_validate(
-        user_create, update={"hashed_password": get_password_hash(user_create.password)}
-    )
-    session.add(db_obj)
-    session.commit()
-    session.refresh(db_obj)
-    return db_obj
-
-
-def create_customer(*, session: Session, user_create: UserCreate) -> User:
+def create_user(*, session: Session, user_create: UserCreate) -> User:
     db_obj = User.model_validate(
         user_create,
         update={
             "hashed_password": get_password_hash(user_create.password),
-            "user_type": UserType.CUSTOMER,
-            "role": Role.CUSTOMER,
         },
     )
     session.add(db_obj)
@@ -73,7 +58,7 @@ def authenticate(*, session: Session, email: str, password: str) -> User | None:
 def create_event(
     *, session: Session, event_in: EventCreate, manager_id: uuid.UUID
 ) -> Event:
-    db_event = Event.model_validate(event_in, update={"ownemanager_id": manager_id})
+    db_event = Event.model_validate(event_in, update={"manager_id": manager_id})
     session.add(db_event)
     session.commit()
     session.refresh(db_event)
