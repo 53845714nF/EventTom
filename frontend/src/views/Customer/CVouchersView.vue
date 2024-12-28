@@ -12,7 +12,7 @@ onBeforeMount(async () => {
     await CustomerService.tryGetAllVouchersForCustomer(authStore)
     .then((result) => {
       console.log(result);
-      vouchers.value = result; // Populate vouchers
+      vouchers.value = result.data; // Populate vouchers
     })
 });
 </script>

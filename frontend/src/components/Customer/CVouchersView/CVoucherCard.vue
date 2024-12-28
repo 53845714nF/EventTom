@@ -9,9 +9,8 @@ const props = defineProps({
 
 <template>
   <div class="voucher-card">
-    <p><strong>{{ voucher.code }}</strong></p>
-    <p>Wert: {{ voucher.amount }}€</p>
-    <p>Läuft ab am: {{ voucher.expiryDate }}</p>
+    <p class="p-large small-margin">"{{ voucher.title }}"</p>
+    <p>Wert: <span class="p-large small-margin">{{ voucher.amount }}€</span></p>
   </div>
 </template>
 
@@ -19,8 +18,7 @@ const props = defineProps({
 .voucher-card {
   background-color: var(--color-customer);
   border-radius: 10px;
-  padding: 15px;
-  margin: 10px 0;
+  padding: 5px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;

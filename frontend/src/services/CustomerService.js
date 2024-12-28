@@ -51,7 +51,9 @@ export default class CustomerService{
 
   static async fetchAllVouchersForCustomer(authStore) {
     // Include the authorization headers
-    return await axios.get(`/api/v1/vouchers/user/${authStore.userId}`, {
+    console.log(AuthService.getAuthorizedHeaders(authStore));
+
+    return await axios.get('/api/v1/vouchers/me', {
       headers: AuthService.getAuthorizedHeaders(authStore) // AuthService.getAuthorizedHeaders(authStore); needs authStore as argument
     })
     .then((response) => {
