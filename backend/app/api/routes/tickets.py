@@ -5,13 +5,14 @@ from fastapi import APIRouter, HTTPException
 from sqlmodel import select
 
 from app.api.deps import CurrentUser, SessionDep
+from app.api.websockets import manager
 from app.models import Event, EventPublic, Ticket
 
 router = APIRouter()
 
 
 @router.post("/{id}/buy", response_model=EventPublic)
-def buy_ticket(
+async def buy_ticket(
     *,
     session: SessionDep,
     current_user: CurrentUser,
@@ -30,6 +31,9 @@ def buy_ticket(
     session.add(ticket)
     session.commit()
     session.refresh(event)
+    await manager.broadcast(
+        {"type": "ticket_purchase", "quantity": quantity, "event": event.model_dump()}
+    )
     return event
 
 
