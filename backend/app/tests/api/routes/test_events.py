@@ -19,7 +19,7 @@ def test_create_event(
     data = {
         "title": "38C3",
         "description": "Biggest hacker party in Europe",
-        "count": 13000,
+        "total_tickets": 13000,
         "threshold": 0,
         "base_price": 130,
         "pay_fee": 0,
@@ -36,7 +36,7 @@ def test_create_event(
     content = response.json()
     assert content["title"] == data["title"]
     assert content["description"] == data["description"]
-    assert content["count"] == data["count"]
+    assert content["total_tickets"] == data["total_tickets"]
     assert "id" in content
 
 
