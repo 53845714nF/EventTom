@@ -1,7 +1,7 @@
 <script setup>
 import PageTitleContainer from "@/components/Basic/PageTitleContainer.vue";
 import CVoucherCard from "@/components/Customer/CVouchersView/CVoucherCard.vue";
-import VoucherService from "@/services/VoucherService";
+import CustomerService from "@/services/CustomerService";
 import { ref, onBeforeMount } from "vue";
 import { useAuthStore } from "@/stores/AuthStore";  
 
@@ -9,7 +9,7 @@ const vouchers = ref([]);
 const authStore = useAuthStore(); // Initialize auth store
 
 onBeforeMount(async () => {
-    await VoucherService.tryGetAllVouchersForUser(authStore)
+    await CustomerService.tryGetAllVouchersForCustomer(authStore)
     .then((result) => {
       console.log(result);
       vouchers.value = result; // Populate vouchers
