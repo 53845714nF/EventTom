@@ -85,8 +85,9 @@ const router = createRouter({
       beforeEnter: requireRole(Roles.CUSTOMER),
     },
     {
-      path: "/customer/purchase_ticket",
+      path: "/customer/purchase_ticket/:event_id",
       name: "CTicketPurchase",
+      props: true,
       component: CTicketPurchaseView,
       beforeEnter: requireRole(Roles.CUSTOMER),
     },

@@ -5,13 +5,13 @@ import axios from "axios";
 export default class CustomerService{
 
   // Provides an empty form structure for ticket purchases for initializing the form data in components.
-  static provideEmptyForm = () => {
+  static provideTicketPurchaseFormData() {
     return {
       name: "",  
       address: "",  
-      cityZip: "",  
-      ticketCount: 1,  
-      voucherCode: "",  
+      zip_code: "",  
+      ticket_count: 1,  
+      voucher_code: "",  
     };
   };
 
@@ -62,19 +62,6 @@ export default class CustomerService{
       return { success: false, data: [] };
     }); 
   }
-
-  
-  // Validates a voucher code.
-  // Uses the TicketPurchaseService to validate the voucher and return the response.
-  // static async validateVoucher(voucherCode) {
-  //   try {
-  //     const response = await TicketPurchaseService.validateVoucherCode(voucherCode); // Call the service to validate
-  //     return response;  
-  //   } catch (error) {
-  //     console.error("Error validating voucher code:", error); // Log any errors
-  //     return { valid: false, discount: 0 }; // Return a default invalid response in case of errors
-  //   }
-  // };
 
 }
 

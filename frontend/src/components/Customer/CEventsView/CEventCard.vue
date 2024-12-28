@@ -1,5 +1,8 @@
 <script setup>
 import PrimaryButton from '@/components/Basic/PrimaryButton.vue';
+import { useTicketPurchaseStore } from '@/stores/TicketPurchaseStore';
+
+const ticketPurchaseStore = useTicketPurchaseStore();
 
 const props = defineProps({
   event: {
@@ -7,6 +10,10 @@ const props = defineProps({
     required: true,
   },
 });
+
+const setEventInStore = () => {
+  ticketPurchaseStore.setEvent(props.event);
+};
 
 </script>
 
@@ -16,7 +23,7 @@ const props = defineProps({
       <div class="heading-container">
         <h4>{{ event.title }}</h4>
         <p>
-          Preis pro Ticket: <span class="p-bold">{{ event.base_price * event.pay_fee }}</span>
+          Preis pro Ticket: <span class="p-bold">{{ event.base_price * event.pay_fee }}€</span>
         </p>
       </div>
       <p>{{ event.description }}</p>
@@ -25,10 +32,11 @@ const props = defineProps({
     <div class="button-container">
       <!--TODO: get correct number of remaining Tickets or put "ausverkauft" in the button-->
       <PrimaryButton
-        :text="`Noch ${Math.round(event.total_tickets * Math.random())} Tickets`"
+        :onClick="setEventInStore"
+        :text="`Noch ${event.total_tickets - event.sold_tickets} Tickets`"
         type="black"
         class="primary-button"
-        to="/customer/purchase_ticket"
+        to="/customer/purchase_ticket/123"
       />
     </div>
   </div>
@@ -66,6 +74,6 @@ const props = defineProps({
 .button-container {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 </style>
