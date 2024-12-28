@@ -19,6 +19,10 @@ async def buy_ticket(
     event_id: UUID,
     quantity: int = 1,
 ) -> Event:
+    """
+    Buy tickets for an event.
+    """
+    
     event = session.get(Event, event_id)
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
@@ -26,6 +30,13 @@ async def buy_ticket(
     if event.sold_tickets + quantity > event.total_tickets:
         raise HTTPException(status_code=400, detail="Not enough tickets available")
 
+    final_price_per_ticket = event.base_price + event.pay_fee
+    total_cost = final_price_per_ticket * quantity
+
+    if current_user.balance < total_cost:
+        raise HTTPException(status_code=400, detail="Insufficient balance")
+
+    current_user.balance -= total_cost
     event.sold_tickets += quantity
     ticket = Ticket(event_id=event_id, user_id=current_user.id, quantity=quantity)
     session.add(ticket)
@@ -41,6 +52,10 @@ async def buy_ticket(
 def list_my_tickets(
     *, session: SessionDep, current_user: CurrentUser
 ) -> Sequence[Ticket]:
+    """
+    List all tickets purchased by the current user.
+    """
+
     tickets = session.exec(
         select(Ticket).where(Ticket.user_id == current_user.id)
     ).all()
