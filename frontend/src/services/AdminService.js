@@ -176,7 +176,7 @@ export default class AdminService {
 
   static async postVoucherData(voucher, authStore) {
     const data = {
-      code_name: voucher.value.code_name,
+      title: voucher.value.code_name,
       amount: voucher.value.amount,
       owner_id: voucher.value.owner_id,
     };
