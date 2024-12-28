@@ -25,7 +25,7 @@ const props = defineProps({
     <div class="button-container">
       <!--TODO: get correct number of remaining Tickets or put "ausverkauft" in the button-->
       <PrimaryButton
-        :text="`Noch ${Math.round(event.count * Math.random())} Tickets`"
+        :text="`Noch ${Math.round(event.total_tickets * Math.random())} Tickets`"
         type="black"
         class="primary-button"
         to="/customer/purchase_ticket"

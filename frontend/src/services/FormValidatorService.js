@@ -106,7 +106,7 @@ export default class FormValidatorService {
             FormValidatorService.rules.isNumeric("Gebühr muss eine Zahl sein."),
             FormValidatorService.rules.largerOrEqualThan(1, "Gebühr muss größer oder gleich 1 sein."),
           ],
-          count: [
+          total_tickets: [
             FormValidatorService.rules.isRequired("Anzahl Tickets darf nicht leer sein."),
             FormValidatorService.rules.isNumeric("Anzahl Tickets muss eine Zahl sein."),
             FormValidatorService.rules.largerThan(0, "Anzahl Tickets muss größer als 0 sein."),

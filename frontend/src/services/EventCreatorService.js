@@ -9,7 +9,8 @@ export default class EventCreatorService {
     return {
       title: "",
       description: "",
-      count: "", // number of tickets availabe
+      total_tickets: "", // number of tickets availabe
+      sold_tickets: "0", // number of tickets availabe
       threshold: "",
       base_price: "",
       pay_fee: "", // price of event = base_price * pay_fee
@@ -48,11 +49,17 @@ export default class EventCreatorService {
   }
 
   static async tryPostNewEvent(event, authStore) {
+    console.log(event.value)
     const validationRules = FormValidatorService.getValidationRules(FormTypes.NEW_EVENT);
     const validationError = FormValidatorService.validateForm(event.value, validationRules);
 
     if (validationError) {
       ToasterService.createToasterPopUp("error", validationError);
+      return;
+    }
+
+    if (Number(event.value.total_tickets) < Number(event.value.threshold)) {
+      ToasterService.createToasterPopUp("error", "Threshold darf nicht größer als die Anzahl der Tickets sein.");
       return;
     }
 
@@ -68,7 +75,7 @@ export default class EventCreatorService {
     const data = {
       title: event.value.title,
       description: event.value.description,
-      count: event.value.count,
+      total_tickets: event.value.total_tickets,
       threshold: event.value.threshold,
       base_price: event.value.base_price,
       pay_fee: event.value.pay_fee,

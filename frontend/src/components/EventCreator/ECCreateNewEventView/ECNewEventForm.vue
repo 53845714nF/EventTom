@@ -35,7 +35,7 @@ const tryPostEvent = async () => await EventCreatorService.tryPostNewEvent(event
       <FormInput v-model="event.description" title="Beschreibung" placeholder="Beschreibung" type="textarea" />
       <FormInput v-model="event.base_price" title="Preis" placeholder="Preis" type="number" />
       <FormInput v-model="event.pay_fee" title="Gebühr" placeholder="Gebühr" type="number" />
-      <FormInput v-model="event.count" title="Anzahl Tickets" placeholder="Anzahl Tickets" type="number" />
+      <FormInput v-model="event.total_tickets" title="Anzahl Tickets" placeholder="Anzahl Tickets" type="number" />
       <FormInput v-model="event.threshold" title="Threshold" placeholder="Threshold" type="number" />
       <FormInput
         v-model="event.event_manager_email"
