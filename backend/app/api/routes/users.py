@@ -184,7 +184,7 @@ def update_password_me(
 @router.post("/me/top-up", response_model=UserPublic)
 def top_up_balance(
     *, session: SessionDep, amount: float, current_user: CurrentUser
-) -> UserPublic:
+) -> User:
     """
     Top up the balance of the current user.
     """

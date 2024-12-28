@@ -7,6 +7,7 @@ from sqlmodel import Field, SQLModel, func
 
 # User Models
 
+
 class Role(str, Enum):
     EVENTCREATOR = "eventcreator"
     EVENTMANAGER = "eventmanager"

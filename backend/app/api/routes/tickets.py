@@ -22,7 +22,7 @@ async def buy_ticket(
     """
     Buy tickets for an event.
     """
-    
+
     event = session.get(Event, event_id)
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
