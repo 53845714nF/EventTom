@@ -8,11 +8,6 @@ from sqlmodel import Field, SQLModel, func
 # User Models
 
 
-class UserType(str, Enum):
-    EMPLOYEE = "employee"
-    CUSTOMER = "customer"
-
-
 class Role(str, Enum):
     EVENTCREATOR = "eventcreator"
     EVENTMANAGER = "eventmanager"
@@ -24,44 +19,30 @@ class UserBase(SQLModel):
     full_name: str | None = Field(default=None, max_length=255)
     email: EmailStr = Field(unique=True, index=True, max_length=255)
     is_active: bool = True
-    user_type: UserType
+    role: Role
 
 
 class User(UserBase, table=True):
     id: UUID = Field(default_factory=uuid4, primary_key=True)
     hashed_password: str
 
-    # Discriminator column for the user type
-    user_type: UserType
-    role: Role
-
 
 class UserCreate(SQLModel):
     full_name: str | None = Field(default=None, max_length=255)
     email: EmailStr = Field(unique=True, index=True, max_length=255)
     password: str = Field(min_length=8, max_length=40)
-
-
-class EmployeeCreate(UserCreate):
-    user_type: UserType = UserType.EMPLOYEE
-    role: Role
-
-
-class CustomerCreate(UserCreate):
-    user_type: UserType = UserType.CUSTOMER
+    role: Role | None = Field(default=None)
 
 
 class UserUpdate(SQLModel):
     full_name: str | None = Field(default=None, max_length=255)
     email: EmailStr | None = Field(default=None, max_length=255)
     password: str | None = Field(default=None, min_length=8, max_length=40)
-    user_type: UserType = Field(default=None)
-    role: Role | None | None = Field(default=None)
+    role: Role | None = Field(default=None)
 
 
 class UserPublic(UserBase):
     id: UUID
-    role: Role | None = Field(default=None)
 
 
 class UsersPublic(SQLModel):
