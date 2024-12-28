@@ -1,5 +1,5 @@
 <script setup>
-import PrimaryButton from "@/components/Basic/PrimaryButton.vue";
+import PrimaryButton from '@/components/Basic/PrimaryButton.vue';
 
 const props = defineProps({
   event: {
@@ -7,6 +7,7 @@ const props = defineProps({
     required: true,
   },
 });
+
 </script>
 
 <template>
@@ -15,18 +16,19 @@ const props = defineProps({
       <div class="heading-container">
         <h4>{{ event.title }}</h4>
         <p>
-          Preis pro Ticket: <span class="p-bold">{{ event.price }}</span>
+          Preis pro Ticket: <span class="p-bold">{{ event.base_price * event.pay_fee }}</span>
         </p>
       </div>
       <p>{{ event.description }}</p>
-      <p class="p-large">{{ event.organizer }}</p>
+      <!--TODO: maybe add Eventmanager to see who is responsible for this event?-->
     </div>
     <div class="button-container">
+      <!--TODO: get correct number of remaining Tickets or put "ausverkauft" in the button-->
       <PrimaryButton
-        :text="event.available ? `Noch ${event.tickets} Tickets` : 'Ausverkauft'"
-        :disabled="!event.available"
+        :text="`Noch ${Math.round(event.count * Math.random())} Tickets`"
         type="black"
         class="primary-button"
+        to="/customer/purchase_ticket"
       />
     </div>
   </div>
