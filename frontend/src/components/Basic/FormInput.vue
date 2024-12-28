@@ -23,11 +23,21 @@ const updateValue = (event) => {
 
     <!--Normal Input field-->
     <input
-      v-if="props.type === 'text' || props.type === 'number' || props.type === 'password'"
+      v-if="props.type === 'text' || props.type === 'password'"
       :value="modelValue"
       @input="updateValue"
       :type="props.type"
       :placeholder="props.placeholder"
+    />
+
+    <!--Number input field: add min attribute-->
+    <input
+      v-if="props.type === 'number'"
+      :value="modelValue"
+      @input="updateValue"
+      :type="props.type"
+      :placeholder="props.placeholder"
+      :min="0"
     />
 
     <!-- Textarea if type is textarea -->

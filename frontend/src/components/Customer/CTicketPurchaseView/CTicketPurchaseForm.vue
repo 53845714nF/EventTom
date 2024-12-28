@@ -3,20 +3,46 @@ import FormInput from "@/components/Basic/FormInput.vue";
 import PrimaryButton from "@/components/Basic/PrimaryButton.vue";
 import { PrimaryButtonTypes } from "@/constants/ButtonTypes";
 import { useAuthStore } from "@/stores/AuthStore";
-import { ref, computed, watch } from "vue";
+import { ref, computed, onBeforeMount } from "vue";
 import CustomerService from "@/services/CustomerService";
-import { useTicketPurchaseStore } from "@/stores/TicketPurchaseStore";
+import router from "@/router";
 
-const authStore = useAuthStore();
-const ticketPurchaseStore = useTicketPurchaseStore();
+const props = defineProps({
+  event: {
+    type: Object,
+    required: true,
+  },
+});
 
-const event = ticketPurchaseStore.event;
+// TODO: better solution for this
+// navigate back if no event is provided (once browser is refreshed pinia store is reset)
+if (!props.event.title) {
+  router.push({ name: "CEvents" });
+}
 
+const availableVouchers = ref([]);
 const ticketPurchaseFormData = ref(CustomerService.provideTicketPurchaseFormData());
+const authStore = useAuthStore();
+
+onBeforeMount(async () => {
+  await CustomerService.tryGetAllVouchersForCustomer(authStore)
+  .then((result) => {
+    availableVouchers.value = result.data; 
+  })
+});
+
+const singleTicketPrice = computed(() => CustomerService.calculateSingleTicketPrice(props.event));
+const totalPrice = computed(() => CustomerService.calculateTotalTicketPurchasePrice(singleTicketPrice.value, ticketPurchaseFormData.value, appliedVoucher.value));
+
+const appliedVoucher = computed(() => CustomerService.getAppliedVoucherFromCode(ticketPurchaseFormData.value, availableVouchers));
+
+const tryPostTicketPurchaseFormData = async () => await CustomerService.tryPurchaseTicket(ticketPurchaseFormData.value, props.event, authStore);
 </script>
 
 <template>
-  <div class="form-background">
+  <div class="container-background">
+    <h3 class="heading-margin">{{ event.title }}</h3>
+    <p>{{ event.description }}</p>
     <div class="form-container">
       <FormInput v-model="ticketPurchaseFormData.name" title="Name, Vorname" placeholder="Name, Vorname" type="text" />
       <FormInput v-model="ticketPurchaseFormData.address" title="Straße, Hausnummer" placeholder="Straße, Hausnummer" type="text" />
@@ -24,18 +50,37 @@ const ticketPurchaseFormData = ref(CustomerService.provideTicketPurchaseFormData
       <FormInput v-model="ticketPurchaseFormData.ticket_count" title="Anzahl Tickets" placeholder="Anzahl Tickets" type="number" />
       <FormInput v-model="ticketPurchaseFormData.voucher_code" title="Gutscheincode" placeholder="Gutscheincode" type="text" />
     </div>
+
+    <hr/>
+
+    <h4>{{ totalPrice }}€</h4>
+    <p class="small-margin">{{ ticketPurchaseFormData.ticket_count }}x {{ props.event.title }} Ticket: je <span class="p-bold">{{ singleTicketPrice }}€</span></p>
+    <p v-if="appliedVoucher" class="small-margin">1x Gutschein: <span class="p-bold">{{ appliedVoucher.title }}: -{{ appliedVoucher.amount }}€</span></p>
+
     <div class="button-container">
-      <PrimaryButton :onClick="tryPostEvent" text="Kaufen" :type="PrimaryButtonTypes.BLACK" />
+      <PrimaryButton :onClick="tryPostTicketPurchaseFormData" text="Kaufen" :type="PrimaryButtonTypes.BLACK" />
     </div>
   </div>
 </template>
 
 <style scoped>
-.form-background {
+.container-background {
   padding: 20px 40px;
   margin: 10px 40px;
   border-radius: 25px;
   background-color: var(--color-customer);
+}
+
+.container-background h3 {
+  margin-top: 10px;
+}
+
+.container-background h4 {
+  margin-bottom: 20px;
+}
+
+.container-background p:first-of-type {
+  margin-bottom: 30px;
 }
 
 .form-container {
@@ -43,6 +88,12 @@ const ticketPurchaseFormData = ref(CustomerService.provideTicketPurchaseFormData
   flex-direction: column;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--cp-black);
+  margin: 40px 0;
 }
 
 .button-container {

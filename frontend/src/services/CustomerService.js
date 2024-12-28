@@ -1,6 +1,8 @@
 import AuthService from "./AuthService";
 import ToasterService from "./ToasterService";
 import axios from "axios";
+import FormValidatorService from "./FormValidatorService";
+import FormTypes from "@/constants/FormTypes";
 
 export default class CustomerService{
 
@@ -10,10 +12,34 @@ export default class CustomerService{
       name: "",  
       address: "",  
       zip_code: "",  
-      ticket_count: 1,  
+      ticket_count: "1",  
       voucher_code: "",  
     };
   };
+
+  static calculateSingleTicketPrice(event) {
+    return event.base_price * event.pay_fee;
+  }
+
+  static calculateTotalTicketPurchasePrice(singleTicketPrice, ticketPurchaseFormData, appliedVoucher) {
+    let totalPrice = singleTicketPrice * ticketPurchaseFormData.ticket_count;
+
+    if (appliedVoucher) {
+      totalPrice -= appliedVoucher.amount;
+    }
+
+    // in case discount is higher than total price
+    if (totalPrice < 0) {
+      totalPrice = 0;
+    }
+
+    return totalPrice;
+  }
+
+  static getAppliedVoucherFromCode(ticketPurchaseFormData, availableVouchers) {
+    const voucher = availableVouchers.value.find(voucher => voucher.title === ticketPurchaseFormData.voucher_code); // undefined if not found
+    return voucher;
+  }
 
   static async tryGetAllEvents(){
     const result = await CustomerService.fetchAllEvents()
@@ -50,8 +76,6 @@ export default class CustomerService{
   }
 
   static async fetchAllVouchersForCustomer(authStore) {
-    // Include the authorization headers
-    console.log(AuthService.getAuthorizedHeaders(authStore));
 
     return await axios.get('/api/v1/vouchers/me', {
       headers: AuthService.getAuthorizedHeaders(authStore) // AuthService.getAuthorizedHeaders(authStore); needs authStore as argument
@@ -63,6 +87,45 @@ export default class CustomerService{
       console.error("Error fetching vouchers for user:", error);
       return { success: false, data: [] };
     }); 
+  }
+
+  static async tryPurchaseTicket(ticketPurchaseFormData, event ,authStore) {
+
+    const validationRules = FormValidatorService.getValidationRules(FormTypes.PURCHASE_TICKET);
+    const validationError = FormValidatorService.validateForm(ticketPurchaseFormData, validationRules);
+
+    if (validationError) {
+      ToasterService.createToasterPopUp("error", validationError);
+      return;
+    }
+
+    const response = await CustomerService.postPurchaseTicketData(ticketPurchaseFormData, event, authStore);
+
+    if (response.success) {
+      ToasterService.createToasterPopUp("success", "Ticket erfolgreich gekauft");
+    } else {
+      ToasterService.createToasterPopUp("error", "Fehler beim Kauf des Tickets");
+    }
+
+    return response;
+  }
+
+  static async postPurchaseTicketData(ticketPurchaseFormData, event, authStore) {
+
+    const data = {
+      quantity: ticketPurchaseFormData.ticket_count,
+    }
+
+    return await axios.post(`/api/v1/tickets/${event.id}/buy`, data, ticketPurchaseFormData, {
+      headers: AuthService.getAuthorizedHeaders(authStore)
+    })
+    .then((response) => {
+      return { success: true, data: response.data };
+    })
+    .catch((error) => {
+      console.error("Error purchasing ticket:", error);
+      return { success: false, data: [] };
+    });
   }
 
 }

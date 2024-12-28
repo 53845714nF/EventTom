@@ -1,5 +1,6 @@
 <script setup>
 import PrimaryButton from '@/components/Basic/PrimaryButton.vue';
+import CustomerService from '@/services/CustomerService';
 import { useTicketPurchaseStore } from '@/stores/TicketPurchaseStore';
 
 const ticketPurchaseStore = useTicketPurchaseStore();
@@ -23,7 +24,7 @@ const setEventInStore = () => {
       <div class="heading-container">
         <h4>{{ event.title }}</h4>
         <p>
-          Preis pro Ticket: <span class="p-bold">{{ event.base_price * event.pay_fee }}€</span>
+          Preis pro Ticket: <span class="p-bold">{{ CustomerService.calculateSingleTicketPrice(event) }}€</span>
         </p>
       </div>
       <p>{{ event.description }}</p>
@@ -36,7 +37,7 @@ const setEventInStore = () => {
         :text="`Noch ${event.total_tickets - event.sold_tickets} Tickets`"
         type="black"
         class="primary-button"
-        to="/customer/purchase_ticket/123"
+        to="/customer/purchase_ticket"
       />
     </div>
   </div>
