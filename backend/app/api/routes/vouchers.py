@@ -4,7 +4,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import func, select
 
-from app.api.deps import SessionDep, get_current_active_employee
+from app.api.deps import CurrentUser, SessionDep, get_current_active_employee
 from app.models import (
     Message,
     User,
@@ -17,6 +17,39 @@ from app.models import (
 )
 
 router = APIRouter()
+
+
+@router.get(
+    "/me",
+    response_model=VouchersPublic,
+)
+def read_my_vouchers(
+    session: SessionDep, current_user: CurrentUser, skip: int = 0, limit: int = 100
+) -> VouchersPublic:
+    """
+    Get vouchers for the current user.
+    """
+    count_statement = (
+        select(func.count())
+        .select_from(Voucher)
+        .where(Voucher.owner_id == current_user.id)
+    )
+    count = session.exec(count_statement).one()
+
+    statement = (
+        select(Voucher)
+        .where(Voucher.owner_id == current_user.id)
+        .offset(skip)
+        .limit(limit)
+    )
+    vouchers = session.exec(statement).all()
+
+    if not vouchers:
+        raise HTTPException(
+            status_code=404, detail="No vouchers found for the current user"
+        )
+
+    return VouchersPublic(data=vouchers, count=count)
 
 
 @router.post(
