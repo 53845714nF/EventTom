@@ -1,11 +1,8 @@
 # EventTom Frontend
 
-## Project Setup for Development
+## Getting Started
 
-- Navigate inside frontend folder: `cd frontend`
-- Install dependencies: `npm install` (run after each _git pull_)
-- Run on your local machine in dev mode with hot-reload: `npm run dev`
-- Run the backend container: `docker compose  --env-file .env up`
+Instructions for getting started are available in the "Getting started" section [here](../Readme.md). Make sure to read this before going any further.
 
 ## Building Project with Docker (Not necassary for development purposes)
 
@@ -164,9 +161,23 @@ const props = defineProps({
 
 ```
 
-### Services
+### Services and API calls
 
 Services contain API Calls and / or logic for a specific View. Each Service is a class inside its own file and should **only** contain logic for the equivalent View. Services should be place inside the [services](/frontend/src/services/) directory.
+
+The API endpoints you need can bee seen in the API Documentation under `http://localhost:8000/docs` (only available after starting the backend. You have to authorize for certain endpoints by logging in with an existing account using the the top right "Authorize" button). Depending on the API endpoints you are using, you have to provide data, headers or arguments inside the route itself. 
+
+Each of the routes are listed like this:
+
+![API route](./src/assets/images/api_route.png "API route on API documentation")
+
+If you click on there and then do "try out" > "execute" you can execute an api call by yourself without using code. You can see a curl request after that which looks like this:
+
+![API curl request](./src/assets/images/api_curl.png "API curl request")
+
+Here, you can see, which headers (-H) and data (-d) have to be provided for the request to be successfull. You should base your code on this curl request (ChatGPT can write it four you if you provide the curl request). To provide correct headers, you can use `AuthService.getAuthorizedHeaders()` or `AuthService.getBasicHeaders()` if you don't need authentication for the endpoint. (see example below)
+
+Always make sure to create a separate method for making the call itself and a method which calls the method which makes the call. This is for better readability, testability and code reusability.
 
 Lets say we want the `BookView.js` View we defined above to render books we get from an API endpoint, then we could define a Service like this:
 
@@ -174,30 +185,41 @@ Lets say we want the `BookView.js` View we defined above to render books we get 
 
 ```javascript
 import axios from "axios";
+import ToasterService from "./ToasterService";
 
 export default class BookService {
-  static async getBooks(authStore) {
-    let books = [];
 
+  // mehtod wihch utilitzes data from api enpoint
+  static async tryGetBooks(authStore) {
+    const response = await BookService.fetchBooks(authStore);
+
+    if(response.success){
+      return response.data;
+    }
+    else{
+      ToasterService.createToasterPopUp("error", "Error while fetching books.");
+    }
+  }
+
+  // method which makes call to endpoint
+  static async fetchBooks(authStore) {
     // config to make sure, user is authenticated
     const config = {
-      headers: {
-        Accept: "application/json",
-        Authorization: `bearer ${authStore.accessToken}`,
-      },
+      headers: AuthService.getAuthorizedHeaders(authStore); // use AuthService.getBasicHeaders() if you don't need authentication
     };
 
+    // no data necessary for this endpoint, but you would need data if you create something for example
+    const data = {}
+
     // api call using axios
-    await axios
-      .get("/api/v1/books", {}, config)
+    return await axios.get("/api/v1/books/", data, config)
       .then((response) => {
-        books = response.data;
+        return { success: true, data: response.data};
       })
       .catch((error) => {
         console.log(error);
+        return { success: false };
       });
-
-    return books;
   }
 }
 ```
@@ -212,11 +234,15 @@ import PageTitleContainer from "@/components/Basic/PageTitleContainer.vue";
 import BookList from "@/components/BookView/BookList.vue";
 import BookService from "@/services/BookService";
 import { onBeforeMount, ref } from "vue";
+import { useAuthStore } from "@/stores/AuthStore";
 
+const authStore = useAuthStore();
 const myBooks = ref([]);
 
 onBeforeMount(async () => {
-  myBooks.value = await BookService.getBooks();
+  BookService.tryGetBooks(authStore).then((result) => {
+    myBooks.value = result.data;
+  });
 });
 
 </script>
