@@ -1,8 +1,6 @@
 from collections.abc import Sequence
-from http import HTTPStatus
 from uuid import UUID
 
-from app import crud
 from fastapi import APIRouter, HTTPException
 from sqlmodel import select
 
@@ -20,7 +18,7 @@ async def buy_ticket(
     current_user: CurrentUser,
     event_id: UUID,
     quantity: int = 1,
-    voucher_id: UUID = None,
+    voucher_id: UUID | None = None,
 ) -> Event:
     """
     Buy tickets for an event.
@@ -41,9 +39,7 @@ async def buy_ticket(
         if not voucher:
             raise HTTPException(status_code=404, detail="Voucher not found")
         if voucher.owner_id != current_user.id:
-            raise HTTPException(
-                status_code=403, detail="You do not own this voucher"
-            )
+            raise HTTPException(status_code=403, detail="You do not own this voucher")
         total_cost -= voucher.amount
 
     if current_user.balance < total_cost:
