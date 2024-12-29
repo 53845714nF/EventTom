@@ -11,7 +11,6 @@ const authStore = useAuthStore(); // Initialize auth store
 onBeforeMount(async () => {
     await CustomerService.tryGetAllVouchersForCustomer(authStore)
     .then((result) => {
-      console.log(result);
       vouchers.value = result.data; // Populate vouchers
     })
 });
@@ -30,14 +29,3 @@ onBeforeMount(async () => {
     />
   </div>
 </template>
-
-<style scoped>
-.content-container {
-  margin: 20px;
-}
-.no-vouchers {
-  text-align: center;
-  margin: 20px;
-  color: gray;
-}
-</style>

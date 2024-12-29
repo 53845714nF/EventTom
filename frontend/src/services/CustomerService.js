@@ -17,9 +17,11 @@ export default class CustomerService{
     };
   };
 
+
   static calculateSingleTicketPrice(event) {
     return event.base_price * event.pay_fee;
   }
+
 
   static calculateTotalTicketPurchasePrice(singleTicketPrice, ticketPurchaseFormData, appliedVoucher) {
     let totalPrice = singleTicketPrice * ticketPurchaseFormData.ticket_count;
@@ -36,10 +38,12 @@ export default class CustomerService{
     return totalPrice;
   }
 
+
   static getAppliedVoucherFromCode(ticketPurchaseFormData, availableVouchers) {
     const voucher = availableVouchers.value.find(voucher => voucher.title === ticketPurchaseFormData.voucher_code); // undefined if not found
     return voucher;
   }
+
 
   static async tryGetAllEvents(){
     const result = await CustomerService.fetchAllEvents()
@@ -51,6 +55,7 @@ export default class CustomerService{
       ToasterService.createToasterPopUp("error", "Events konnten nicht geladen werden");
     }
   }
+
 
   static async fetchAllEvents(){
     return await axios.get("/api/v1/events/", {
@@ -65,6 +70,7 @@ export default class CustomerService{
     });
   }
 
+
   static async tryGetAllVouchersForCustomer(authStore) {
     const response = await CustomerService.fetchAllVouchersForCustomer(authStore);
 
@@ -75,16 +81,43 @@ export default class CustomerService{
     return response.data;
   }
 
+
   static async fetchAllVouchersForCustomer(authStore) {
 
     return await axios.get('/api/v1/vouchers/me', {
-      headers: AuthService.getAuthorizedHeaders(authStore) // AuthService.getAuthorizedHeaders(authStore); needs authStore as argument
+      headers: AuthService.getAuthorizedHeaders(authStore)
     })
     .then((response) => {
       return { success: true, data: response.data };
     })
     .catch((error) => {
       console.error("Error fetching vouchers for user:", error);
+      return { success: false, data: [] };
+    }); 
+  }
+
+
+  static async tryGetAllTicketsForCustomer(authStore) {
+    const response = await CustomerService.fetchAllTicketsForCustomer(authStore);
+
+    if (!response.success) {
+      ToasterService.createToasterPopUp("error", "Fehler beim Laden der Tickets");
+    }
+    
+    return response.data;
+  }
+
+
+  static async fetchAllTicketsForCustomer(authStore) {
+
+    return await axios.get('/api/v1/tickets/my-tickets', {
+      headers: AuthService.getAuthorizedHeaders(authStore)
+    })
+    .then((response) => {
+      return { success: true, data: response.data };
+    })
+    .catch((error) => {
+      console.error("Error fetching tickets for user:", error);
       return { success: false, data: [] };
     }); 
   }
@@ -110,6 +143,7 @@ export default class CustomerService{
     return response;
   }
 
+
   static async postPurchaseTicketData(ticketPurchaseFormData, event, authStore) {
 
     const data = {
@@ -127,7 +161,6 @@ export default class CustomerService{
       return { success: false, data: [] };
     });
   }
-
 }
 
 
