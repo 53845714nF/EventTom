@@ -72,7 +72,7 @@ def get_tickets_with_events(
 ) -> Sequence[tuple[Ticket, Event]]:
     statement = (
         select(Ticket, Event)
-        .join(Event, Ticket.event_id == Event.id) # type: ignore[arg-type]
+        .join(Event, Ticket.event_id == Event.id)  # type: ignore[arg-type]
         .where(Ticket.user_id == user_id)
     )
     return session.exec(statement).all()
