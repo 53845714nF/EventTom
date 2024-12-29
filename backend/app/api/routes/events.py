@@ -104,9 +104,9 @@ async def create_event(
     Create new event.
     """
 
-    if current_user.role != Role.EVENTCREATOR or Role.ADMIN:
+    if not (current_user.role == Role.EVENTCREATOR or current_user.role == Role.ADMIN):
         raise HTTPException(
-            status_code=400, detail="Not enough permissions to create events"
+            status_code=403, detail="Not enough permissions to create events"
         )
 
     selected_user = session.get(User, event_in.manager_id)
