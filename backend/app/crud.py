@@ -72,8 +72,8 @@ def get_manager_ticket_purchases(
 ) -> Sequence[tuple[Ticket, Event, User]]:
     statement = (
         select(Ticket, Event, User)
-        .join(Event, Ticket.event_id == Event.id) # type: ignore[arg-type]
-        .join(User, Ticket.user_id == User.id) # type: ignore[arg-type]
+        .join(Event, Ticket.event_id == Event.id)  # type: ignore[arg-type]
+        .join(User, Ticket.user_id == User.id)  # type: ignore[arg-type]
         .where(Event.manager_id == manager_id)
         .order_by(desc(Ticket.purchase_date))
         .limit(limit)
