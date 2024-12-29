@@ -12,9 +12,7 @@ const props = defineProps({
   },
 });
 
-const setEventInStore = () => {
-  ticketPurchaseStore.setEvent(props.event);
-};
+const setEventInStore = () => ticketPurchaseStore.setEvent(props.event);
 
 </script>
 
