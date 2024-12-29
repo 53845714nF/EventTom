@@ -3,7 +3,7 @@ import { ref } from "vue";
 
 export const useTicketPurchaseStore = defineStore("ticketPurchase", () => {
   const event = ref({});
-  
+
   function setEvent(newEvent) {
     event.value = newEvent;
   }

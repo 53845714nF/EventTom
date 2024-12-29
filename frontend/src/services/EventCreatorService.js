@@ -49,7 +49,6 @@ export default class EventCreatorService {
   }
 
   static async tryPostNewEvent(event, authStore) {
-
     const validationRules = FormValidatorService.getValidationRules(FormTypes.NEW_EVENT);
     const validationError = FormValidatorService.validateForm(event.value, validationRules);
 

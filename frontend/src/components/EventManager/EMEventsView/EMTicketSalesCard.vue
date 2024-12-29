@@ -13,9 +13,9 @@ const showPercentage = ref(true);
 const switchView = () => (showPercentage.value = !showPercentage.value);
 
 const percentageSold = EventManagerService.getPercentageOfTicketsSold(
-    props.event.total_tickets,
-    props.event.sold_tickets
-  );
+  props.event.total_tickets,
+  props.event.sold_tickets,
+);
 
 const percentageComparedToExpected = EventManagerService.getPercentageOfTicketsSoldComparedToExpected(
   props.event.sold_tickets,
@@ -29,9 +29,7 @@ const comparisonText = computed(() => EventManagerService.getComparisonText(perc
 <template>
   <div class="sales-card-body">
     <div v-if="showPercentage" class="sales-card-text-container">
-      <p class="white p-large small-margin">
-        {{ props.event.sold_tickets }} Tickets verkauft
-      </p>
+      <p class="white p-large small-margin">{{ props.event.sold_tickets }} Tickets verkauft</p>
       <p class="white small-margin">
         <span :class="[highLightClass.text, 'p-bold']"
           >{{ Math.abs(percentageComparedToExpected) }}% {{ comparisonText }}
@@ -42,9 +40,7 @@ const comparisonText = computed(() => EventManagerService.getComparisonText(perc
 
     <div v-else class="sales-card-text-container">
       <!--TODO: get tickets_sold as attribute for event-->
-      <p class="white p-large small-margin">
-        {{ props.event.sold_tickets }} / {{ props.event.total_tickets }} Tickets
-      </p>
+      <p class="white p-large small-margin">{{ props.event.sold_tickets }} / {{ props.event.total_tickets }} Tickets</p>
       <div class="progress-bar small-margin">
         <div :class="['progress-bar-fill', highLightClass.bar]" :style="{ width: percentageSold + '%' }"></div>
       </div>

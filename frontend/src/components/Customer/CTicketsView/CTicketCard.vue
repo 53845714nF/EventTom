@@ -5,8 +5,6 @@ const props = defineProps({
     required: true,
   },
 });
-
-console.log(props.ticket);
 </script>
 
 <template>

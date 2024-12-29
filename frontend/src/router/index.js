@@ -90,7 +90,7 @@ const router = createRouter({
       name: "CVouchers",
       component: CVouchersView,
       beforeEnter: requireRole(Roles.CUSTOMER),
-    }, 
+    },
     {
       path: "/customer/purchase_ticket",
       name: "CTicketPurchase",
@@ -150,7 +150,7 @@ const router = createRouter({
       meta: {
         title: "404 - Not Found",
       },
-    },   
+    },
   ],
 });
 

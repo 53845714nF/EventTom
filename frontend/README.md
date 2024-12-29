@@ -165,7 +165,7 @@ const props = defineProps({
 
 Services contain API Calls and / or logic for a specific View. Each Service is a class inside its own file and should **only** contain logic for the equivalent View. Services should be place inside the [services](/frontend/src/services/) directory.
 
-The API endpoints you need can bee seen in the API Documentation under `http://localhost:8000/docs` (only available after starting the backend. You have to authorize for certain endpoints by logging in with an existing account using the the top right "Authorize" button). Depending on the API endpoints you are using, you have to provide data, headers or arguments inside the route itself. 
+The API endpoints you need can bee seen in the API Documentation under `http://localhost:8000/docs` (only available after starting the backend. You have to authorize for certain endpoints by logging in with an existing account using the the top right "Authorize" button). Depending on the API endpoints you are using, you have to provide data, headers or arguments inside the route itself.
 
 Each of the routes are listed like this:
 

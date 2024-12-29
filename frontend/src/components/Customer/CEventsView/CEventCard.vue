@@ -1,7 +1,7 @@
 <script setup>
-import PrimaryButton from '@/components/Basic/PrimaryButton.vue';
-import CustomerService from '@/services/CustomerService';
-import { useTicketPurchaseStore } from '@/stores/TicketPurchaseStore';
+import PrimaryButton from "@/components/Basic/PrimaryButton.vue";
+import CustomerService from "@/services/CustomerService";
+import { useTicketPurchaseStore } from "@/stores/TicketPurchaseStore";
 
 const ticketPurchaseStore = useTicketPurchaseStore();
 
@@ -13,7 +13,6 @@ const props = defineProps({
 });
 
 const setEventInStore = () => ticketPurchaseStore.setEvent(props.event);
-
 </script>
 
 <template>

@@ -25,18 +25,26 @@ const ticketPurchaseFormData = ref(CustomerService.provideTicketPurchaseFormData
 const authStore = useAuthStore();
 
 onBeforeMount(async () => {
-  await CustomerService.tryGetAllVouchersForCustomer(authStore)
-  .then((result) => {
-    availableVouchers.value = result.data; 
-  })
+  await CustomerService.tryGetAllVouchersForCustomer(authStore).then((result) => {
+    availableVouchers.value = result.data;
+  });
 });
 
 const singleTicketPrice = computed(() => CustomerService.calculateSingleTicketPrice(props.event));
-const totalPrice = computed(() => CustomerService.calculateTotalTicketPurchasePrice(singleTicketPrice.value, ticketPurchaseFormData.value, appliedVoucher.value));
+const totalPrice = computed(() =>
+  CustomerService.calculateTotalTicketPurchasePrice(
+    singleTicketPrice.value,
+    ticketPurchaseFormData.value,
+    appliedVoucher.value,
+  ),
+);
 
-const appliedVoucher = computed(() => CustomerService.getAppliedVoucherFromCode(ticketPurchaseFormData.value, availableVouchers));
+const appliedVoucher = computed(() =>
+  CustomerService.getAppliedVoucherFromCode(ticketPurchaseFormData.value, availableVouchers),
+);
 
-const tryPostTicketPurchaseFormData = async () => await CustomerService.tryPurchaseTicket(ticketPurchaseFormData.value, props.event, authStore);
+const tryPostTicketPurchaseFormData = async () =>
+  await CustomerService.tryPurchaseTicket(ticketPurchaseFormData.value, props.event, authStore);
 </script>
 
 <template>
@@ -45,17 +53,37 @@ const tryPostTicketPurchaseFormData = async () => await CustomerService.tryPurch
     <p>{{ event.description }}</p>
     <div class="form-container">
       <FormInput v-model="ticketPurchaseFormData.name" title="Name, Vorname" placeholder="Name, Vorname" type="text" />
-      <FormInput v-model="ticketPurchaseFormData.address" title="Straße, Hausnummer" placeholder="Straße, Hausnummer" type="text" />
+      <FormInput
+        v-model="ticketPurchaseFormData.address"
+        title="Straße, Hausnummer"
+        placeholder="Straße, Hausnummer"
+        type="text"
+      />
       <FormInput v-model="ticketPurchaseFormData.zip_code" title="PLZ" placeholder="PLZ" type="text" />
-      <FormInput v-model="ticketPurchaseFormData.ticket_count" title="Anzahl Tickets" placeholder="Anzahl Tickets" type="number" />
-      <FormInput v-model="ticketPurchaseFormData.voucher_code" title="Gutscheincode" placeholder="Gutscheincode" type="text" />
+      <FormInput
+        v-model="ticketPurchaseFormData.ticket_count"
+        title="Anzahl Tickets"
+        placeholder="Anzahl Tickets"
+        type="number"
+      />
+      <FormInput
+        v-model="ticketPurchaseFormData.voucher_code"
+        title="Gutscheincode"
+        placeholder="Gutscheincode"
+        type="text"
+      />
     </div>
 
-    <hr/>
+    <hr />
 
     <h4>{{ totalPrice }}€</h4>
-    <p class="small-margin">{{ ticketPurchaseFormData.ticket_count }}x {{ props.event.title }} Ticket: je <span class="p-bold">{{ singleTicketPrice }}€</span></p>
-    <p v-if="appliedVoucher" class="small-margin">1x Gutschein: <span class="p-bold">{{ appliedVoucher.title }}: -{{ appliedVoucher.amount }}€</span></p>
+    <p class="small-margin">
+      {{ ticketPurchaseFormData.ticket_count }}x {{ props.event.title }} Ticket: je
+      <span class="p-bold">{{ singleTicketPrice }}€</span>
+    </p>
+    <p v-if="appliedVoucher" class="small-margin">
+      1x Gutschein: <span class="p-bold">{{ appliedVoucher.title }}: -{{ appliedVoucher.amount }}€</span>
+    </p>
 
     <div class="button-container">
       <PrimaryButton :onClick="tryPostTicketPurchaseFormData" text="Kaufen" :type="PrimaryButtonTypes.BLACK" />

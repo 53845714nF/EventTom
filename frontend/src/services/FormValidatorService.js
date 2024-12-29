@@ -66,7 +66,7 @@ export default class FormValidatorService {
             FormValidatorService.rules.isRequired("Anzahl Tickets darf nicht leer sein."),
             FormValidatorService.rules.isNumeric("Anzahl Tickets muss eine Zahl sein."),
             FormValidatorService.rules.largerThan(0, "Anzahl Tickets muss größer als 0 sein."),
-          ]
+          ],
         };
       case FormTypes.SIGNUP:
         return {
@@ -161,7 +161,4 @@ export default class FormValidatorService {
   }
 
   // Adding validation rules for the PURCHASE_TICKET form
-
-
-
 }
