@@ -2,28 +2,47 @@ from collections.abc import Sequence
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, status
-from sqlmodel import select
 
 from app import crud
 from app.api.deps import CurrentUser, SessionDep
 from app.api.websockets import manager
-from app.models import Event, EventPublic, Role, Ticket, TicketPurchaseResponse, Voucher
+from app.models import (
+    Event,
+    EventPublic,
+    Role,
+    Ticket,
+    TicketPurchaseResponse,
+    TicketWithEvent,
+    Voucher,
+)
 
 router = APIRouter()
 
 
-@router.get("/my-tickets", response_model=Sequence[Ticket])
+@router.get("/my-tickets", response_model=Sequence[TicketWithEvent])
 def list_my_tickets(
     *, session: SessionDep, current_user: CurrentUser
-) -> Sequence[Ticket]:
+) -> Sequence[TicketWithEvent]:
     """
-    List all tickets purchased by the current user.
+    List all tickets purchased by the current user, including event information.
     """
 
-    tickets = session.exec(
-        select(Ticket).where(Ticket.user_id == current_user.id)
-    ).all()
-    return tickets
+    results = crud.get_tickets_with_events(session, current_user.id)
+
+    tickets_with_events = [
+        TicketWithEvent(
+            ticket_id=ticket.ticket_id,
+            event_id=event.id,
+            event_title=event.title,
+            event_description=event.description,
+            user_id=ticket.user_id,
+            quantity=ticket.quantity,
+            purchase_date=ticket.purchase_date,
+        )
+        for ticket, event in results
+    ]
+
+    return tickets_with_events
 
 
 @router.get("/activities", response_model=Sequence[TicketPurchaseResponse])
@@ -70,6 +89,12 @@ async def buy_ticket(
     """
     Buy tickets for an event.
     """
+
+    if current_user.role != Role.CUSTOMER:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only customers can buy tickets",
+        )
 
     event = session.get(Event, event_id)
     if not event:
