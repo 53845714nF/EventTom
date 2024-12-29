@@ -12,7 +12,7 @@ def test_create_event(
 ) -> None:
     username = random_email()
     password = random_lower_string()
-    employee = UserCreate(email=username, password=password, role=Role.EVENTCREATOR)
+    employee = UserCreate(email=username, password=password, role=Role.EVENTMANAGER)
     manager = crud.create_user(session=db, user_create=employee)
     manager_id = manager.id
 

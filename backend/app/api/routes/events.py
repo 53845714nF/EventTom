@@ -104,7 +104,7 @@ async def create_event(
     Create new event.
     """
 
-    if not (current_user.role == Role.EVENTCREATOR or current_user.role == Role.ADMIN):
+    if current_user.role != Role.EVENTCREATOR or Role.ADMIN:
         raise HTTPException(
             status_code=400, detail="Not enough permissions to create events"
         )
