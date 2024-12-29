@@ -139,26 +139,6 @@ def update_user_me(
     return current_user
 
 
-@router.patch("/me/password", response_model=Message)
-def update_password_me(
-    *, session: SessionDep, body: UpdatePassword, current_user: CurrentUser
-) -> Any:
-    """
-    Update own password.
-    """
-    if not verify_password(body.current_password, current_user.hashed_password):
-        raise HTTPException(status_code=400, detail="Incorrect password")
-    if body.current_password == body.new_password:
-        raise HTTPException(
-            status_code=400, detail="New password cannot be the same as the current one"
-        )
-    hashed_password = get_password_hash(body.new_password)
-    current_user.hashed_password = hashed_password
-    session.add(current_user)
-    session.commit()
-    return Message(message="Password updated successfully")
-
-
 @router.get("/me", response_model=UserPublic)
 def read_user_me(current_user: CurrentUser) -> Any:
     """
@@ -179,6 +159,43 @@ def delete_user_me(session: SessionDep, current_user: CurrentUser) -> Any:
     session.delete(current_user)
     session.commit()
     return Message(message="User deleted successfully")
+
+
+@router.patch("/me/password", response_model=Message)
+def update_password_me(
+    *, session: SessionDep, body: UpdatePassword, current_user: CurrentUser
+) -> Any:
+    """
+    Update own password.
+    """
+    if not verify_password(body.current_password, current_user.hashed_password):
+        raise HTTPException(status_code=400, detail="Incorrect password")
+    if body.current_password == body.new_password:
+        raise HTTPException(
+            status_code=400, detail="New password cannot be the same as the current one"
+        )
+    hashed_password = get_password_hash(body.new_password)
+    current_user.hashed_password = hashed_password
+    session.add(current_user)
+    session.commit()
+    return Message(message="Password updated successfully")
+
+
+@router.post("/me/top-up", response_model=UserPublic)
+def top_up_balance(
+    *, session: SessionDep, amount: float, current_user: CurrentUser
+) -> User:
+    """
+    Top up the balance of the current user.
+    """
+    if amount <= 0:
+        raise HTTPException(status_code=400, detail="Amount must be greater than zero")
+
+    current_user.balance += amount
+    session.add(current_user)
+    session.commit()
+    session.refresh(current_user)
+    return current_user
 
 
 @router.post("/signup", response_model=UserPublic)
