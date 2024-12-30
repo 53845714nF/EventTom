@@ -11,6 +11,7 @@ from app.models import (
     EventPublic,
     Role,
     Ticket,
+    TicketPurchaseRequest,
     TicketPurchaseResponse,
     TicketWithEvent,
     Voucher,
@@ -79,12 +80,7 @@ def read_manager_ticket_purchases(
 
 @router.post("/{id}/buy", response_model=EventPublic)
 async def buy_ticket(
-    *,
-    session: SessionDep,
-    current_user: CurrentUser,
-    event_id: UUID,
-    quantity: int = 1,
-    voucher_id: UUID | None = None,
+    *, session: SessionDep, current_user: CurrentUser, request: TicketPurchaseRequest
 ) -> Event:
     """
     Buy tickets for an event.
@@ -96,36 +92,51 @@ async def buy_ticket(
             detail="Only customers can buy tickets",
         )
 
-    event = session.get(Event, event_id)
-    if not event:
-        raise HTTPException(status_code=404, detail="Event not found")
-
-    if event.sold_tickets + quantity > event.total_tickets:
-        raise HTTPException(status_code=400, detail="Not enough tickets available")
-
-    final_price_per_ticket = event.base_price + event.pay_fee
-    total_cost = final_price_per_ticket * quantity
-
-    if voucher_id:
+    voucher = None
+    if request.voucher_id:
+        try:
+            voucher_id = UUID(request.voucher_id)
+        except ValueError:
+            raise HTTPException(
+                status_code=400, detail="Voucher ID is not a valid UUID"
+            )
         voucher = session.get(Voucher, voucher_id)
         if not voucher:
             raise HTTPException(status_code=404, detail="Voucher not found")
         if voucher.owner_id != current_user.id:
             raise HTTPException(status_code=403, detail="You do not own this voucher")
+
+    event = session.get(Event, request.event_id)
+    if not event:
+        raise HTTPException(status_code=404, detail="Event not found")
+
+    if event.sold_tickets + request.quantity > event.total_tickets:
+        raise HTTPException(status_code=400, detail="Not enough tickets available")
+
+    final_price_per_ticket = event.base_price + event.pay_fee
+    total_cost = final_price_per_ticket * request.quantity
+
+    if voucher:
         total_cost -= voucher.amount
 
     if current_user.balance < total_cost:
         raise HTTPException(status_code=400, detail="Insufficient balance")
 
     current_user.balance -= total_cost
-    event.sold_tickets += quantity
-    ticket = Ticket(event_id=event_id, user_id=current_user.id, quantity=quantity)
+    event.sold_tickets += request.quantity
+    ticket = Ticket(
+        event_id=request.event_id, user_id=current_user.id, quantity=request.quantity
+    )
     session.add(ticket)
-    if voucher_id:
+    if voucher:
         session.delete(voucher)
     session.commit()
     session.refresh(event)
     await manager.broadcast(
-        {"type": "ticket_purchase", "quantity": quantity, "event": event.model_dump()}
+        {
+            "type": "ticket_purchase",
+            "quantity": request.quantity,
+            "event": event.model_dump(),
+        }
     )
     return event

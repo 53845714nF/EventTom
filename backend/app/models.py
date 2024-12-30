@@ -126,6 +126,12 @@ class TicketWithEvent(SQLModel):
     purchase_date: datetime
 
 
+class TicketPurchaseRequest(SQLModel):
+    event_id: UUID
+    quantity: int
+    voucher_id: str | None = None
+
+
 class TicketPurchaseResponse(SQLModel):
     ticket_id: UUID
     event_id: UUID
