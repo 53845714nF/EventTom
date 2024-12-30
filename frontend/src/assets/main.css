@@ -86,6 +86,10 @@ p {
   font-weight: 500;
 }
 
+.p-light {
+  font-weight: 300;
+}
+
 .light {
   color: var(--color-text-light);
 }

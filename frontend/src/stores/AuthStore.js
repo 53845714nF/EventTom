@@ -54,7 +54,7 @@ export const useAuthStore = defineStore("role", () => {
   // you have to return every state property in order for pinia to work properly
   return {
     role,
-    userId: userId,
+    userId,
     accessToken,
     userAuthenticated,
     navItems,

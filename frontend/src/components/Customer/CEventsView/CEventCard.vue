@@ -1,5 +1,9 @@
 <script setup>
 import PrimaryButton from "@/components/Basic/PrimaryButton.vue";
+import CustomerService from "@/services/CustomerService";
+import { useTicketPurchaseStore } from "@/stores/TicketPurchaseStore";
+
+const ticketPurchaseStore = useTicketPurchaseStore();
 
 const props = defineProps({
   event: {
@@ -7,6 +11,8 @@ const props = defineProps({
     required: true,
   },
 });
+
+const setEventInStore = () => ticketPurchaseStore.setEvent(props.event);
 </script>
 
 <template>
@@ -15,18 +21,20 @@ const props = defineProps({
       <div class="heading-container">
         <h4>{{ event.title }}</h4>
         <p>
-          Preis pro Ticket: <span class="p-bold">{{ event.price }}</span>
+          Preis pro Ticket: <span class="p-bold">{{ CustomerService.calculateSingleTicketPrice(event) }}€</span>
         </p>
       </div>
       <p>{{ event.description }}</p>
-      <p class="p-large">{{ event.organizer }}</p>
+      <!--TODO: maybe add Eventmanager to see who is responsible for this event?-->
     </div>
     <div class="button-container">
+      <!--TODO: get correct number of remaining Tickets or put "ausverkauft" in the button-->
       <PrimaryButton
-        :text="event.available ? `Noch ${event.tickets} Tickets` : 'Ausverkauft'"
-        :disabled="!event.available"
+        :onClick="setEventInStore"
+        :text="`Noch ${event.total_tickets - event.sold_tickets} Tickets`"
         type="black"
         class="primary-button"
+        to="/customer/purchase_ticket"
       />
     </div>
   </div>
@@ -64,6 +72,6 @@ const props = defineProps({
 .button-container {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 </style>

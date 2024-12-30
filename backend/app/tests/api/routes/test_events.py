@@ -3,7 +3,7 @@ from sqlmodel import Session
 
 from app import crud
 from app.core.config import settings
-from app.models import EmployeeCreate, Role
+from app.models import Role, UserCreate
 from app.tests.utils.utils import random_email, random_lower_string
 
 
@@ -12,15 +12,14 @@ def test_create_event(
 ) -> None:
     username = random_email()
     password = random_lower_string()
-    role = Role.EVENTMANAGER
-    employee = EmployeeCreate(email=username, password=password, role=role)
-    manager = crud.create_employee(session=db, user_create=employee)
+    employee = UserCreate(email=username, password=password, role=Role.EVENTMANAGER)
+    manager = crud.create_user(session=db, user_create=employee)
     manager_id = manager.id
 
     data = {
         "title": "38C3",
         "description": "Biggest hacker party in Europe",
-        "count": 13000,
+        "total_tickets": 13000,
         "threshold": 0,
         "base_price": 130,
         "pay_fee": 0,
@@ -37,7 +36,7 @@ def test_create_event(
     content = response.json()
     assert content["title"] == data["title"]
     assert content["description"] == data["description"]
-    assert content["count"] == data["count"]
+    assert content["total_tickets"] == data["total_tickets"]
     assert "id" in content
 
 

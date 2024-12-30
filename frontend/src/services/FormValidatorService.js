@@ -54,12 +54,19 @@ export default class FormValidatorService {
   static getValidationRules(formType) {
     switch (formType) {
       case FormTypes.PURCHASE_TICKET:
-        // TODO: provide the correct validation rules here, you cal also add new rules if needed (e.g. for the cityZip you can add a regex or whatever)
         return {
-          address: [],
-          cityZip: [],
-          ticketCount: [],
-          voucherCode: [],
+          name: [FormValidatorService.rules.isRequired("Name darf nicht leer sein.")],
+          address: [FormValidatorService.rules.isRequired("Adresse darf nicht leer sein.")],
+          zip_code: [
+            FormValidatorService.rules.isRequired("PLZ darf nicht leer sein."),
+            FormValidatorService.rules.minLength(5, "PLZ ungültig."),
+            FormValidatorService.rules.maxLength(5, "PLZ ungültig."),
+          ],
+          ticket_count: [
+            FormValidatorService.rules.isRequired("Anzahl Tickets darf nicht leer sein."),
+            FormValidatorService.rules.isNumeric("Anzahl Tickets muss eine Zahl sein."),
+            FormValidatorService.rules.largerThan(0, "Anzahl Tickets muss größer als 0 sein."),
+          ],
         };
       case FormTypes.SIGNUP:
         return {
@@ -98,7 +105,7 @@ export default class FormValidatorService {
             FormValidatorService.rules.isNumeric("Gebühr muss eine Zahl sein."),
             FormValidatorService.rules.largerOrEqualThan(1, "Gebühr muss größer oder gleich 1 sein."),
           ],
-          count: [
+          total_tickets: [
             FormValidatorService.rules.isRequired("Anzahl Tickets darf nicht leer sein."),
             FormValidatorService.rules.isNumeric("Anzahl Tickets muss eine Zahl sein."),
             FormValidatorService.rules.largerThan(0, "Anzahl Tickets muss größer als 0 sein."),

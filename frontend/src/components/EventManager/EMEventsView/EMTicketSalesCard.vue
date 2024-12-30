@@ -9,35 +9,27 @@ const props = defineProps({
   },
 });
 
-props.event.tickets_sold = Math.round(Math.random() * props.event.count); //TODO: tickets_sold as attribute
 const showPercentage = ref(true);
 const switchView = () => (showPercentage.value = !showPercentage.value);
 
-const percentageSold = computed(() => {
-  return EventManagerService.getPercentageOfTicketsSold(
-    props.event.count,
-    props.event.tickets_sold ? props.event.tickets_sold : 0,
-  ); //TODO: tickets_sold as attribute
-});
-
-const percentageComparedToExpected = computed(() =>
-  EventManagerService.getPercentageOfTicketsSoldComparedToExpected(
-    props.event.tickets_sold, //TODO: tickets_sold as attribute
-    props.event.threshold,
-  ),
+const percentageSold = EventManagerService.getPercentageOfTicketsSold(
+  props.event.total_tickets,
+  props.event.sold_tickets,
 );
 
-const highLightClass = computed(() => EventManagerService.getHighlightClass(percentageComparedToExpected.value));
+const percentageComparedToExpected = EventManagerService.getPercentageOfTicketsSoldComparedToExpected(
+  props.event.sold_tickets,
+  props.event.threshold,
+);
 
-const comparisonText = computed(() => EventManagerService.getComparisonText(percentageComparedToExpected.value));
+const highLightClass = computed(() => EventManagerService.getHighlightClass(percentageComparedToExpected));
+const comparisonText = computed(() => EventManagerService.getComparisonText(percentageComparedToExpected));
 </script>
 
 <template>
   <div class="sales-card-body">
     <div v-if="showPercentage" class="sales-card-text-container">
-      <p class="white p-large small-margin">
-        {{ props.event.tickets_sold ? props.event.tickets_sold : 0 }} Tickets verkauft
-      </p>
+      <p class="white p-large small-margin">{{ props.event.sold_tickets }} Tickets verkauft</p>
       <p class="white small-margin">
         <span :class="[highLightClass.text, 'p-bold']"
           >{{ Math.abs(percentageComparedToExpected) }}% {{ comparisonText }}
@@ -48,9 +40,7 @@ const comparisonText = computed(() => EventManagerService.getComparisonText(perc
 
     <div v-else class="sales-card-text-container">
       <!--TODO: get tickets_sold as attribute for event-->
-      <p class="white p-large small-margin">
-        {{ props.event.tickets_sold ? props.event.tickets_sold : 0 }} / {{ props.event.count }} Tickets
-      </p>
+      <p class="white p-large small-margin">{{ props.event.sold_tickets }} / {{ props.event.total_tickets }} Tickets</p>
       <div class="progress-bar small-margin">
         <div :class="['progress-bar-fill', highLightClass.bar]" :style="{ width: percentageSold + '%' }"></div>
       </div>

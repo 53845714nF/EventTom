@@ -5,6 +5,7 @@ from fastapi import APIRouter, HTTPException
 from sqlmodel import func, select
 
 from app.api.deps import CurrentUser, SessionDep
+from app.api.websockets import manager
 from app.models import (
     Event,
     EventCreate,
@@ -96,7 +97,7 @@ def read_event_by_creator(
 
 
 @router.post("/", response_model=EventPublic)
-def create_event(
+async def create_event(
     *, session: SessionDep, current_user: CurrentUser, event_in: EventCreate
 ) -> Any:
     """
@@ -125,11 +126,12 @@ def create_event(
     session.add(event)
     session.commit()
     session.refresh(event)
+    await manager.broadcast({"type": "event_create", "event": event.model_dump()})
     return event
 
 
 @router.put("/{id}", response_model=EventPublic)
-def update_event(
+async def update_event(
     *,
     session: SessionDep,
     current_user: CurrentUser,
@@ -157,11 +159,12 @@ def update_event(
     session.add(event)
     session.commit()
     session.refresh(event)
+    await manager.broadcast({"type": "event_update", "event": event.model_dump()})
     return event
 
 
 @router.delete("/{id}")
-def delete_event(
+async def delete_event(
     session: SessionDep, current_user: CurrentUser, id: uuid.UUID
 ) -> Message:
     """
@@ -180,4 +183,5 @@ def delete_event(
         )
     session.delete(event)
     session.commit()
+    await manager.broadcast({"type": "event_delete", "event": event.model_dump()})
     return Message(message="Event deleted successfully")
