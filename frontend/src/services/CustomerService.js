@@ -37,8 +37,7 @@ export default class CustomerService {
   }
 
   static getAppliedVoucherFromCode(ticketPurchaseFormData, availableVouchers) {
-    const voucher = availableVouchers.value.find((voucher) => voucher.title === ticketPurchaseFormData.voucher_code); // undefined if not found
-    return voucher;
+    return availableVouchers.value.find((voucher) => voucher.title === ticketPurchaseFormData.voucher_code); // undefined if not found
   }
 
   static async tryGetAllEvents() {
@@ -113,7 +112,9 @@ export default class CustomerService {
       });
   }
 
-  static async tryPurchaseTicket(ticketPurchaseFormData, event, authStore) {
+  static async tryPurchaseTicket(ticketPurchaseFormData, event, appliedVoucher, authStore) {
+
+    // validate form data
     const validationRules = FormValidatorService.getValidationRules(FormTypes.PURCHASE_TICKET);
     const validationError = FormValidatorService.validateForm(ticketPurchaseFormData, validationRules);
 
@@ -122,13 +123,31 @@ export default class CustomerService {
       return;
     }
 
-    const response = await CustomerService.postPurchaseTicketData(ticketPurchaseFormData, event, authStore);
+    try {
 
-    if (response.success) {
-      ToasterService.createToasterPopUp("success", "Kauf erfolgreich!");
-      router.push({ name: "CTickets" });
-    } else {
-      ToasterService.createToasterPopUp("error", "Fehler beim Kauf des Tickets");
+      const response = await CustomerService.postPurchaseTicketData(ticketPurchaseFormData, event, authStore);
+  
+      if (!response.success) {
+        ToasterService.createToasterPopUp("error", "Fehler beim Kauf des Tickets.");
+        return;
+      }
+  
+      // delete voucher if applied
+      if (appliedVoucher) {
+        const deleteVoucherResponse = await CustomerService.deleteVoucher(appliedVoucher, authStore);
+    
+        if (!deleteVoucherResponse.success) {
+          ToasterService.createToasterPopUp("error", "Gutschein konnte nicht gelöscht werden.");
+          return;
+        }
+      }
+
+      ToasterService.createToasterPopUp("success", "Ticket erfolgreich gekauft");
+      router.push({name: "CTickets"});
+    }
+
+    catch (error) {
+      ToasterService.createToasterPopUp("error", "Ein unerwarteter Fehler ist aufgetreten.");
     }
   }
 
@@ -136,6 +155,20 @@ export default class CustomerService {
 
     return await axios
       .post(`/api/v1/tickets/${event.id}/buy?event_id=${event.id}&quantity=${ticketPurchaseFormData.ticket_count}`, {}, {
+        headers: AuthService.getAuthorizedHeaders(authStore),
+      })
+      .then((response) => {
+        return { success: true, data: response.data };
+      })
+      .catch((error) => {
+        console.error("Error purchasing ticket:", error);
+        return { success: false, data: [] };
+      });
+  };
+
+  static async deleteVoucher(voucher, authStore) {
+    return await axios
+      .delete(`/api/v1/vouchers/${voucher.id}`, {}, {
         headers: AuthService.getAuthorizedHeaders(authStore),
       })
       .then((response) => {

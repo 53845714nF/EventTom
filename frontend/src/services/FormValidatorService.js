@@ -159,6 +159,4 @@ export default class FormValidatorService {
       }
     }
   }
-
-  // Adding validation rules for the PURCHASE_TICKET form
 }

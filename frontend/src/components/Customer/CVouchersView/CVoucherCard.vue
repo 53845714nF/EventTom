@@ -10,8 +10,10 @@ const props = defineProps({
 <template>
   <div class="voucher-card">
     <p class="p-large">"{{ voucher.title }}"</p>
-    <p>
-      Wert: <span class="p-large">{{ voucher.amount }}€</span>
+    <p class="p-large p-light">
+      Wert: <span class="p-large">
+        {{ voucher.amount }}€
+      </span>
     </p>
   </div>
 </template>

@@ -44,7 +44,7 @@ const appliedVoucher = computed(() =>
 );
 
 const tryPostTicketPurchaseFormData = async () =>
-  await CustomerService.tryPurchaseTicket(ticketPurchaseFormData.value, props.event, authStore);
+  await CustomerService.tryPurchaseTicket(ticketPurchaseFormData.value, props.event, appliedVoucher.value, authStore);
 </script>
 
 <template>
