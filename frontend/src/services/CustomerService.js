@@ -3,6 +3,7 @@ import ToasterService from "./ToasterService";
 import axios from "axios";
 import FormValidatorService from "./FormValidatorService";
 import FormTypes from "@/constants/FormTypes";
+import router from "@/router";
 
 export default class CustomerService {
   // Provides an empty form structure for ticket purchases for initializing the form data in components.
@@ -124,21 +125,17 @@ export default class CustomerService {
     const response = await CustomerService.postPurchaseTicketData(ticketPurchaseFormData, event, authStore);
 
     if (response.success) {
-      ToasterService.createToasterPopUp("success", "Ticket erfolgreich gekauft");
+      ToasterService.createToasterPopUp("success", "Kauf erfolgreich!");
+      router.push({ name: "CTickets" });
     } else {
       ToasterService.createToasterPopUp("error", "Fehler beim Kauf des Tickets");
     }
-
-    return response;
   }
 
   static async postPurchaseTicketData(ticketPurchaseFormData, event, authStore) {
-    const data = {
-      quantity: ticketPurchaseFormData.ticket_count,
-    };
 
     return await axios
-      .post(`/api/v1/tickets/${event.id}/buy`, data, ticketPurchaseFormData, {
+      .post(`/api/v1/tickets/${event.id}/buy?event_id=${event.id}&quantity=${ticketPurchaseFormData.ticket_count}`, {}, {
         headers: AuthService.getAuthorizedHeaders(authStore),
       })
       .then((response) => {
