@@ -11,9 +11,7 @@ const props = defineProps({
   <div class="voucher-card">
     <p class="p-large">"{{ voucher.title }}"</p>
     <p class="p-large p-light">
-      Wert: <span class="p-large">
-        {{ voucher.amount }}€
-      </span>
+      Wert: <span class="p-large"> {{ voucher.amount }}€ </span>
     </p>
   </div>
 </template>

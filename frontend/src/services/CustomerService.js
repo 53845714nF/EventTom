@@ -113,7 +113,6 @@ export default class CustomerService {
   }
 
   static async tryPurchaseTicket(ticketPurchaseFormData, event, appliedVoucher, authStore) {
-
     // validate form data
     const validationRules = FormValidatorService.getValidationRules(FormTypes.PURCHASE_TICKET);
     const validationError = FormValidatorService.validateForm(ticketPurchaseFormData, validationRules);
@@ -124,18 +123,17 @@ export default class CustomerService {
     }
 
     try {
-
       const response = await CustomerService.postPurchaseTicketData(ticketPurchaseFormData, event, authStore);
-  
+
       if (!response.success) {
         ToasterService.createToasterPopUp("error", "Fehler beim Kauf des Tickets.");
         return;
       }
-  
+
       // delete voucher if applied
       if (appliedVoucher) {
         const deleteVoucherResponse = await CustomerService.deleteVoucher(appliedVoucher, authStore);
-    
+
         if (!deleteVoucherResponse.success) {
           ToasterService.createToasterPopUp("error", "Gutschein konnte nicht gelöscht werden.");
           return;
@@ -143,20 +141,22 @@ export default class CustomerService {
       }
 
       ToasterService.createToasterPopUp("success", "Ticket erfolgreich gekauft");
-      router.push({name: "CTickets"});
-    }
-
-    catch (error) {
+      router.push({ name: "CTickets" });
+    } catch (error) {
+      console.error("Error purchasing ticket:", error);
       ToasterService.createToasterPopUp("error", "Ein unerwarteter Fehler ist aufgetreten.");
     }
   }
 
   static async postPurchaseTicketData(ticketPurchaseFormData, event, authStore) {
-
     return await axios
-      .post(`/api/v1/tickets/${event.id}/buy?event_id=${event.id}&quantity=${ticketPurchaseFormData.ticket_count}`, {}, {
-        headers: AuthService.getAuthorizedHeaders(authStore),
-      })
+      .post(
+        `/api/v1/tickets/${event.id}/buy?event_id=${event.id}&quantity=${ticketPurchaseFormData.ticket_count}`,
+        {},
+        {
+          headers: AuthService.getAuthorizedHeaders(authStore),
+        },
+      )
       .then((response) => {
         return { success: true, data: response.data };
       })
@@ -164,13 +164,17 @@ export default class CustomerService {
         console.error("Error purchasing ticket:", error);
         return { success: false, data: [] };
       });
-  };
+  }
 
   static async deleteVoucher(voucher, authStore) {
     return await axios
-      .delete(`/api/v1/vouchers/${voucher.id}`, {}, {
-        headers: AuthService.getAuthorizedHeaders(authStore),
-      })
+      .delete(
+        `/api/v1/vouchers/${voucher.id}`,
+        {},
+        {
+          headers: AuthService.getAuthorizedHeaders(authStore),
+        },
+      )
       .then((response) => {
         return { success: true, data: response.data };
       })
