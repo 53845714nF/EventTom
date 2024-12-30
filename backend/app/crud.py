@@ -1,12 +1,14 @@
 import uuid
+from collections.abc import Sequence
 from typing import Any
 
-from sqlmodel import Session, select
+from sqlmodel import Session, desc, select
 
 from app.core.security import get_password_hash, verify_password
 from app.models import (
     Event,
     EventCreate,
+    Ticket,
     User,
     UserCreate,
     UserUpdate,
@@ -63,3 +65,17 @@ def create_event(
     session.commit()
     session.refresh(db_event)
     return db_event
+
+
+def get_manager_ticket_purchases(
+    session: Session, manager_id: uuid.UUID, limit: int
+) -> Sequence[tuple[Ticket, Event, User]]:
+    statement = (
+        select(Ticket, Event, User)
+        .join(Event, Ticket.event_id == Event.id)  # type: ignore[arg-type]
+        .join(User, Ticket.user_id == User.id)  # type: ignore[arg-type]
+        .where(Event.manager_id == manager_id)
+        .order_by(desc(Ticket.purchase_date))
+        .limit(limit)
+    )
+    return session.exec(statement).all()

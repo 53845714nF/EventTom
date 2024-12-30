@@ -18,27 +18,14 @@ class Role(str, Enum):
 class UserBase(SQLModel):
     full_name: str | None = Field(default=None, max_length=255)
     email: EmailStr = Field(unique=True, index=True, max_length=255)
-    is_active: bool = True
-    role: Role
+    balance: float = Field(default=0.0)
+    is_active: bool = Field(default=True)
+    role: Role = Field()
 
 
 class User(UserBase, table=True):
     id: UUID = Field(default_factory=uuid4, primary_key=True)
-    hashed_password: str
-
-
-class UserCreate(SQLModel):
-    full_name: str | None = Field(default=None, max_length=255)
-    email: EmailStr = Field(unique=True, index=True, max_length=255)
-    password: str = Field(min_length=8, max_length=40)
-    role: Role | None = Field(default=None)
-
-
-class UserUpdate(SQLModel):
-    full_name: str | None = Field(default=None, max_length=255)
-    email: EmailStr | None = Field(default=None, max_length=255)
-    password: str | None = Field(default=None, min_length=8, max_length=40)
-    role: Role | None = Field(default=None)
+    hashed_password: str = Field()
 
 
 class UserPublic(UserBase):
@@ -48,6 +35,20 @@ class UserPublic(UserBase):
 class UsersPublic(SQLModel):
     data: list[UserPublic]
     count: int
+
+
+class UserCreate(SQLModel):
+    full_name: str | None = Field(default=None, max_length=255)
+    email: EmailStr = Field(max_length=255)
+    password: str = Field(min_length=8, max_length=40)
+    role: Role | None = Field(default=None)
+
+
+class UserUpdate(SQLModel):
+    full_name: str | None = Field(default=None, max_length=255)
+    email: EmailStr | None = Field(default=None, max_length=255)
+    password: str | None = Field(default=None, min_length=8, max_length=40)
+    role: Role | None = Field(default=None)
 
 
 class UserUpdateMe(SQLModel):
@@ -113,6 +114,16 @@ class Ticket(SQLModel, table=True):
     user_id: UUID = Field(foreign_key="user.id")
     quantity: int = Field(default=1)
     purchase_date: datetime = Field(default=func.now())
+
+
+class TicketPurchaseResponse(SQLModel):
+    ticket_id: UUID
+    event_id: UUID
+    event_title: str
+    user_id: UUID
+    user_email: EmailStr
+    quantity: int
+    purchase_date: datetime
 
 
 # Voucher Models

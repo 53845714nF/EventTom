@@ -104,22 +104,21 @@ async def create_event(
     Create new event.
     """
 
-    if current_user.role != Role.EVENTCREATOR:
+    if not (current_user.role == Role.EVENTCREATOR or current_user.role == Role.ADMIN):
         raise HTTPException(
-            status_code=400, detail="Not enough permissions to create events"
+            status_code=403, detail="Not enough permissions to create events"
         )
 
-    # Get the Event Manger event is intended.
     selected_user = session.get(User, event_in.manager_id)
 
     if selected_user is None:
         raise HTTPException(
-            status_code=400, detail="The selected Event Manager dose not exsit."
+            status_code=400, detail="The selected Event Manager does not exist"
         )
 
     if not (selected_user.role == Role.EVENTMANAGER):
         raise HTTPException(
-            status_code=400, detail="The selected user is not an event manager."
+            status_code=400, detail="The selected user is not an Event Manager"
         )
 
     event = Event.model_validate(event_in, update={"creator_id": current_user.id})
