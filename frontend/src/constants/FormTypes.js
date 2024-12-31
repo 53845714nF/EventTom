@@ -1,4 +1,5 @@
 export default {
+  INCREASE_BALANCE: "increaseBalance",
   PURCHASE_TICKET: "purchaseTicket",
   SIGNUP: "signup",
   LOGIN: "login",

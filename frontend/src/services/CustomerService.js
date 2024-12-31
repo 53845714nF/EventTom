@@ -6,6 +6,66 @@ import FormTypes from "@/constants/FormTypes";
 import router from "@/router";
 
 export default class CustomerService {
+
+  static proviceBalanceFormData() {
+    return {
+      amount: "0",
+      payment_method: "",
+    }
+  }
+
+  static providePaymentMethodOptions() {
+    return [
+      "PayPal",
+      "Kreditkarte",
+      "Rechnung",
+      "Bitcoin",
+    ]
+  }
+
+  static async tryTopUpBalance(balanceFormData, authStore) {
+
+    const validationRules = FormValidatorService.getValidationRules(FormTypes.INCREASE_BALANCE);
+    const validationError = FormValidatorService.validateForm(balanceFormData.value, validationRules);
+
+    if (validationError) {
+      ToasterService.createToasterPopUp("error", validationError);
+      return;
+    }
+
+    try {
+      const result = await CustomerService.postTopUpBalance(balanceFormData.value, authStore);
+
+      if (!result.success) {
+        ToasterService.createToasterPopUp("error", "Fehler beim Aufladen deines Guthabens");
+        return;
+      }
+      
+      ToasterService.createToasterPopUp("success", "Guthaben erfolgreich aufgeladen!");
+      authStore.setBalance(result.data.balance);
+      balanceFormData.value = CustomerService.proviceBalanceFormData();
+      return;
+
+    } catch (error) {
+      ToasterService.createDefaultErrorPopUp();
+    }
+  }
+
+  static async postTopUpBalance(balanceFormData, authStore) {
+    return await axios.post(
+      `/api/v1/users/me/top-up?amount=${balanceFormData.amount}`, // TODO: use request body once available
+      {},
+      {
+        headers: AuthService.getAuthorizedHeaders(authStore),
+      }
+    ).then((response) => {
+      return {success: true, data: response.data};
+    }).catch((error) => {
+      console.error(error);
+      return {success: false, data: []};
+    })
+  }
+
   // Provides an empty form structure for ticket purchases for initializing the form data in components.
   static provideTicketPurchaseFormData() {
     return {

@@ -53,6 +53,19 @@ export default class FormValidatorService {
   // this method procides the validation rules for the form fields with the corresponding attributes
   static getValidationRules(formType) {
     switch (formType) {
+      
+      case FormTypes.INCREASE_BALANCE:
+        return {
+          amount: [
+            FormValidatorService.rules.isRequired("Betrag darf nicht leer sein."),
+            FormValidatorService.rules.isNumeric("Betrag muss eine Zahl sein."),
+            FormValidatorService.rules.largerThan(0, "Betrag muss größer als 0 sein."),
+          ],
+          payment_method: [
+            FormValidatorService.rules.isRequired("Zahlungsmethode darf nicht leer sein."),
+          ],
+        };
+
       case FormTypes.PURCHASE_TICKET:
         return {
           name: [FormValidatorService.rules.isRequired("Name darf nicht leer sein.")],
@@ -68,6 +81,7 @@ export default class FormValidatorService {
             FormValidatorService.rules.largerThan(0, "Anzahl Tickets muss größer als 0 sein."),
           ],
         };
+
       case FormTypes.SIGNUP:
         return {
           full_name: [FormValidatorService.rules.isRequired("Name darf nicht leer sein.")],
