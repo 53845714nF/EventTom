@@ -29,6 +29,8 @@ async def websocket_endpoint(websocket: WebSocket) -> None:
     await manager.connect(websocket)
     try:
         while True:
-            await websocket.receive_text()
+            data = await websocket.receive_text()
+            print(f"Nachricht erhalten: {data}")
+            await websocket.send_text(f"Echo: {data}")
     except WebSocketDisconnect:
         manager.disconnect(websocket)

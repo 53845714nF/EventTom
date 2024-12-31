@@ -2,6 +2,14 @@
 import PrimaryButton from "@/components/Basic/PrimaryButton.vue";
 import SecondaryButton from "@/components/Basic/SecondaryButton.vue";
 import { PrimaryButtonTypes, SecondaryButtonTypes } from "@/constants/ButtonTypes";
+
+const exampleSocket = new WebSocket("ws://localhost:8000/api/v1/ws");
+
+exampleSocket.onopen = (event) => {
+  exampleSocket.send("Here's some text that the server is urgently awaiting!");
+};
+
+
 </script>
 
 <template>
