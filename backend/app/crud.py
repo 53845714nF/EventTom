@@ -67,6 +67,17 @@ def create_event(
     return db_event
 
 
+def get_tickets_with_events(
+    session: Session, user_id: uuid.UUID
+) -> Sequence[tuple[Ticket, Event]]:
+    statement = (
+        select(Ticket, Event)
+        .join(Event, Ticket.event_id == Event.id)  # type: ignore[arg-type]
+        .where(Ticket.user_id == user_id)
+    )
+    return session.exec(statement).all()
+
+
 def get_manager_ticket_purchases(
     session: Session, manager_id: uuid.UUID, limit: int
 ) -> Sequence[tuple[Ticket, Event, User]]:

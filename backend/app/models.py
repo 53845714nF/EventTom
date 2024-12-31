@@ -116,6 +116,22 @@ class Ticket(SQLModel, table=True):
     purchase_date: datetime = Field(default=func.now())
 
 
+class TicketWithEvent(SQLModel):
+    ticket_id: UUID
+    event_id: UUID
+    event_title: str
+    event_description: str
+    user_id: UUID
+    quantity: int
+    purchase_date: datetime
+
+
+class TicketPurchaseRequest(SQLModel):
+    event_id: UUID
+    quantity: int
+    voucher_id: str | None = None
+
+
 class TicketPurchaseResponse(SQLModel):
     ticket_id: UUID
     event_id: UUID
