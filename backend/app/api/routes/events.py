@@ -125,7 +125,9 @@ async def create_event(
     session.add(event)
     session.commit()
     session.refresh(event)
-    await manager.broadcast({"type": "event_create", "event": event.model_dump()})
+    await manager.broadcast(
+        {"type": "event_create", "event": event.model_dump(mode="json")}
+    )
     return event
 
 
@@ -158,7 +160,9 @@ async def update_event(
     session.add(event)
     session.commit()
     session.refresh(event)
-    await manager.broadcast({"type": "event_update", "event": event.model_dump()})
+    await manager.broadcast(
+        {"type": "event_update", "event": event.model_dump(mode="json")}
+    )
     return event
 
 
@@ -182,5 +186,7 @@ async def delete_event(
         )
     session.delete(event)
     session.commit()
-    await manager.broadcast({"type": "event_delete", "event": event.model_dump()})
+    await manager.broadcast(
+        {"type": "event_delete", "event": event.model_dump(mode="json")}
+    )
     return Message(message="Event deleted successfully")

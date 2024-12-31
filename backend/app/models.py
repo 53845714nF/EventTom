@@ -61,12 +61,16 @@ class UpdatePassword(SQLModel):
     new_password: str = Field(min_length=8, max_length=40)
 
 
+class TopUpRequest(SQLModel):
+    amount: float
+
+
 # Event Models
 
 
 class EventBase(SQLModel):
     title: str = Field(min_length=1, max_length=255)
-    description: str | None = Field(default=None, max_length=255)
+    description: str | None = Field(default=None, max_length=1024)
     threshold: int
     base_price: float
     pay_fee: float
@@ -110,8 +114,8 @@ class EventsPublic(SQLModel):
 
 class Ticket(SQLModel, table=True):
     ticket_id: UUID = Field(default_factory=uuid4, primary_key=True)
-    event_id: UUID = Field(foreign_key="event.id")
-    user_id: UUID = Field(foreign_key="user.id")
+    event_id: UUID = Field(foreign_key="event.id", nullable=False, ondelete="CASCADE")
+    user_id: UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
     quantity: int = Field(default=1)
     purchase_date: datetime = Field(default=func.now())
 
