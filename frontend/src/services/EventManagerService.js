@@ -4,17 +4,37 @@ import ToasterService from "./ToasterService";
 
 export default class EventManagerService {
   // ### EMEventsView.vue
-  static async getEventsForEventManager(eventManagerId, authStore) {
+
+  static async tryGetEventsForEventManager(eventManagerId, authStore) {
+
+    try {
+      const response = await EventManagerService.fetchEventsForEventManager(eventManagerId, authStore);
+  
+      if (!response.success) {
+        ToasterService.createToasterPopUp("error", "Fehler beim Laden deiner Events.");
+        return;
+      }
+  
+      return response.data;
+
+    } catch (error) {
+      console.error(error);
+      ToasterService.createDefaultErrorPopUp(); 
+    }
+  }
+
+  static async fetchEventsForEventManager(eventManagerId, authStore) {
     return await axios
       .get(`/api/v1/events/manager/${eventManagerId}`, {
-        headers: AuthService.getAuthorizedConfig(authStore.accessToken),
+        headers: AuthService.getAuthorizedConfig(authStore),
       })
       .then((response) => {
-        return response.data;
+        return {success: true, data: response.data.data};
       })
       .catch((error) => {
         console.log(error);
         ToasterService.createToasterPopUp("error", "Something went wrong while fetching the events.");
+        return {success: false, data: []};
       });
   }
 
@@ -45,5 +65,39 @@ export default class EventManagerService {
     } else {
       return "mehr";
     }
+  }
+
+  
+  // ### EMActivitiesView ###
+  static async tryGetRecentActivties(limit, authStore){
+
+    try {
+      const response = await EventManagerService.fetchRecentActivities(limit, authStore);
+  
+      if (!response.success) {
+        ToasterService.createToasterPopUp("error", "Fehler beim Laden der Aktivitäten.");
+        return
+      }
+  
+      return response.data;
+
+    } catch (error) {
+      ToasterService.createDefaultErrorPopUp(); 
+      console.error(error);
+    }
+  }
+
+  static async fetchRecentActivities(limit, authStore){
+    return await axios.get(
+      `/api/v1/tickets/activities?limit=${limit}`,
+      {
+        headers: AuthService.getAuthorizedHeaders(authStore)
+      }
+    ).then((response) => {
+      return {success: true, data: response.data};
+    }).catch((error) => {
+      console.log(error);
+      return {success: false, data: []};
+    })
   }
 }

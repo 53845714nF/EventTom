@@ -30,6 +30,8 @@ async def websocket_endpoint(websocket: WebSocket) -> None:
     try:
         while True:
             data = await websocket.receive_text()
+
+            # Arnes changes: (just for testing, can be deleted)
             print(f"Nachricht erhalten: {data}")
             await websocket.send_text(f"Echo: {data}")
     except WebSocketDisconnect:

@@ -9,7 +9,7 @@ const props = defineProps({
 
 <template>
   <div class="ticket-card">
-    <p class="p-large">{{ ticket.quantity }}x</p>
+    <p class="p-large">{{ ticket.quantity }}x {{ ticket.event_title }}</p>
     <p class="p-large p-light">
       gekauft am: <span class="p-large">{{ new Date(ticket.purchase_date).toISOString().split("T")[0] }}</span>
     </p>

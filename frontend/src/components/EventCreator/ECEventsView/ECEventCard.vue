@@ -48,6 +48,10 @@ const deleteEvent = async () => await EventCreatorService.tryDeleteEvent(props.e
   width: 100%;
 }
 
+.card-content p {
+  margin-top: 15px;
+}
+
 .card-content > div {
   width: 100%;
   display: flex;

@@ -123,54 +123,37 @@ export default class CustomerService {
     }
 
     try {
-      const response = await CustomerService.postPurchaseTicketData(ticketPurchaseFormData, event, authStore);
+      const response = await CustomerService.postPurchaseTicketData(ticketPurchaseFormData, event, appliedVoucher, authStore);
 
       if (!response.success) {
         ToasterService.createToasterPopUp("error", "Fehler beim Kauf des Tickets.");
         return;
       }
 
-      // delete voucher if applied
-      if (appliedVoucher) {
-        const deleteVoucherResponse = await CustomerService.deleteVoucher(appliedVoucher, authStore);
-
-        if (!deleteVoucherResponse.success) {
-          ToasterService.createToasterPopUp("error", "Gutschein konnte nicht gelöscht werden.");
-          return;
-        }
-      }
-
       ToasterService.createToasterPopUp("success", "Ticket erfolgreich gekauft");
       router.push({ name: "CTickets" });
+
     } catch (error) {
       console.error("Error purchasing ticket:", error);
-      ToasterService.createToasterPopUp("error", "Ein unerwarteter Fehler ist aufgetreten.");
+      ToasterService.createDefaultErrorPopUp(); 
     }
   }
 
-  static async postPurchaseTicketData(ticketPurchaseFormData, event, authStore) {
+  static async postPurchaseTicketData(ticketPurchaseFormData, event, appliedVoucher, authStore) {
+
+    // get id of applied voucher if exists
+    const appliedVoucherId =  appliedVoucher ? appliedVoucher.id : ""
+
+    const data = {
+      event_id: event.id,
+      quantity: ticketPurchaseFormData.ticket_count,
+      voucher_id: appliedVoucherId
+    }
+
     return await axios
       .post(
-        `/api/v1/tickets/${event.id}/buy?event_id=${event.id}&quantity=${ticketPurchaseFormData.ticket_count}`,
-        {},
-        {
-          headers: AuthService.getAuthorizedHeaders(authStore),
-        },
-      )
-      .then((response) => {
-        return { success: true, data: response.data };
-      })
-      .catch((error) => {
-        console.error("Error purchasing ticket:", error);
-        return { success: false, data: [] };
-      });
-  }
-
-  static async deleteVoucher(voucher, authStore) {
-    return await axios
-      .delete(
-        `/api/v1/vouchers/${voucher.id}`,
-        {},
+        "/api/v1/tickets/{id}/buy",
+        data,
         {
           headers: AuthService.getAuthorizedHeaders(authStore),
         },
