@@ -1,4 +1,3 @@
-import { ref } from "vue";
 import { Roles } from "@/constants/Roles";
 import AuthService from "./AuthService";
 import ToasterService from "./ToasterService";
@@ -8,14 +7,14 @@ import FormTypes from "@/constants/FormTypes";
 
 export default class AdminService {
   static provideEmptyUser() {
-    return ref({
+    return {
       full_name: "",
       email: "",
       is_active: true,
       user_type: "employee",
       role: "",
       password: "",
-    });
+    };
   }
 
   static provideRoleOptions() {
@@ -25,14 +24,35 @@ export default class AdminService {
 
   static provideEmptyVoucher() {
     return {
-      code: "",
+      code_name: "",
       amount: "0",
       owner_id: "",
       owner_email: "",
     };
   }
 
+  static provideVoucherOwnerEmailOptions(users) {
+    // this function is already executed when users are not loaded yet
+    if (users.length === 0) {
+      return [];
+    }
+
+    const possibleOwners = users.filter((user) => user.role === Roles.CUSTOMER);
+
+    if (possibleOwners.length === 0) {
+      ToasterService.createToasterPopUp("error", "Keine Kunden im System.");
+      return [];
+    }
+
+    return possibleOwners.map((user) => user.email);
+  }
+
   static getUserIdByEmail(email, users) {
+    // when voucher gets resettet after submitting, email is empty, but this method is called since email is watched
+    if (!email) {
+      return "";
+    }
+
     const user = users.find((user) => user.email === email);
     return user.id;
   }
@@ -46,6 +66,17 @@ export default class AdminService {
       return;
     }
 
+    const result = await AdminService.postNewUser(user, authStore);
+
+    if (result.success) {
+      ToasterService.createToasterPopUp("success", "User erfolgreich hinzugefügt.");
+      user.value = AdminService.provideEmptyUser();
+    } else {
+      ToasterService.createToasterPopUp("error", "Fehler beim Hinzufügen des Users.");
+    }
+  }
+
+  static async postNewUser(user, authStore) {
     const data = {
       full_name: user.value.full_name,
       email: user.value.email,
@@ -55,43 +86,74 @@ export default class AdminService {
       password: user.value.password,
     };
 
-    return axios
-      .post("/api/v1/users/", data, AuthService.getConfig(authStore))
+    return await axios
+      .post("/api/v1/users/", data, {
+        headers: AuthService.getAuthorizedHeaders(authStore),
+      })
       .then(() => {
-        user.value = AdminService.provideEmptyUser();
-        ToasterService.createToasterPopUp("success", "User erfolgreich hinzugefügt");
+        return { success: true };
       })
       .catch((error) => {
         console.log(error);
-        ToasterService.createToasterPopUp("error", "Etwas ist schief gelaufen.");
+        return { success: false };
       });
+  }
+
+  static async tryGetAllUsers(authStore) {
+    const result = await AdminService.getAllUsers(authStore);
+
+    if (result.success) {
+      return result.data;
+    } else {
+      ToasterService.createToasterPopUp("error", "Fehler beim Laden der User.");
+    }
   }
 
   static async getAllUsers(authStore) {
     return axios
-      .get("/api/v1/users/", AuthService.getConfig(authStore))
+      .get("/api/v1/users/", {
+        headers: AuthService.getAuthorizedHeaders(authStore),
+      })
       .then((response) => {
-        return response.data.data;
+        return { success: true, data: response.data.data };
       })
       .catch((error) => {
         console.log(error);
-        ToasterService.createToasterPopUp("error", "Fehler beim Laden der User.");
+        return { success: false };
       });
   }
 
-  static async deleteUser(userId, authStore) {
-    return axios
-      .delete(`/api/v1/users/${userId}`, AuthService.getConfig(authStore))
+  static async tryDeleteUser(user, authStore) {
+    if (user.id === authStore.userId) {
+      ToasterService.createToasterPopUp("error", "Du kannst dich nicht selbst löschen.");
+      return;
+    }
+
+    const result = await AdminService.deleteUser(user, authStore);
+
+    if (result.success) {
+      ToasterService.createToasterPopUp("success", "User erfolgreich gelöscht.");
+      window.location.reload(); // TODO: more elegant solution
+    } else {
+      ToasterService.createToasterPopUp("error", "Fehler beim Löschen des Users.");
+    }
+  }
+
+  static async deleteUser(user, authStore) {
+    return await axios
+      .delete(`/api/v1/users/${user.id}`, {
+        headers: AuthService.getAuthorizedHeaders(authStore),
+      })
       .then(() => {
-        ToasterService.createToasterPopUp("success", "User erfolgreich gelöscht");
+        return { success: true };
       })
       .catch((error) => {
         console.log(error);
-        ToasterService.createToasterPopUp("error", "Fehler beim Löschen des Users.");
+        return { success: false };
       });
   }
 
-  static tryPostNewVoucher(voucher) {
+  static async tryPostNewVoucher(voucher, authStore) {
     const validationRules = FormValidatorService.getValidationRules(FormTypes.NEW_VOUCHER);
     const validationError = FormValidatorService.validateForm(voucher.value, validationRules);
 
@@ -100,7 +162,33 @@ export default class AdminService {
       return;
     }
 
-    console.log(voucher.value);
-    ToasterService.createToasterPopUp("error", "Not implemented yet.");
+    const result = await AdminService.postVoucherData(voucher, authStore);
+
+    if (result.success) {
+      ToasterService.createToasterPopUp("success", "Gutschein erfolgreich hinzugefügt.");
+      voucher.value = AdminService.provideEmptyVoucher();
+    } else {
+      ToasterService.createToasterPopUp("error", "Fehler beim Hinzufügen des Gutscheins.");
+    }
+  }
+
+  static async postVoucherData(voucher, authStore) {
+    const data = {
+      title: voucher.value.code_name,
+      amount: voucher.value.amount,
+      owner_id: voucher.value.owner_id,
+    };
+
+    return axios
+      .post("/api/v1/vouchers/", data, {
+        headers: AuthService.getAuthorizedHeaders(authStore),
+      })
+      .then(() => {
+        return { success: true };
+      })
+      .catch((error) => {
+        console.log(error);
+        return { success: false };
+      });
   }
 }

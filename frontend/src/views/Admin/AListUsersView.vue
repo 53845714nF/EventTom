@@ -10,7 +10,7 @@ const authStore = useAuthStore();
 const users = ref([]);
 
 onBeforeMount(async () => {
-  await AdminService.getAllUsers(authStore).then((data) => {
+  await AdminService.tryGetAllUsers(authStore).then((data) => {
     users.value = data;
   });
 });

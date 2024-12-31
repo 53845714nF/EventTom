@@ -12,6 +12,8 @@ export default [
         Storage: "readonly",
         console: "readonly",
         URLSearchParams: "readonly",
+        setTimeout: "readonly",
+        window: "readonly",
       },
     },
   },

@@ -9,8 +9,8 @@ const authStore = useAuthStore();
 const events = ref([]);
 
 onBeforeMount(async () => {
-  EventCreatorService.getEventsForEventCreator("", authStore).then((options) => {
-    events.value = options;
+  EventCreatorService.getEventsForEventCreator(authStore.userId, authStore).then((result) => {
+    events.value = result.data;
   });
 });
 </script>

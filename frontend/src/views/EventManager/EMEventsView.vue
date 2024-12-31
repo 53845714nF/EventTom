@@ -6,12 +6,12 @@ import { onBeforeMount, ref } from "vue";
 import { useAuthStore } from "@/stores/AuthStore";
 
 const authStore = useAuthStore();
-const eventManagerId = 1;
+const eventManagerId = authStore.userId;
 const events = ref([]);
 
 onBeforeMount(async () => {
-  await EventManagerService.getEventsForEventManager(eventManagerId, authStore).then((data) => {
-    events.value = data;
+  await EventManagerService.getEventsForEventManager(eventManagerId, authStore).then((response) => {
+    events.value = response.data;
   });
 });
 </script>
