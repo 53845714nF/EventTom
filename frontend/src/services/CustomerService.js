@@ -112,6 +112,17 @@ export default class CustomerService {
     return availableVouchers.value.find((voucher) => voucher.title === ticketPurchaseFormData.voucher_code); //TODO: fix error when no vouchers found
   }
 
+  static getEventCardInfo(event) {
+    const remainingTickets = event.total_tickets - event.sold_tickets;
+    
+    if (remainingTickets <= 0) {
+      return {buttonText: "Ausverkauft", cssClass: "bg-grey", to: ""};
+    } else {
+      return {buttonText: `Noch ${remainingTickets} Tickets`, cssClass: "bg-customer", to: "/customer/purchase_ticket"};
+    }
+
+  }
+
   static async tryGetAllEvents() {
     const result = await CustomerService.fetchAllEvents();
 

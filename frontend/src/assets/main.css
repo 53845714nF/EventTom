@@ -130,6 +130,14 @@ a {
   background-color: var(--color-text-white);
 }
 
+.bg-grey {
+  background-color: var(--cp-light-grey);
+}
+
+.bg-customer {
+  background-color: var(--color-customer);
+}
+
 .nav-item-active {
   color: var(--cp-bright-green);
 }
