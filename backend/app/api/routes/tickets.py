@@ -113,7 +113,7 @@ async def buy_ticket(
     if event.sold_tickets + request.quantity > event.total_tickets:
         raise HTTPException(status_code=400, detail="Not enough tickets available")
 
-    final_price_per_ticket = event.base_price + event.pay_fee
+    final_price_per_ticket = event.base_price * event.pay_fee
     total_cost = final_price_per_ticket * request.quantity
 
     if voucher:
@@ -136,7 +136,7 @@ async def buy_ticket(
         {
             "type": "ticket_purchase",
             "quantity": request.quantity,
-            "event": event.model_dump(),
+            "event": event.model_dump(mode="json"),
         }
     )
     return event

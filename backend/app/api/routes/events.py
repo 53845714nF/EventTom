@@ -125,7 +125,9 @@ async def create_event(
     session.add(event)
     session.commit()
     session.refresh(event)
-    await manager.broadcast({"type": "event_create", "event": event.model_dump()})
+    await manager.broadcast(
+        {"type": "event_create", "event": event.model_dump(mode="json")}
+    )
     return event
 
 
@@ -145,9 +147,9 @@ async def update_event(
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
 
-    if not ((current_user.id == event.manager_id) or (
-        current_user.id == event.creator_id
-    )):
+    if not (
+        (current_user.id == event.manager_id) or (current_user.id == event.creator_id)
+    ):
         raise HTTPException(
             status_code=400,
             detail="Only the Event Manager or Creator of this Event has enough permissions",
@@ -158,7 +160,9 @@ async def update_event(
     session.add(event)
     session.commit()
     session.refresh(event)
-    await manager.broadcast({"type": "event_update", "event": event.model_dump()})
+    await manager.broadcast(
+        {"type": "event_update", "event": event.model_dump(mode="json")}
+    )
     return event
 
 
@@ -173,14 +177,16 @@ async def delete_event(
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
 
-    if not ((current_user.id == event.manager_id) or (
-        current_user.id == event.creator_id
-    )):
+    if not (
+        (current_user.id == event.manager_id) or (current_user.id == event.creator_id)
+    ):
         raise HTTPException(
             status_code=400,
             detail="Only the Event Manager or Creator of this Event has enough permissions",
         )
     session.delete(event)
     session.commit()
-    await manager.broadcast({"type": "event_delete", "event": event.model_dump()})
+    await manager.broadcast(
+        {"type": "event_delete", "event": event.model_dump(mode="json")}
+    )
     return Message(message="Event deleted successfully")

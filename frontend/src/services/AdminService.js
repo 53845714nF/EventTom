@@ -86,8 +86,6 @@ export default class AdminService {
       password: user.value.password,
     };
 
-    console.log(data);
-
     return await axios
       .post("/api/v1/users/", data, {
         headers: AuthService.getAuthorizedHeaders(authStore),
