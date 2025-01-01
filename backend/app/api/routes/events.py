@@ -63,11 +63,6 @@ def read_event_by_manager(
     )
     events = session.exec(statement).all()
 
-    if not events:
-        raise HTTPException(
-            status_code=404, detail=f"No events found for manager {manager_id}"
-        )
-
     return EventsPublic(data=events, count=count)
 
 
@@ -87,11 +82,6 @@ def read_event_by_creator(
         select(Event).where(Event.creator_id == creator_id).offset(skip).limit(limit)
     )
     events = session.exec(statement).all()
-
-    if not events:
-        raise HTTPException(
-            status_code=404, detail=f"No events found for manager {creator_id}"
-        )
 
     return EventsPublic(data=events, count=count)
 
