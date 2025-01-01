@@ -140,11 +140,11 @@ export default class CustomerService {
   static async tryGetAllEvents() {
     const result = await CustomerService.fetchAllEvents();
 
-    if (result.success) {
-      return result.data;
-    } else {
+    if (!result.success) {
       ToasterService.createToasterPopUp("error", "Events konnten nicht geladen werden");
-    }
+    } 
+    
+    return result.data;
   }
 
   static async fetchAllEvents() {

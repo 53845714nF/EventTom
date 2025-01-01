@@ -1,45 +1,67 @@
-class WebSocketService {
+export default class WebSocketService {
   constructor(url) {
-    this.socket = new WebSocket(url);
-    this.listeners = [];
+    this.url = url;
+    this.socket = null;
+    this.listeners = []; // callbacks for when a message is received
+    this.reconnectInterval = 5000; // 5 seconds
+    this.shouldReconnect = true; // reconnect automatically
   }
 
   connect() {
+    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+      console.log("WebSocket ist bereits verbunden.");
+      return;
+    }
+
+    this.socket = new WebSocket(this.url);
+
     this.socket.onopen = () => {
       console.log("WebSocket verbunden!");
     };
 
     this.socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log("Empfangene Nachricht:", data);
+      console.log("websocket received message:", data);
       this.listeners.forEach((callback) => callback(data));
     };
 
     this.socket.onerror = (error) => {
-      console.error("WebSocket Fehler:", error);
+      console.error("websocket error:", error);
     };
 
     this.socket.onclose = () => {
-      console.log("WebSocket geschlossen!");
+      console.log("websocket closed!");
+      if (this.shouldReconnect) {
+        console.log("websocket trying to reconnect...");
+        setTimeout(() => this.connect(), this.reconnectInterval);
+      }
     };
   }
 
   send(message) {
-    this.socket.send(JSON.stringify(message));
+    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+      this.socket.send(JSON.stringify(message));
+    } else {
+      console.warn("message could not be sent: websocket not connected.");
+    }
   }
 
   addListener(callback) {
-    console.log("added listener");
     this.listeners.push(callback);
   }
 
-  close() {
-    this.socket.close();
+  removeListener(callback) {
+    this.listeners = this.listeners.filter((listener) => listener !== callback);
   }
 
-  removeListeners() {
+  removeAllListeners() {
     this.listeners = [];
   }
-}
 
-export default new WebSocketService("ws://localhost:8000/api/v1/ws");
+  close() {
+    this.shouldReconnect = false;
+    if (this.socket) {
+      this.socket.close();
+    }
+  }
+}
