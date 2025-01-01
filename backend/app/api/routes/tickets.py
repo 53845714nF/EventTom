@@ -78,7 +78,7 @@ def read_manager_ticket_purchases(
     return ticket_purchases
 
 
-@router.post("/{id}/buy", response_model=EventPublic)
+@router.post("/buy", response_model=EventPublic)
 async def buy_ticket(
     *, session: SessionDep, current_user: CurrentUser, request: TicketPurchaseRequest
 ) -> Event:
