@@ -93,7 +93,6 @@ class Event(EventBase, table=True):
     creator_id: UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
 
 
-# Single Event must be Public
 class EventPublic(EventBase):
     id: UUID
     title: str
@@ -137,13 +136,9 @@ class TicketPurchaseRequest(SQLModel):
 
 
 class TicketPurchaseResponse(SQLModel):
-    ticket_id: UUID
-    event_id: UUID
-    event_title: str
-    user_id: UUID
-    user_email: EmailStr
+    user: UserPublic
+    event: EventPublic
     quantity: int
-    purchase_date: datetime
 
 
 # Voucher Models
