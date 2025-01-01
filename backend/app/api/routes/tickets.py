@@ -8,7 +8,6 @@ from app.api.deps import CurrentUser, SessionDep
 from app.api.websockets import manager
 from app.models import (
     Event,
-    EventPublic,
     Role,
     Ticket,
     TicketPurchaseRequest,
@@ -78,10 +77,10 @@ def read_manager_ticket_purchases(
     return ticket_purchases
 
 
-@router.post("/buy", response_model=EventPublic)
+@router.post("/buy", response_model=TicketPurchaseResponse)
 async def buy_ticket(
     *, session: SessionDep, current_user: CurrentUser, request: TicketPurchaseRequest
-) -> Event:
+) -> TicketPurchaseResponse:
     """
     Buy tickets for an event.
     """
@@ -119,6 +118,10 @@ async def buy_ticket(
     if voucher:
         total_cost -= voucher.amount
 
+    minimum_cost = request.quantity * event.base_price
+    if total_cost < minimum_cost:
+        total_cost = minimum_cost
+
     if current_user.balance < total_cost:
         raise HTTPException(status_code=400, detail="Insufficient balance")
 
@@ -139,4 +142,6 @@ async def buy_ticket(
             "event": event.model_dump(mode="json"),
         }
     )
-    return event
+    return TicketPurchaseResponse(
+        user=current_user, event=event, quantity=request.quantity
+    )
