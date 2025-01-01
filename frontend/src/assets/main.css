@@ -70,6 +70,7 @@ h4 {
 
 /* Text */
 
+
 p {
   font-family: FunnelDisplay;
   font-size: 14px;
@@ -104,6 +105,10 @@ a {
   transition: 0.4s;
   padding: 3px;
   color: var(--color-text-black);
+}
+
+.blocktext {
+  text-align: justify;
 }
 
 /* Margin Options */

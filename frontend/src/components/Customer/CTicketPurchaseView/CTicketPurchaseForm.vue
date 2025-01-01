@@ -54,7 +54,7 @@ const tryPostTicketPurchaseFormData = async () => await CustomerService.tryPurch
 <template>
   <div class="container-background">
     <h3 class="heading-margin">{{ event.title }}</h3>
-    <p>{{ event.description }}</p>
+    <p class="blocktext">{{ event.description }}</p>
     <div class="form-container">
       <FormInput v-model="ticketPurchaseFormData.name" title="Name, Vorname" placeholder="Name, Vorname" type="text" />
       <FormInput
