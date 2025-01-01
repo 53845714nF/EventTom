@@ -56,14 +56,15 @@ const tryPostTicketPurchaseFormData = async () => await CustomerService.tryPurch
     <h3 class="heading-margin">{{ event.title }}</h3>
     <p class="blocktext">{{ event.description }}</p>
     <div class="form-container">
-      <FormInput v-model="ticketPurchaseFormData.name" title="Name, Vorname" placeholder="Name, Vorname" type="text" />
+      <FormInput v-model="ticketPurchaseFormData.name" title="Name, Vorname" placeholder="Name, Vorname" type="text" maxlength="255"/>
       <FormInput
         v-model="ticketPurchaseFormData.address"
         title="Straße, Hausnummer"
         placeholder="Straße, Hausnummer"
         type="text"
+        maxlength="255"
       />
-      <FormInput v-model="ticketPurchaseFormData.zip_code" title="PLZ" placeholder="PLZ" type="text" />
+      <FormInput v-model="ticketPurchaseFormData.zip_code" title="PLZ" placeholder="PLZ" type="text" maxlength="5"/>
       <FormInput
         v-model="ticketPurchaseFormData.ticket_count"
         title="Anzahl Tickets"
@@ -75,6 +76,7 @@ const tryPostTicketPurchaseFormData = async () => await CustomerService.tryPurch
         title="Gutscheincode"
         placeholder="Gutscheincode"
         type="text"
+        maxlength="255"
       />
     </div>
 

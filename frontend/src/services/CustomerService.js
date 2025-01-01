@@ -52,9 +52,13 @@ export default class CustomerService {
   }
 
   static async postTopUpBalance(balanceFormData, authStore) {
+    const data = {
+      amount: balanceFormData.amount,
+    }
+    
     return await axios.post(
-      `/api/v1/users/me/top-up?amount=${balanceFormData.amount}`, // TODO: use request body once available
-      {},
+      `/api/v1/users/me/top-up`, // TODO: use request body once available
+      data,
       {
         headers: AuthService.getAuthorizedHeaders(authStore),
       }
