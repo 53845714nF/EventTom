@@ -7,7 +7,6 @@ from sqlmodel import Field, SQLModel, func
 
 # User Models
 
-
 class Role(str, Enum):
     EVENTCREATOR = "eventcreator"
     EVENTMANAGER = "eventmanager"
@@ -67,7 +66,6 @@ class TopUpRequest(SQLModel):
 
 # Event Models
 
-
 class EventBase(SQLModel):
     title: str = Field(min_length=1, max_length=255)
     description: str | None = Field(default=None, max_length=1024)
@@ -93,7 +91,6 @@ class Event(EventBase, table=True):
     creator_id: UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
 
 
-# Single Event must be Public
 class EventPublic(EventBase):
     id: UUID
     title: str
@@ -110,7 +107,6 @@ class EventsPublic(SQLModel):
 
 
 # Ticket Models
-
 
 class Ticket(SQLModel, table=True):
     ticket_id: UUID = Field(default_factory=uuid4, primary_key=True)
@@ -137,17 +133,12 @@ class TicketPurchaseRequest(SQLModel):
 
 
 class TicketPurchaseResponse(SQLModel):
-    ticket_id: UUID
-    event_id: UUID
-    event_title: str
-    user_id: UUID
-    user_email: EmailStr
+    user: UserPublic
+    event: EventPublic
     quantity: int
-    purchase_date: datetime
 
 
 # Voucher Models
-
 
 class VoucherBase(SQLModel):
     amount: float = Field()
@@ -179,13 +170,11 @@ class VouchersPublic(SQLModel):
 
 # Generic message
 
-
 class Message(SQLModel):
     message: str
 
 
 # JSON payload containing access token
-
 
 class Token(SQLModel):
     access_token: str
@@ -193,7 +182,6 @@ class Token(SQLModel):
 
 
 # Contents of JWT token
-
 
 class TokenPayload(SQLModel):
     sub: str | None = None
