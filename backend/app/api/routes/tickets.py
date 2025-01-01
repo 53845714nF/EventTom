@@ -118,6 +118,10 @@ async def buy_ticket(
     if voucher:
         total_cost -= voucher.amount
 
+    minimum_cost = request.quantity * event.base_price
+    if total_cost < minimum_cost:
+        total_cost = minimum_cost
+
     if current_user.balance < total_cost:
         raise HTTPException(status_code=400, detail="Insufficient balance")
 
