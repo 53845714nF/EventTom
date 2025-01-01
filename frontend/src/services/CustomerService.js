@@ -96,8 +96,20 @@ export default class CustomerService {
     return totalPrice;
   }
 
+  static calculateBalanceAfterPurchase(currentBalance, totalPrice) {
+    return currentBalance - totalPrice;
+  }
+
+  static getBalanceAfterPurchaseHighlightClass(balance) {
+    if (balance < 0) {
+      return "highlight-red";
+    } else {
+      return "";
+    }
+  }
+
   static getAppliedVoucherFromCode(ticketPurchaseFormData, availableVouchers) {
-    return availableVouchers.value.find((voucher) => voucher.title === ticketPurchaseFormData.voucher_code); // undefined if not found
+    return availableVouchers.value.find((voucher) => voucher.title === ticketPurchaseFormData.voucher_code); //TODO: fix error when no vouchers found
   }
 
   static async tryGetAllEvents() {
@@ -172,13 +184,26 @@ export default class CustomerService {
       });
   }
 
-  static async tryPurchaseTicket(ticketPurchaseFormData, event, appliedVoucher, authStore) {
+  static async tryPurchaseTicket(ticketPurchaseFormData, balanceAfterPurchase, event, appliedVoucher, authStore) {
     // validate form data
     const validationRules = FormValidatorService.getValidationRules(FormTypes.PURCHASE_TICKET);
     const validationError = FormValidatorService.validateForm(ticketPurchaseFormData, validationRules);
 
     if (validationError) {
       ToasterService.createToasterPopUp("error", validationError);
+      return;
+    }
+
+    // check if user has sufficient funds
+    if (balanceAfterPurchase < 0) {
+      ToasterService.createToasterPopUp("error", "Nicht genügend Guthaben.");
+      return;
+    }
+
+    // check if enough tickets are available
+    const remainingTickets = event.total_tickets - event.sold_tickets
+    if (remainingTickets - ticketPurchaseFormData.ticket_count < 0) {
+      ToasterService.createToasterPopUp("error", `Nicht genügend Tickets vorhanden. Verbleibende Tickets: ${remainingTickets}`);
       return;
     }
 
@@ -191,6 +216,7 @@ export default class CustomerService {
       }
 
       ToasterService.createToasterPopUp("success", "Ticket erfolgreich gekauft");
+      authStore.setBalance(balanceAfterPurchase); // TODO: wait for response on issue #68
       router.push({ name: "CTickets" });
 
     } catch (error) {

@@ -14,6 +14,8 @@ const props = defineProps({
   },
 });
 
+console.log(props.event);
+
 // TODO: better solution for this
 // navigate back if no event is provided (once browser is refreshed pinia store is reset)
 if (!props.event.title) {
@@ -30,6 +32,7 @@ onBeforeMount(async () => {
   });
 });
 
+// price and balance calculations 
 const singleTicketPrice = computed(() => CustomerService.calculateSingleTicketPrice(props.event));
 const totalPrice = computed(() =>
   CustomerService.calculateTotalTicketPurchasePrice(
@@ -38,13 +41,14 @@ const totalPrice = computed(() =>
     appliedVoucher.value,
   ),
 );
+const balanceAfterPurchase = computed(() => CustomerService.calculateBalanceAfterPurchase(authStore.balance, totalPrice.value));
+const balanceAfterPurchaseHighlightClass = computed(() => CustomerService.getBalanceAfterPurchaseHighlightClass(balanceAfterPurchase.value));
 
 const appliedVoucher = computed(() =>
   CustomerService.getAppliedVoucherFromCode(ticketPurchaseFormData.value, availableVouchers),
 );
 
-const tryPostTicketPurchaseFormData = async () =>
-  await CustomerService.tryPurchaseTicket(ticketPurchaseFormData.value, props.event, appliedVoucher.value, authStore);
+const tryPostTicketPurchaseFormData = async () => await CustomerService.tryPurchaseTicket(ticketPurchaseFormData.value, balanceAfterPurchase.value, props.event, appliedVoucher.value, authStore);
 </script>
 
 <template>
@@ -75,7 +79,7 @@ const tryPostTicketPurchaseFormData = async () =>
     </div>
 
     <hr />
-
+    
     <h4>{{ totalPrice }}€</h4>
     <p class="small-margin">
       {{ ticketPurchaseFormData.ticket_count }}x {{ props.event.title }} Ticket: je
@@ -84,6 +88,11 @@ const tryPostTicketPurchaseFormData = async () =>
     <p v-if="appliedVoucher" class="small-margin">
       1x Gutschein: <span class="p-bold">{{ appliedVoucher.title }}: -{{ appliedVoucher.amount }}€</span>
     </p>
+    
+    <hr />
+
+    <p class="small-margin">Aktuelles Guthaben: <span class="p-bold">{{ authStore.balance }}€</span></p>
+    <p class="small-margin">Guthaben nach dem Kauf: <span :class="['p-bold', balanceAfterPurchaseHighlightClass]">{{ balanceAfterPurchase }}€</span></p>
 
     <div class="button-container">
       <PrimaryButton :onClick="tryPostTicketPurchaseFormData" text="Kaufen" :type="PrimaryButtonTypes.BLACK" />
