@@ -4,6 +4,7 @@ const props = defineProps({
   placeholder: String,
   modelValue: String,
   type: String,
+  maxlength: String,
   options: {
     type: Array,
     reqired: false,
@@ -28,24 +29,27 @@ const updateValue = (event) => {
       @input="updateValue"
       :type="props.type"
       :placeholder="props.placeholder"
-    />
-
-    <!--Number input field: add min attribute-->
-    <input
+      :maxlength="props.maxlength"
+      />
+      
+      <!--Number input field: add min attribute-->
+      <input
       v-if="props.type === 'number'"
       :value="modelValue"
       @input="updateValue"
       :type="props.type"
       :placeholder="props.placeholder"
       :min="0"
-    />
-
-    <!-- Textarea if type is textarea -->
-    <textarea
+      :maxlength="props.maxlength"
+      />
+      
+      <!-- Textarea if type is textarea -->
+      <textarea
       v-if="props.type === 'textarea'"
       :value="modelValue"
       @input="updateValue"
       :placeholder="props.placeholder"
+      :maxlength="props.maxlength"
       rows="4"
       cols="50"
     ></textarea>

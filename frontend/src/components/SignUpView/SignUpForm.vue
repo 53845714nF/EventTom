@@ -17,10 +17,10 @@ const trySignUpUser = async () => await AuthService.trySignUpUser(user, authStor
   <div class="form-background">
     <h3 class="heading-margin">Willkommen bei EvenTom!</h3>
     <div class="form-container">
-      <FormInput v-model="user.full_name" title="Name" placeholder="Nutzername" type="text" />
-      <FormInput v-model="user.email" title="E-Mail" placeholder="E-Mail" type="text" />
-      <FormInput v-model="user.password" title="Passwort" placeholder="Passwort" type="password" />
-      <FormInput v-model="user.password_repeat" title="Passwort wiederholen" placeholder="Passwort" type="password" />
+      <FormInput v-model="user.full_name" title="Name" placeholder="Nutzername" type="text" maxlength="255"/>
+      <FormInput v-model="user.email" title="E-Mail" placeholder="E-Mail" type="text" maxlength="255"/>
+      <FormInput v-model="user.password" title="Passwort" placeholder="Passwort" type="password" maxlength="40"/>
+      <FormInput v-model="user.password_repeat" title="Passwort wiederholen" placeholder="Passwort" type="password" maxlength="40"/>
     </div>
     <div class="button-container">
       <PrimaryButton :onClick="trySignUpUser" text="Registrieren" :type="PrimaryButtonTypes.GREEN" />
