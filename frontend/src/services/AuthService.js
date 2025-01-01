@@ -24,7 +24,7 @@ export default class AuthService {
   }
 
   // ### Handling Login and Sign Up ###
-  
+
   static async trySignUpUser(user, authStore) {
     const validationRules = FormValidatorService.getValidationRules(FormTypes.SIGNUP);
     const validationError = FormValidatorService.validateForm(user.value, validationRules);
@@ -42,12 +42,11 @@ export default class AuthService {
 
     try {
       const response = await AuthService.postSignUpData(user);
-  
+
       if (!response.success) {
         ToasterService.createToasterPopUp("error", "Sign up failed.");
         return;
       }
-
     } catch (error) {
       console.error(error);
       ToasterService.createDefaultErrorPopUp();
@@ -69,31 +68,29 @@ export default class AuthService {
 
     try {
       const response = await AuthService.postLoginData(user);
-  
+
       if (!response.success) {
         ToasterService.createToasterPopUp("error", "Falsche Email oder Passwort.");
         return;
       }
-  
+
       // set accessToken first since it is needed to fetch the user info
       authStore.setAccessToken(response.access_token);
-  
+
       const userInfo = await AuthService.getUserMe(authStore);
-  
+
       authStore.setRole(userInfo.role);
       authStore.setId(userInfo.id);
       authStore.setBalance(userInfo.balance);
-  
+
       // set the redirect path to the first item in the navItems array
       const redirectPath = authStore.navItems.items[0].path;
       router.push(redirectPath);
-
     } catch (error) {
       console.error(error);
       ToasterService.createDefaultErrorPopUp();
       return;
     }
-
   }
 
   // ### API Calls ###

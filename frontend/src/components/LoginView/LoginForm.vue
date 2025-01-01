@@ -17,8 +17,8 @@ const tryLoginUser = () => AuthService.tryLoginUser(user, authStore);
   <div class="form-background">
     <h3 class="heading-margin">Login</h3>
     <div class="form-container">
-      <FormInput v-model="user.email" title="Email" placeholder="Email" type="text" maxlength="255"/>
-      <FormInput v-model="user.password" title="Passwort" placeholder="Passwort" type="password" maxlength="40"/>
+      <FormInput v-model="user.email" title="Email" placeholder="Email" type="text" maxlength="255" />
+      <FormInput v-model="user.password" title="Passwort" placeholder="Passwort" type="password" maxlength="40" />
     </div>
     <div class="button-container">
       <PrimaryButton :onClick="tryLoginUser" text="Login" :type="PrimaryButtonTypes.GREEN" />

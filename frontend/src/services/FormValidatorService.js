@@ -53,7 +53,6 @@ export default class FormValidatorService {
   // this method procides the validation rules for the form fields with the corresponding attributes
   static getValidationRules(formType) {
     switch (formType) {
-      
       case FormTypes.INCREASE_BALANCE:
         return {
           amount: [
@@ -61,29 +60,27 @@ export default class FormValidatorService {
             FormValidatorService.rules.isNumeric("Betrag muss eine Zahl sein."),
             FormValidatorService.rules.largerThan(0, "Betrag muss größer als 0 sein."),
           ],
-          payment_method: [
-            FormValidatorService.rules.isRequired("Zahlungsmethode darf nicht leer sein."),
+          payment_method: [FormValidatorService.rules.isRequired("Zahlungsmethode darf nicht leer sein.")],
+        };
+
+      case FormTypes.PURCHASE_TICKET:
+        return {
+          name: [FormValidatorService.rules.isRequired("Name darf nicht leer sein.")],
+          address: [FormValidatorService.rules.isRequired("Adresse darf nicht leer sein.")],
+          zip_code: [
+            FormValidatorService.rules.isRequired("PLZ darf nicht leer sein."),
+            FormValidatorService.rules.minLength(5, "PLZ ungültig."),
+            FormValidatorService.rules.maxLength(5, "PLZ ungültig."),
+          ],
+          ticket_count: [
+            FormValidatorService.rules.isRequired("Anzahl Tickets darf nicht leer sein."),
+            FormValidatorService.rules.isNumeric("Anzahl Tickets muss eine Zahl sein."),
+            FormValidatorService.rules.largerThan(0, "Anzahl Tickets muss größer als 0 sein."),
           ],
         };
-        
-        case FormTypes.PURCHASE_TICKET:
-          return {
-            name: [FormValidatorService.rules.isRequired("Name darf nicht leer sein.")],
-            address: [FormValidatorService.rules.isRequired("Adresse darf nicht leer sein.")],
-            zip_code: [
-              FormValidatorService.rules.isRequired("PLZ darf nicht leer sein."),
-              FormValidatorService.rules.minLength(5, "PLZ ungültig."),
-              FormValidatorService.rules.maxLength(5, "PLZ ungültig."),
-            ],
-            ticket_count: [
-              FormValidatorService.rules.isRequired("Anzahl Tickets darf nicht leer sein."),
-              FormValidatorService.rules.isNumeric("Anzahl Tickets muss eine Zahl sein."),
-              FormValidatorService.rules.largerThan(0, "Anzahl Tickets muss größer als 0 sein."),
-            ],
-          };
-          
-        case FormTypes.SIGNUP:
-          return {
+
+      case FormTypes.SIGNUP:
+        return {
           full_name: [
             FormValidatorService.rules.isRequired("Name darf nicht leer sein."),
             FormValidatorService.rules.maxLength(255, "Name darf maximal 255 Zeichen lang sein."),

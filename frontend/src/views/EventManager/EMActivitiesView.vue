@@ -11,7 +11,7 @@ const limit = 50;
 
 onBeforeMount(async () => {
   await EventManagerService.tryGetRecentActivties(limit, authStore).then((result) => {
-    activities.value = result; 
+    activities.value = result;
   });
 });
 </script>

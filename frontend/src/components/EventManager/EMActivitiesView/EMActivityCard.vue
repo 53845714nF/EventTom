@@ -6,7 +6,7 @@ const props = defineProps({
   },
 });
 
-const formattedDate = props.activity.purchase_date.split(".")[0]
+const formattedDate = props.activity.purchase_date.split(".")[0];
 </script>
 
 <template>

@@ -30,9 +30,11 @@ onBeforeMount(async () => {
   });
 });
 
-// price and balance calculations 
+// price and balance calculations
 const singleTicketPrice = computed(() => CustomerService.calculateSingleTicketPrice(props.event));
-const minPrice = computed(() => CustomerService.calculateMinTicketPurchasePrice(props.event, ticketPurchaseFormData.value));
+const minPrice = computed(() =>
+  CustomerService.calculateMinTicketPurchasePrice(props.event, ticketPurchaseFormData.value),
+);
 const totalCost = computed(() =>
   CustomerService.calculateTotalTicketPurchasePrice(
     singleTicketPrice.value,
@@ -41,14 +43,25 @@ const totalCost = computed(() =>
     minPrice.value,
   ),
 );
-const balanceAfterPurchase = computed(() => CustomerService.calculateBalanceAfterPurchase(authStore.balance, totalCost.value.cost));
-const balanceAfterPurchaseHighlightClass = computed(() => CustomerService.getBalanceAfterPurchaseHighlightClass(balanceAfterPurchase.value));
+const balanceAfterPurchase = computed(() =>
+  CustomerService.calculateBalanceAfterPurchase(authStore.balance, totalCost.value.cost),
+);
+const balanceAfterPurchaseHighlightClass = computed(() =>
+  CustomerService.getBalanceAfterPurchaseHighlightClass(balanceAfterPurchase.value),
+);
 
 const appliedVoucher = computed(() =>
   CustomerService.getAppliedVoucherFromCode(ticketPurchaseFormData.value, availableVouchers),
 );
 
-const tryPostTicketPurchaseFormData = async () => await CustomerService.tryPurchaseTicket(ticketPurchaseFormData.value, balanceAfterPurchase.value, props.event, appliedVoucher.value, authStore);
+const tryPostTicketPurchaseFormData = async () =>
+  await CustomerService.tryPurchaseTicket(
+    ticketPurchaseFormData.value,
+    balanceAfterPurchase.value,
+    props.event,
+    appliedVoucher.value,
+    authStore,
+  );
 </script>
 
 <template>
@@ -56,7 +69,13 @@ const tryPostTicketPurchaseFormData = async () => await CustomerService.tryPurch
     <h3 class="heading-margin">{{ event.title }}</h3>
     <p class="blocktext">{{ event.description }}</p>
     <div class="form-container">
-      <FormInput v-model="ticketPurchaseFormData.name" title="Name, Vorname" placeholder="Name, Vorname" type="text" maxlength="255"/>
+      <FormInput
+        v-model="ticketPurchaseFormData.name"
+        title="Name, Vorname"
+        placeholder="Name, Vorname"
+        type="text"
+        maxlength="255"
+      />
       <FormInput
         v-model="ticketPurchaseFormData.address"
         title="Straße, Hausnummer"
@@ -64,7 +83,7 @@ const tryPostTicketPurchaseFormData = async () => await CustomerService.tryPurch
         type="text"
         maxlength="255"
       />
-      <FormInput v-model="ticketPurchaseFormData.zip_code" title="PLZ" placeholder="PLZ" type="text" maxlength="5"/>
+      <FormInput v-model="ticketPurchaseFormData.zip_code" title="PLZ" placeholder="PLZ" type="text" maxlength="5" />
       <FormInput
         v-model="ticketPurchaseFormData.ticket_count"
         title="Anzahl Tickets"
@@ -81,7 +100,7 @@ const tryPostTicketPurchaseFormData = async () => await CustomerService.tryPurch
     </div>
 
     <hr />
-    
+
     <h4>{{ totalCost.cost }}€</h4>
     <p class="small-margin">
       {{ ticketPurchaseFormData.ticket_count }}x {{ props.event.title }} Ticket: je
@@ -93,8 +112,13 @@ const tryPostTicketPurchaseFormData = async () => await CustomerService.tryPurch
     <p class="small-margin highlight-red">{{ totalCost.info }}</p>
     <hr />
 
-    <p class="small-margin">Aktuelles Guthaben: <span class="p-bold">{{ authStore.balance }}€</span></p>
-    <p class="small-margin">Guthaben nach dem Kauf: <span :class="['p-bold', balanceAfterPurchaseHighlightClass]">{{ balanceAfterPurchase }}€</span></p>
+    <p class="small-margin">
+      Aktuelles Guthaben: <span class="p-bold">{{ authStore.balance }}€</span>
+    </p>
+    <p class="small-margin">
+      Guthaben nach dem Kauf:
+      <span :class="['p-bold', balanceAfterPurchaseHighlightClass]">{{ balanceAfterPurchase }}€</span>
+    </p>
 
     <div class="button-container">
       <PrimaryButton :onClick="tryPostTicketPurchaseFormData" text="Kaufen" :type="PrimaryButtonTypes.BLACK" />

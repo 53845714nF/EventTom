@@ -30,10 +30,10 @@ const updateValue = (event) => {
       :type="props.type"
       :placeholder="props.placeholder"
       :maxlength="props.maxlength"
-      />
-      
-      <!--Number input field: add min attribute-->
-      <input
+    />
+
+    <!--Number input field: add min attribute-->
+    <input
       v-if="props.type === 'number'"
       :value="modelValue"
       @input="updateValue"
@@ -41,10 +41,10 @@ const updateValue = (event) => {
       :placeholder="props.placeholder"
       :min="0"
       :maxlength="props.maxlength"
-      />
-      
-      <!-- Textarea if type is textarea -->
-      <textarea
+    />
+
+    <!-- Textarea if type is textarea -->
+    <textarea
       v-if="props.type === 'textarea'"
       :value="modelValue"
       @input="updateValue"

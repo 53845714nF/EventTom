@@ -6,6 +6,6 @@ import CBalanceForm from "@/components/Customer/CBalanceView/CBalanceForm.vue";
 <template>
   <PageTitleContainer title="Guthaben" />
   <div class="content-container">
-    <CBalanceForm/>
+    <CBalanceForm />
   </div>
 </template>

@@ -15,28 +15,28 @@ const props = defineProps({
 
 const setEventInStore = () => ticketPurchaseStore.setEvent(props.event);
 
-const cardInfo = ref(CustomerService.getEventCardInfo(props.event))
+const cardInfo = ref(CustomerService.getEventCardInfo(props.event));
 </script>
 
 <template>
   <div :class="['event-card', cardInfo.cssClass]">
-      <div class="heading-container">
-        <div>
-          <h4>{{ event.title }}</h4>
-          <p>
-            Preis pro Ticket: <span class="p-bold">{{ CustomerService.calculateSingleTicketPrice(event) }}€</span>
-          </p>
-        </div>
-        <PrimaryButton
-          :onClick="setEventInStore"
-          :text="cardInfo.buttonText"
-          type="black"
-          class="primary-button"
-          :to="cardInfo.to"
-        />
+    <div class="heading-container">
+      <div>
+        <h4>{{ event.title }}</h4>
+        <p>
+          Preis pro Ticket: <span class="p-bold">{{ CustomerService.calculateSingleTicketPrice(event) }}€</span>
+        </p>
       </div>
-      <!--TODO: maybe add Eventmanager to see who is responsible for this event?-->
-      <p class="blocktext">{{ event.description }}</p>
+      <PrimaryButton
+        :onClick="setEventInStore"
+        :text="cardInfo.buttonText"
+        type="black"
+        class="primary-button"
+        :to="cardInfo.to"
+      />
+    </div>
+    <!--TODO: maybe add Eventmanager to see who is responsible for this event?-->
+    <p class="blocktext">{{ event.description }}</p>
   </div>
 </template>
 
