@@ -78,11 +78,13 @@ export default class CustomerService {
   }
 
   static calculateSingleTicketPrice(event) {
-    return event.base_price * event.pay_fee;
+    const singleTicketPrice = event.base_price * event.pay_fee;
+    return singleTicketPrice;
   }
 
   static calculateMinTicketPurchasePrice(event, ticketPurchaseFormData) {
-    return event.base_price * ticketPurchaseFormData.ticket_count;
+    const minPrice = event.base_price * ticketPurchaseFormData.ticket_count;
+    return minPrice;
   }
 
   static calculateTotalTicketPurchasePrice(singleTicketPrice, ticketPurchaseFormData, appliedVoucher, minPrice) {
@@ -92,9 +94,9 @@ export default class CustomerService {
       totalCost -= appliedVoucher.amount;
     }
 
-    // in case discount is higher than total price
+    // check that price after discount is not higher than base_price of tickets
     if (totalCost < minPrice) {
-      totalCost = minPrice;
+
       return {
         cost: minPrice,
         info: "Info: Das Einlösen dieses Gutscheins unterschreitet den Basispreis des Tickets, weshalb nicht der komplette Betrag eingelöst werden kann.",
@@ -105,7 +107,8 @@ export default class CustomerService {
   }
 
   static calculateBalanceAfterPurchase(currentBalance, totalCost) {
-    return currentBalance - totalCost;
+    const balanceAfterPurchase = currentBalance - totalCost;
+    return balanceAfterPurchase;
   }
 
   static getBalanceAfterPurchaseHighlightClass(balance) {
@@ -246,7 +249,7 @@ export default class CustomerService {
       }
 
       ToasterService.createToasterPopUp("success", "Ticket erfolgreich gekauft");
-      authStore.setBalance(balanceAfterPurchase); // TODO: wait for response on issue #68
+      authStore.setBalance(response.data.user.balance);
       router.push({ name: "CTickets" });
     } catch (error) {
       console.error("Error purchasing ticket:", error);

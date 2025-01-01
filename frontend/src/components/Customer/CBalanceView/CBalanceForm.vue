@@ -17,7 +17,7 @@ const tryTopUpBalance = async () => await CustomerService.tryTopUpBalance(balanc
 <template>
   <div class="form-background">
     <div class="form-container">
-      <h3>Dein Aktuelles Guthaben beträgt: {{ authStore.balance }}€</h3>
+      <h3>Dein Aktuelles Guthaben beträgt: {{ Number(authStore.balance).toFixed(2) }}€</h3>
       <FormInput v-model="balanceFormData.amount" title="Aufzuladender Betrag (€)" placeholder="Betrag" type="number" />
       <FormInput
         v-model="balanceFormData.payment_method"

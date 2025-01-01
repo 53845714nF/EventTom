@@ -101,23 +101,23 @@ const tryPostTicketPurchaseFormData = async () =>
 
     <hr />
 
-    <h4>{{ totalCost.cost }}€</h4>
+    <h4>{{ totalCost.cost.toFixed(2) }}€</h4>
     <p class="small-margin">
       {{ ticketPurchaseFormData.ticket_count }}x {{ props.event.title }} Ticket: je
-      <span class="p-bold">{{ singleTicketPrice }}€</span>
+      <span class="p-bold">{{ singleTicketPrice.toFixed(2) }}€</span>
     </p>
     <p v-if="appliedVoucher" class="small-margin">
-      1x Gutschein: <span class="p-bold">{{ appliedVoucher.title }}: -{{ appliedVoucher.amount }}€</span>
+      1x Gutschein: <span class="p-bold">{{ appliedVoucher.title }}: -{{ appliedVoucher.amount.toFixed(2) }}€</span>
     </p>
     <p class="small-margin highlight-red">{{ totalCost.info }}</p>
     <hr />
 
     <p class="small-margin">
-      Aktuelles Guthaben: <span class="p-bold">{{ authStore.balance }}€</span>
+      Aktuelles Guthaben: <span class="p-bold">{{ Number(authStore.balance).toFixed(2) }}€</span>
     </p>
     <p class="small-margin">
       Guthaben nach dem Kauf:
-      <span :class="['p-bold', balanceAfterPurchaseHighlightClass]">{{ balanceAfterPurchase }}€</span>
+      <span :class="['p-bold', balanceAfterPurchaseHighlightClass]">{{ balanceAfterPurchase.toFixed(2) }}€</span>
     </p>
 
     <div class="button-container">

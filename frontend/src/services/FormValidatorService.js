@@ -62,13 +62,14 @@ export default class FormValidatorService {
           ],
           payment_method: [FormValidatorService.rules.isRequired("Zahlungsmethode darf nicht leer sein.")],
         };
-
+        
       case FormTypes.PURCHASE_TICKET:
         return {
           name: [FormValidatorService.rules.isRequired("Name darf nicht leer sein.")],
           address: [FormValidatorService.rules.isRequired("Adresse darf nicht leer sein.")],
           zip_code: [
             FormValidatorService.rules.isRequired("PLZ darf nicht leer sein."),
+            FormValidatorService.rules.isNumeric("PLZ muss eine Zahl sein."),
             FormValidatorService.rules.minLength(5, "PLZ ungültig."),
             FormValidatorService.rules.maxLength(5, "PLZ ungültig."),
           ],

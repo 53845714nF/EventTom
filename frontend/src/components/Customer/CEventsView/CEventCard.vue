@@ -24,7 +24,7 @@ const cardInfo = ref(CustomerService.getEventCardInfo(props.event));
       <div>
         <h4>{{ event.title }}</h4>
         <p>
-          Preis pro Ticket: <span class="p-bold">{{ CustomerService.calculateSingleTicketPrice(event) }}€</span>
+          Preis pro Ticket: <span class="p-bold">{{ CustomerService.calculateSingleTicketPrice(event).toFixed(2) }}€</span>
         </p>
       </div>
       <PrimaryButton
