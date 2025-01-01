@@ -136,7 +136,7 @@ async def buy_ticket(
         {
             "type": "ticket_purchase",
             "quantity": request.quantity,
-            "event": event.model_dump(),
+            "event": event.model_dump(mode="json"),
         }
     )
     return event
