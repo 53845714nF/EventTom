@@ -90,6 +90,7 @@ export function createAuthStoreLoggedInUser() {
     accessToken: "validToken",
     userAuthenticated: true,
     navItems: NavItems.CUSTOMER,
+    balance: "",
     setAccessToken: vi.fn(function (newToken) {
       this.accessToken = newToken;
     }),
@@ -105,6 +106,12 @@ export function createAuthStoreLoggedInUser() {
     removeId: vi.fn(function () {
       this.setId("");
     }),
+    setBalance: vi.fn(function (newBalance) {
+      this.balance = newBalance;
+    }),
+    removeBalance: vi.fn(function () {
+      this.setBalance("");
+    })
   };
 }
 
