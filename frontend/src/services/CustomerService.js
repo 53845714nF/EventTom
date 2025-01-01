@@ -85,23 +85,28 @@ export default class CustomerService {
     return event.base_price * event.pay_fee;
   }
 
-  static calculateTotalTicketPurchasePrice(singleTicketPrice, ticketPurchaseFormData, appliedVoucher) {
-    let totalPrice = singleTicketPrice * ticketPurchaseFormData.ticket_count;
+  static calculateMinTicketPurchasePrice(event, ticketPurchaseFormData) {
+    return event.base_price * ticketPurchaseFormData.ticket_count;
+  }
+
+  static calculateTotalTicketPurchasePrice(singleTicketPrice, ticketPurchaseFormData, appliedVoucher, minPrice) {
+    let totalCost = singleTicketPrice * ticketPurchaseFormData.ticket_count;
 
     if (appliedVoucher) {
-      totalPrice -= appliedVoucher.amount;
+      totalCost -= appliedVoucher.amount;
     }
 
     // in case discount is higher than total price
-    if (totalPrice < 0) {
-      totalPrice = 0;
+    if (totalCost < minPrice) {
+      totalCost = minPrice;
+      return {cost: minPrice, info: "Info: Das Einlösen dieses Gutscheins unterschreitet den Basispreis des Tickets, weshalb nicht der komplette Betrag eingelöst werden kann."}
     }
 
-    return totalPrice;
+    return {cost: totalCost, info: ""};
   }
 
-  static calculateBalanceAfterPurchase(currentBalance, totalPrice) {
-    return currentBalance - totalPrice;
+  static calculateBalanceAfterPurchase(currentBalance, totalCost) {
+    return currentBalance - totalCost;
   }
 
   static getBalanceAfterPurchaseHighlightClass(balance) {
@@ -253,7 +258,7 @@ export default class CustomerService {
 
     return await axios
       .post(
-        "/api/v1/tickets/{id}/buy",
+        "/api/v1/tickets/buy",
         data,
         {
           headers: AuthService.getAuthorizedHeaders(authStore),
