@@ -96,7 +96,6 @@ export default class CustomerService {
 
     // check that price after discount is not higher than base_price of tickets
     if (totalCost < minPrice) {
-
       return {
         cost: minPrice,
         info: "Info: Das Einlösen dieses Gutscheins unterschreitet den Basispreis des Tickets, weshalb nicht der komplette Betrag eingelöst werden kann.",
@@ -132,7 +131,7 @@ export default class CustomerService {
       return {
         sold_out: false,
         cssClass: "bg-customer",
-        to: "/customer/purchase_ticket"
+        to: "/customer/purchase_ticket",
       };
     }
   }
@@ -142,8 +141,8 @@ export default class CustomerService {
 
     if (!result.success) {
       ToasterService.createToasterPopUp("error", "Events konnten nicht geladen werden");
-    } 
-    
+    }
+
     return result.data;
   }
 

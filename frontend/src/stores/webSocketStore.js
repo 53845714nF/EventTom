@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
 import WebSocketService from "@/services/WebSocketService";
 
 export const useWebSocketStore = defineStore("webSocket", () => {

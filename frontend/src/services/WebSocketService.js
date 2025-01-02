@@ -12,7 +12,7 @@ export default class WebSocketService {
       console.log("WebSocket ist bereits verbunden oder wird gerade verbunden.");
       return;
     }
-    
+
     this.socket = new WebSocket(this.url);
 
     this.socket.onopen = () => {

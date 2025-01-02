@@ -111,7 +111,7 @@ export function createAuthStoreLoggedInUser() {
     }),
     removeBalance: vi.fn(function () {
       this.setBalance("");
-    })
+    }),
   };
 }
 

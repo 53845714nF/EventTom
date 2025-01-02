@@ -24,12 +24,13 @@ const cardInfo = ref(CustomerService.getEventCardInfo(props.event)); // TODO: ma
       <div>
         <h4>{{ event.title }}</h4>
         <p>
-          Preis pro Ticket: <span class="p-bold">{{ CustomerService.calculateSingleTicketPrice(event).toFixed(2) }}€</span>
+          Preis pro Ticket:
+          <span class="p-bold">{{ CustomerService.calculateSingleTicketPrice(event).toFixed(2) }}€</span>
         </p>
       </div>
       <PrimaryButton
         :onClick="setEventInStore"
-        :text="cardInfo.sold_out ? 'Ausverkauft' : `Noch ${event.total_tickets-event.sold_tickets} Tickets`"
+        :text="cardInfo.sold_out ? 'Ausverkauft' : `Noch ${event.total_tickets - event.sold_tickets} Tickets`"
         type="black"
         class="primary-button"
         :to="cardInfo.to"

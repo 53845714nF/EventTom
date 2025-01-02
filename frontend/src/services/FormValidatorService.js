@@ -62,7 +62,7 @@ export default class FormValidatorService {
           ],
           payment_method: [FormValidatorService.rules.isRequired("Zahlungsmethode darf nicht leer sein.")],
         };
-        
+
       case FormTypes.PURCHASE_TICKET:
         return {
           name: [FormValidatorService.rules.isRequired("Name darf nicht leer sein.")],
