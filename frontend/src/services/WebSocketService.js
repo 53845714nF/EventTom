@@ -8,15 +8,15 @@ export default class WebSocketService {
   }
 
   connect() {
-    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-      console.log("WebSocket ist bereits verbunden.");
+    if (this.socket && (this.socket.readyState === WebSocket.OPEN || this.socket.readyState === WebSocket.CONNECTING)) {
+      console.log("WebSocket ist bereits verbunden oder wird gerade verbunden.");
       return;
     }
-
+    
     this.socket = new WebSocket(this.url);
 
     this.socket.onopen = () => {
-      console.log("WebSocket verbunden!");
+      console.log("WebSocket connected!");
     };
 
     this.socket.onmessage = (event) => {

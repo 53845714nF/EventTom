@@ -15,7 +15,7 @@ const props = defineProps({
 
 const setEventInStore = () => ticketPurchaseStore.setEvent(props.event);
 
-const cardInfo = ref(CustomerService.getEventCardInfo(props.event));
+const cardInfo = ref(CustomerService.getEventCardInfo(props.event)); // TODO: maybe needs some refactoring
 </script>
 
 <template>
@@ -29,7 +29,7 @@ const cardInfo = ref(CustomerService.getEventCardInfo(props.event));
       </div>
       <PrimaryButton
         :onClick="setEventInStore"
-        :text="cardInfo.buttonText"
+        :text="cardInfo.sold_out ? 'Ausverkauft' : `Noch ${event.total_tickets-event.sold_tickets} Tickets`"
         type="black"
         class="primary-button"
         :to="cardInfo.to"

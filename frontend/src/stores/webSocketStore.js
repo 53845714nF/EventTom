@@ -6,8 +6,11 @@ export const useWebSocketStore = defineStore("webSocket", () => {
   const webSocketService = new WebSocketService("ws://localhost:8000/api/v1/ws");
   webSocketService.connect();
 
-  // you have to return every state property in order for pinia to work properly
   return {
-    webSocketService
+    webSocketService,
+    addListener: webSocketService.addListener.bind(webSocketService),
+    removeListener: webSocketService.removeListener.bind(webSocketService),
+    removeAllListeners: webSocketService.removeAllListeners.bind(webSocketService),
+    send: webSocketService.send.bind(webSocketService),
   };
 });
