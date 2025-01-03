@@ -30,13 +30,24 @@ onBeforeMount(async () => {
   });
 });
 
+// price and balance calculations
 const singleTicketPrice = computed(() => CustomerService.calculateSingleTicketPrice(props.event));
-const totalPrice = computed(() =>
+const minPrice = computed(() =>
+  CustomerService.calculateMinTicketPurchasePrice(props.event, ticketPurchaseFormData.value),
+);
+const totalCost = computed(() =>
   CustomerService.calculateTotalTicketPurchasePrice(
     singleTicketPrice.value,
     ticketPurchaseFormData.value,
     appliedVoucher.value,
+    minPrice.value,
   ),
+);
+const balanceAfterPurchase = computed(() =>
+  CustomerService.calculateBalanceAfterPurchase(authStore.balance, totalCost.value.cost),
+);
+const balanceAfterPurchaseHighlightClass = computed(() =>
+  CustomerService.getBalanceAfterPurchaseHighlightClass(balanceAfterPurchase.value),
 );
 
 const appliedVoucher = computed(() =>
@@ -44,22 +55,35 @@ const appliedVoucher = computed(() =>
 );
 
 const tryPostTicketPurchaseFormData = async () =>
-  await CustomerService.tryPurchaseTicket(ticketPurchaseFormData.value, props.event, appliedVoucher.value, authStore);
+  await CustomerService.tryPurchaseTicket(
+    ticketPurchaseFormData.value,
+    balanceAfterPurchase.value,
+    props.event,
+    appliedVoucher.value,
+    authStore,
+  );
 </script>
 
 <template>
   <div class="container-background">
     <h3 class="heading-margin">{{ event.title }}</h3>
-    <p>{{ event.description }}</p>
+    <p class="blocktext">{{ event.description }}</p>
     <div class="form-container">
-      <FormInput v-model="ticketPurchaseFormData.name" title="Name, Vorname" placeholder="Name, Vorname" type="text" />
+      <FormInput
+        v-model="ticketPurchaseFormData.name"
+        title="Name, Vorname"
+        placeholder="Name, Vorname"
+        type="text"
+        maxlength="255"
+      />
       <FormInput
         v-model="ticketPurchaseFormData.address"
         title="Straße, Hausnummer"
         placeholder="Straße, Hausnummer"
         type="text"
+        maxlength="255"
       />
-      <FormInput v-model="ticketPurchaseFormData.zip_code" title="PLZ" placeholder="PLZ" type="text" />
+      <FormInput v-model="ticketPurchaseFormData.zip_code" title="PLZ" placeholder="PLZ" type="text" maxlength="5" />
       <FormInput
         v-model="ticketPurchaseFormData.ticket_count"
         title="Anzahl Tickets"
@@ -71,18 +95,29 @@ const tryPostTicketPurchaseFormData = async () =>
         title="Gutscheincode"
         placeholder="Gutscheincode"
         type="text"
+        maxlength="255"
       />
     </div>
 
     <hr />
 
-    <h4>{{ totalPrice }}€</h4>
+    <h4>{{ totalCost.cost.toFixed(2) }}€</h4>
     <p class="small-margin">
       {{ ticketPurchaseFormData.ticket_count }}x {{ props.event.title }} Ticket: je
-      <span class="p-bold">{{ singleTicketPrice }}€</span>
+      <span class="p-bold">{{ singleTicketPrice.toFixed(2) }}€</span>
     </p>
     <p v-if="appliedVoucher" class="small-margin">
-      1x Gutschein: <span class="p-bold">{{ appliedVoucher.title }}: -{{ appliedVoucher.amount }}€</span>
+      1x Gutschein: <span class="p-bold">{{ appliedVoucher.title }}: -{{ appliedVoucher.amount.toFixed(2) }}€</span>
+    </p>
+    <p class="small-margin highlight-red">{{ totalCost.info }}</p>
+    <hr />
+
+    <p class="small-margin">
+      Aktuelles Guthaben: <span class="p-bold">{{ Number(authStore.balance).toFixed(2) }}€</span>
+    </p>
+    <p class="small-margin">
+      Guthaben nach dem Kauf:
+      <span :class="['p-bold', balanceAfterPurchaseHighlightClass]">{{ balanceAfterPurchase.toFixed(2) }}€</span>
     </p>
 
     <div class="button-container">

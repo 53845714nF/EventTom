@@ -64,6 +64,7 @@ const comparisonText = computed(() => EventManagerService.getComparisonText(perc
   background-color: black;
   border-radius: 20px;
   padding: 10px 15px;
+  max-height: 60px;
 }
 
 .sales-card-text-container {

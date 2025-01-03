@@ -75,6 +75,7 @@ export default class EventCreatorService {
       title: event.value.title,
       description: event.value.description,
       total_tickets: event.value.total_tickets,
+      sold_tickets: event.value.sold_tickets,
       threshold: event.value.threshold,
       base_price: event.value.base_price,
       pay_fee: event.value.pay_fee,

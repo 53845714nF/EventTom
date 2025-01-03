@@ -13,18 +13,19 @@ import EMActivitiesView from "@/views/EventManager/EMActivitiesView.vue";
 import ECEventsView from "@/views/EventCreator/ECEventsView.vue";
 import ECCreateNewEventView from "@/views/EventCreator/ECCreateNewEventView.vue";
 
-import NotImplementedView from "@/views/Errors/NotImplementedView.vue";
-import NotFoundView from "@/views/Errors/NotFoundView.vue";
-import NotAllowedView from "@/views/Errors/NotAllowedView.vue";
-
 import CEventsView from "@/views/Customer/CEventsView.vue";
 import CTicketPurchaseView from "@/views/Customer/CTicketPurchaseView.vue";
 import CVouchersView from "@/views/Customer/CVouchersView.vue";
+import CTicketsView from "@/views/Customer/CTicketsView.vue";
+import CBalanceView from "@/views/Customer/CBalanceView.vue";
 
 import AAddNewUserView from "@/views/Admin/AAddNewUserView.vue";
 import ACreateVoucherView from "@/views/Admin/ACreateVoucherView.vue";
 import AListUsersView from "@/views/Admin/AListUsersView.vue";
-import CTicketsView from "@/views/Customer/CTicketsView.vue";
+
+import NotImplementedView from "@/views/Errors/NotImplementedView.vue";
+import NotFoundView from "@/views/Errors/NotFoundView.vue";
+import NotAllowedView from "@/views/Errors/NotAllowedView.vue";
 
 // Middleware, which checks if the user has the required role
 function requireRole(requiredRole) {
@@ -101,6 +102,12 @@ const router = createRouter({
       path: "/customer/tickets",
       name: "CTickets",
       component: CTicketsView,
+      beforeEnter: requireRole(Roles.CUSTOMER),
+    },
+    {
+      path: "/customer/balance",
+      name: "CBalance",
+      component: CBalanceView,
       beforeEnter: requireRole(Roles.CUSTOMER),
     },
 

@@ -34,7 +34,13 @@ const tryPostVoucher = async () => await AdminService.tryPostNewVoucher(voucher,
   <div class="form-background">
     <div class="form-container">
       <FormInput v-model="voucher.amount" title="Betrag (€)" placeholder="Betrag" type="number" />
-      <FormInput v-model="voucher.code_name" title="Gutscheincode" placeholder="Gutscheincode" type="text" />
+      <FormInput
+        v-model="voucher.code_name"
+        title="Gutscheincode"
+        placeholder="Gutscheincode"
+        type="text"
+        maxlength="255"
+      />
       <FormInput
         v-model="voucher.owner_email"
         title="Kunden Email"
