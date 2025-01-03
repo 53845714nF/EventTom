@@ -14,6 +14,7 @@ from app.core.security import get_password_hash, verify_password
 from app.models import (
     Message,
     Role,
+    TopUpRequest,
     UpdatePassword,
     User,
     UserCreate,
@@ -183,15 +184,15 @@ def update_password_me(
 
 @router.post("/me/top-up", response_model=UserPublic)
 def top_up_balance(
-    *, session: SessionDep, amount: float, current_user: CurrentUser
+    *, session: SessionDep, current_user: CurrentUser, request: TopUpRequest
 ) -> User:
     """
     Top up the balance of the current user.
     """
-    if amount <= 0:
+    if request.amount <= 0:
         raise HTTPException(status_code=400, detail="Amount must be greater than zero")
 
-    current_user.balance += amount
+    current_user.balance += request.amount
     session.add(current_user)
     session.commit()
     session.refresh(current_user)

@@ -2,28 +2,47 @@ from collections.abc import Sequence
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, status
-from sqlmodel import select
 
 from app import crud
 from app.api.deps import CurrentUser, SessionDep
 from app.api.websockets import manager
-from app.models import Event, EventPublic, Role, Ticket, TicketPurchaseResponse, Voucher
+from app.models import (
+    Event,
+    Role,
+    Ticket,
+    TicketPurchaseRequest,
+    TicketPurchaseResponse,
+    TicketWithEvent,
+    Voucher,
+)
 
 router = APIRouter()
 
 
-@router.get("/my-tickets", response_model=Sequence[Ticket])
+@router.get("/my-tickets", response_model=Sequence[TicketWithEvent])
 def list_my_tickets(
     *, session: SessionDep, current_user: CurrentUser
-) -> Sequence[Ticket]:
+) -> Sequence[TicketWithEvent]:
     """
-    List all tickets purchased by the current user.
+    List all tickets purchased by the current user, including event information.
     """
 
-    tickets = session.exec(
-        select(Ticket).where(Ticket.user_id == current_user.id)
-    ).all()
-    return tickets
+    results = crud.get_tickets_with_events(session, current_user.id)
+
+    tickets_with_events = [
+        TicketWithEvent(
+            ticket_id=ticket.ticket_id,
+            event_id=event.id,
+            event_title=event.title,
+            event_description=event.description,
+            user_id=ticket.user_id,
+            quantity=ticket.quantity,
+            purchase_date=ticket.purchase_date,
+        )
+        for ticket, event in results
+    ]
+
+    return tickets_with_events
 
 
 @router.get("/activities", response_model=Sequence[TicketPurchaseResponse])
@@ -58,49 +77,71 @@ def read_manager_ticket_purchases(
     return ticket_purchases
 
 
-@router.post("/{id}/buy", response_model=EventPublic)
+@router.post("/buy", response_model=TicketPurchaseResponse)
 async def buy_ticket(
-    *,
-    session: SessionDep,
-    current_user: CurrentUser,
-    event_id: UUID,
-    quantity: int = 1,
-    voucher_id: UUID | None = None,
-) -> Event:
+    *, session: SessionDep, current_user: CurrentUser, request: TicketPurchaseRequest
+) -> TicketPurchaseResponse:
     """
     Buy tickets for an event.
     """
 
-    event = session.get(Event, event_id)
-    if not event:
-        raise HTTPException(status_code=404, detail="Event not found")
+    if current_user.role != Role.CUSTOMER:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only customers can buy tickets",
+        )
 
-    if event.sold_tickets + quantity > event.total_tickets:
-        raise HTTPException(status_code=400, detail="Not enough tickets available")
-
-    final_price_per_ticket = event.base_price + event.pay_fee
-    total_cost = final_price_per_ticket * quantity
-
-    if voucher_id:
+    voucher = None
+    if request.voucher_id:
+        try:
+            voucher_id = UUID(request.voucher_id)
+        except ValueError:
+            raise HTTPException(
+                status_code=400, detail="Voucher ID is not a valid UUID"
+            )
         voucher = session.get(Voucher, voucher_id)
         if not voucher:
             raise HTTPException(status_code=404, detail="Voucher not found")
         if voucher.owner_id != current_user.id:
             raise HTTPException(status_code=403, detail="You do not own this voucher")
+
+    event = session.get(Event, request.event_id)
+    if not event:
+        raise HTTPException(status_code=404, detail="Event not found")
+
+    if event.sold_tickets + request.quantity > event.total_tickets:
+        raise HTTPException(status_code=400, detail="Not enough tickets available")
+
+    final_price_per_ticket = event.base_price * event.pay_fee
+    total_cost = final_price_per_ticket * request.quantity
+
+    if voucher:
         total_cost -= voucher.amount
+
+    minimum_cost = request.quantity * event.base_price
+    if total_cost < minimum_cost:
+        total_cost = minimum_cost
 
     if current_user.balance < total_cost:
         raise HTTPException(status_code=400, detail="Insufficient balance")
 
     current_user.balance -= total_cost
-    event.sold_tickets += quantity
-    ticket = Ticket(event_id=event_id, user_id=current_user.id, quantity=quantity)
+    event.sold_tickets += request.quantity
+    ticket = Ticket(
+        event_id=request.event_id, user_id=current_user.id, quantity=request.quantity
+    )
     session.add(ticket)
-    if voucher_id:
+    if voucher:
         session.delete(voucher)
     session.commit()
     session.refresh(event)
     await manager.broadcast(
-        {"type": "ticket_purchase", "quantity": quantity, "event": event.model_dump()}
+        {
+            "type": "ticket_purchase",
+            "quantity": request.quantity,
+            "event": event.model_dump(mode="json"),
+        }
     )
-    return event
+    return TicketPurchaseResponse(
+        user=current_user, event=event, quantity=request.quantity
+    )

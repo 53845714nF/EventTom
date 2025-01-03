@@ -23,7 +23,7 @@ const deleteEvent = async () => await EventCreatorService.tryDeleteEvent(props.e
           <i class="fa-solid fa-trash"></i>
         </div>
       </div>
-      <p class="no-margin">{{ event.description }}</p>
+      <p class="no-margin blocktext">{{ event.description }}</p>
     </div>
   </div>
 </template>
@@ -46,6 +46,10 @@ const deleteEvent = async () => await EventCreatorService.tryDeleteEvent(props.e
   align-items: flex-start;
   flex-wrap: wrap;
   width: 100%;
+}
+
+.card-content p {
+  margin-top: 15px;
 }
 
 .card-content > div {

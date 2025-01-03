@@ -37,4 +37,9 @@ const props = defineProps({
   flex-wrap: wrap;
   width: 100%;
 }
+
+.card-content p {
+  margin-top: 15px;
+  margin-right: 15px;
+}
 </style>

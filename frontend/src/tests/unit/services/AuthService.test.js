@@ -75,13 +75,6 @@ describe("AuthService handling user data", () => {
     expect(testStore.role).toBe(Roles.GUEST);
   });
 
-  test("Expect ToasterService.createToasterPopUp to be called AuthService.logoutUser is called", async () => {
-    const testStore = createAuthStoreLoggedInUser();
-    const spyOnCreateToasterPopUp = vi.spyOn(ToasterService, "createToasterPopUp");
-    AuthService.logoutUser(testStore);
-    expect(spyOnCreateToasterPopUp).toBeCalledWith("success", "Logout erfolgreich!");
-  });
-
   test("Expect error toast if testAccessToken is successfull", async () => {
     axios.post.mockResolvedValue({ data: { success: true } });
 

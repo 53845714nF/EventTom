@@ -63,11 +63,6 @@ def read_event_by_manager(
     )
     events = session.exec(statement).all()
 
-    if not events:
-        raise HTTPException(
-            status_code=404, detail=f"No events found for manager {manager_id}"
-        )
-
     return EventsPublic(data=events, count=count)
 
 
@@ -87,11 +82,6 @@ def read_event_by_creator(
         select(Event).where(Event.creator_id == creator_id).offset(skip).limit(limit)
     )
     events = session.exec(statement).all()
-
-    if not events:
-        raise HTTPException(
-            status_code=404, detail=f"No events found for manager {creator_id}"
-        )
 
     return EventsPublic(data=events, count=count)
 
@@ -125,7 +115,9 @@ async def create_event(
     session.add(event)
     session.commit()
     session.refresh(event)
-    await manager.broadcast({"type": "event_create", "event": event.model_dump()})
+    await manager.broadcast(
+        {"type": "event_create", "event": event.model_dump(mode="json")}
+    )
     return event
 
 
@@ -158,7 +150,9 @@ async def update_event(
     session.add(event)
     session.commit()
     session.refresh(event)
-    await manager.broadcast({"type": "event_update", "event": event.model_dump()})
+    await manager.broadcast(
+        {"type": "event_update", "event": event.model_dump(mode="json")}
+    )
     return event
 
 
@@ -182,5 +176,7 @@ async def delete_event(
         )
     session.delete(event)
     session.commit()
-    await manager.broadcast({"type": "event_delete", "event": event.model_dump()})
+    await manager.broadcast(
+        {"type": "event_delete", "event": event.model_dump(mode="json")}
+    )
     return Message(message="Event deleted successfully")

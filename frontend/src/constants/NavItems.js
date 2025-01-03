@@ -13,6 +13,7 @@ export const NavItems = {
       { title: "Events", path: "/customer/events" },
       { title: "Gutscheine", path: "/customer/vouchers" },
       { title: "Tickets", path: "/customer/tickets" },
+      { title: "Guthaben", path: "/customer/balance" },
     ],
     button: { title: "Logout", path: "/" },
   },

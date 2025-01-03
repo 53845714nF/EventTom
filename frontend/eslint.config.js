@@ -14,6 +14,7 @@ export default [
         URLSearchParams: "readonly",
         setTimeout: "readonly",
         window: "readonly",
+        WebSocket: "readonly",
       },
     },
   },

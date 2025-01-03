@@ -10,8 +10,8 @@ const eventManagerId = authStore.userId;
 const events = ref([]);
 
 onBeforeMount(async () => {
-  await EventManagerService.getEventsForEventManager(eventManagerId, authStore).then((response) => {
-    events.value = response.data;
+  await EventManagerService.tryGetEventsForEventManager(eventManagerId, authStore).then((response) => {
+    events.value = response;
   });
 });
 </script>

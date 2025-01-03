@@ -44,11 +44,6 @@ def read_my_vouchers(
     )
     vouchers = session.exec(statement).all()
 
-    if not vouchers:
-        raise HTTPException(
-            status_code=404, detail="No vouchers found for the current user"
-        )
-
     return VouchersPublic(data=vouchers, count=count)
 
 

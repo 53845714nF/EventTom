@@ -53,12 +53,23 @@ export default class FormValidatorService {
   // this method procides the validation rules for the form fields with the corresponding attributes
   static getValidationRules(formType) {
     switch (formType) {
+      case FormTypes.INCREASE_BALANCE:
+        return {
+          amount: [
+            FormValidatorService.rules.isRequired("Betrag darf nicht leer sein."),
+            FormValidatorService.rules.isNumeric("Betrag muss eine Zahl sein."),
+            FormValidatorService.rules.largerThan(0, "Betrag muss größer als 0 sein."),
+          ],
+          payment_method: [FormValidatorService.rules.isRequired("Zahlungsmethode darf nicht leer sein.")],
+        };
+
       case FormTypes.PURCHASE_TICKET:
         return {
           name: [FormValidatorService.rules.isRequired("Name darf nicht leer sein.")],
           address: [FormValidatorService.rules.isRequired("Adresse darf nicht leer sein.")],
           zip_code: [
             FormValidatorService.rules.isRequired("PLZ darf nicht leer sein."),
+            FormValidatorService.rules.isNumeric("PLZ muss eine Zahl sein."),
             FormValidatorService.rules.minLength(5, "PLZ ungültig."),
             FormValidatorService.rules.maxLength(5, "PLZ ungültig."),
           ],
@@ -68,16 +79,22 @@ export default class FormValidatorService {
             FormValidatorService.rules.largerThan(0, "Anzahl Tickets muss größer als 0 sein."),
           ],
         };
+
       case FormTypes.SIGNUP:
         return {
-          full_name: [FormValidatorService.rules.isRequired("Name darf nicht leer sein.")],
+          full_name: [
+            FormValidatorService.rules.isRequired("Name darf nicht leer sein."),
+            FormValidatorService.rules.maxLength(255, "Name darf maximal 255 Zeichen lang sein."),
+          ],
           email: [
             FormValidatorService.rules.isRequired("Email darf nicht leer sein"),
             FormValidatorService.rules.isValidEmail("Email ist nicht gültig."),
+            FormValidatorService.rules.maxLength(255, "Email darf maximal 255 Zeichen lang sein."),
           ],
           password: [
             FormValidatorService.rules.isRequired("Passwort darf nicht leer sein."),
             FormValidatorService.rules.minLength(8, "Passwort muss eine Mindestlänge von 8 Zeichen haben."),
+            FormValidatorService.rules.maxLength(40, "Passwort darf maximal 40 Zeichen lang sein."),
           ],
           password_repeat: [FormValidatorService.rules.isRequired("Passwort wiederholen darf nicht leer sein.")],
         };
@@ -93,8 +110,14 @@ export default class FormValidatorService {
 
       case FormTypes.NEW_EVENT:
         return {
-          title: [FormValidatorService.rules.isRequired("Name darf nicht leer sein")],
-          description: [FormValidatorService.rules.isRequired("Beschreibung darf nicht leer sein.")],
+          title: [
+            FormValidatorService.rules.isRequired("Name darf nicht leer sein"),
+            FormValidatorService.rules.maxLength(255, "Name darf maximal 255 Zeichen lang sein."),
+          ],
+          description: [
+            FormValidatorService.rules.isRequired("Beschreibung darf nicht leer sein."),
+            FormValidatorService.rules.maxLength(1024, "Beschreibung darf maximal 1024 Zeichen lang sein."),
+          ],
           base_price: [
             FormValidatorService.rules.isRequired("Preis darf nicht leer sein."),
             FormValidatorService.rules.isNumeric("Preis muss eine Zahl sein."),
@@ -126,20 +149,28 @@ export default class FormValidatorService {
             FormValidatorService.rules.isNumeric("Betrag muss eine Zahl sein."),
             FormValidatorService.rules.largerThan(0, "Betrag muss größer als 0 sein."),
           ],
-          code_name: [FormValidatorService.rules.isRequired("Code darf nicht leer sein")],
+          code_name: [
+            FormValidatorService.rules.isRequired("Code darf nicht leer sein"),
+            FormValidatorService.rules.maxLength(255, "Code darf maximal 255 Zeichen lang sein."),
+          ],
           owner_email: [FormValidatorService.rules.isRequired("Kunden Email darf nicht leer sein.")],
         };
 
       case FormTypes.NEW_USER:
         return {
-          full_name: [FormValidatorService.rules.isRequired("Name darf nicht leer sein.")],
+          full_name: [
+            FormValidatorService.rules.isRequired("Name darf nicht leer sein."),
+            FormValidatorService.rules.maxLength(255, "Name darf maximal 255 Zeichen lang sein."),
+          ],
           email: [
             FormValidatorService.rules.isRequired("Email darf nicht leer sein"),
             FormValidatorService.rules.isValidEmail("Email ist nicht gültig."),
+            FormValidatorService.rules.maxLength(255, "Email darf maximal 255 Zeichen lang sein."),
           ],
           password: [
             FormValidatorService.rules.isRequired("Passwort darf nicht leer sein."),
             FormValidatorService.rules.minLength(8, "Passwort muss eine Mindestlänge von 8 Zeichen haben."),
+            FormValidatorService.rules.maxLength(40, "Passwort darf maximal 40 Zeichen lang sein."),
           ],
           role: [FormValidatorService.rules.isRequired("Rolle darf nicht leer sein.")],
         };

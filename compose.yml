@@ -108,13 +108,13 @@ services:
     ports:
       - "8000:8000"
 
-  frontend:
-    image: frontend:latest
-    restart: "no"
-    build:
-     context: ./frontend
-    ports:
-      - "80:80"
+  # frontend:
+  #   image: frontend:latest
+  #   restart: "no"
+  #   build:
+  #    context: ./frontend
+  #   ports:
+  #     - "80:80"
 
 volumes:
   app-db-data:
