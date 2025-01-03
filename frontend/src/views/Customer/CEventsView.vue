@@ -3,7 +3,7 @@ import PageTitleContainer from "@/components/Basic/PageTitleContainer.vue";
 import CustomerService from "@/services/CustomerService";
 import { onMounted, onUnmounted, ref } from "vue";
 import CEventCard from "@/components/Customer/CEventsView/CEventCard.vue";
-import { useWebSocketStore } from "@/stores/websocketStore";
+import { useWebSocketStore } from "@/stores/webSocketStore";
 
 const events = ref([]);
 const websocketStore = useWebSocketStore();
