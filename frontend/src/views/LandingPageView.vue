@@ -21,7 +21,7 @@ import { PrimaryButtonTypes, SecondaryButtonTypes } from "@/constants/ButtonType
     <h2>Was EvenTom besonders macht:</h2>
     <div class="info-card-container">
       <div class="info-card bg-customer">
-        <h4>Neue Events in Echtzeit</h4>
+        <h4>Events in Echtzeit</h4>
         <p>
           Dank unserer Echtzeitanzeige bleibst du immer informiert und verpasst kein Event mehr! Entdecke spannende Veranstaltungen in deiner Nähe, sei auf dem neuesten Stand und sichere dir deine Tickets rechtzeitig.
         </p>
