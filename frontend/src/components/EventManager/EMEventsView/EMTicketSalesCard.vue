@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import EventManagerService from "@/services/EventManagerService";
 
 const props = defineProps({
@@ -12,18 +12,33 @@ const props = defineProps({
 const showPercentage = ref(true);
 const switchView = () => (showPercentage.value = !showPercentage.value);
 
-const percentageSold = EventManagerService.getPercentageOfTicketsSold(
+const percentageSold = ref(EventManagerService.getPercentageOfTicketsSold(
   props.event.total_tickets,
   props.event.sold_tickets,
-);
+));
 
-const percentageComparedToExpected = EventManagerService.getPercentageOfTicketsSoldComparedToExpected(
+const percentageComparedToExpected = ref(EventManagerService.getPercentageOfTicketsSoldComparedToExpected(
   props.event.sold_tickets,
   props.event.threshold,
+));
+
+watch(
+  () => props,
+  (newProps, _) => {
+    percentageSold.value = EventManagerService.getPercentageOfTicketsSold(
+      newProps.event.total_tickets,
+      newProps.event.sold_tickets,
+    );
+    percentageComparedToExpected.value = EventManagerService.getPercentageOfTicketsSoldComparedToExpected(
+      newProps.event.sold_tickets,
+      newProps.event.threshold,
+    );
+  },
+  { deep: true }
 );
 
-const highLightClass = computed(() => EventManagerService.getHighlightClass(percentageComparedToExpected));
-const comparisonText = computed(() => EventManagerService.getComparisonText(percentageComparedToExpected));
+const highLightClass = computed(() => EventManagerService.getHighlightClass(percentageComparedToExpected.value));
+const comparisonText = computed(() => EventManagerService.getComparisonText(percentageComparedToExpected.value));
 </script>
 
 <template>

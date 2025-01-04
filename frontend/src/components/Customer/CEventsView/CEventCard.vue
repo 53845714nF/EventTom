@@ -2,7 +2,7 @@
 import PrimaryButton from "@/components/Basic/PrimaryButton.vue";
 import CustomerService from "@/services/CustomerService";
 import { useTicketPurchaseStore } from "@/stores/TicketPurchaseStore";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 const ticketPurchaseStore = useTicketPurchaseStore();
 
@@ -14,8 +14,16 @@ const props = defineProps({
 });
 
 const setEventInStore = () => ticketPurchaseStore.setEvent(props.event);
-
 const cardInfo = ref(CustomerService.getEventCardInfo(props.event)); // TODO: maybe needs some refactoring
+
+watch(
+  () => props,
+  (newProps, _) => {
+    cardInfo.value = CustomerService.getEventCardInfo(newProps.event)
+  },
+  { deep: true }
+);
+
 </script>
 
 <template>
@@ -30,7 +38,7 @@ const cardInfo = ref(CustomerService.getEventCardInfo(props.event)); // TODO: ma
       </div>
       <PrimaryButton
         :onClick="setEventInStore"
-        :text="cardInfo.sold_out ? 'Ausverkauft' : `Noch ${event.total_tickets - event.sold_tickets} Tickets`"
+        :text="cardInfo.buttonText"
         type="black"
         class="primary-button"
         :to="cardInfo.to"
