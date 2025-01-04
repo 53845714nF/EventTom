@@ -135,7 +135,7 @@ async def buy_ticket(
     await manager.broadcast(
         {
             "type": "ticket_purchase",
-            "user": {"id": current_user.id, "email": current_user.email},
+            "user": {"id": str(current_user.id), "email": current_user.email},
             "quantity": request.quantity,
             "event": event.model_dump(mode="json"),
         }
