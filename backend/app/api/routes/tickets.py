@@ -140,5 +140,8 @@ async def buy_ticket(
         }
     )
     return TicketPurchaseResponse(
-        user=current_user, event=event, quantity=request.quantity, purchase_date=ticket.purchase_date
+        user=current_user,
+        event=event,
+        quantity=request.quantity,
+        purchase_date=ticket.purchase_date,
     )
