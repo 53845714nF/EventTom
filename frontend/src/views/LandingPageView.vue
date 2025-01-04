@@ -7,7 +7,7 @@ import { PrimaryButtonTypes, SecondaryButtonTypes } from "@/constants/ButtonType
 <template>
   <div class="main-container">
     <div class="main-wrapper">
-      <h1>Das ist der Slogan von EvenTom</h1>
+      <h1>Erlebe mehr,<br> verpasse nichts.</h1>
       <p class="white margin-top-bottom">
         Entdecke mit EvenTom die besten Events in deiner Nähe und sichere dir in wenigen Klicks deine Tickets – einfach, schnell und zuverlässig! Deine Plattform für unvergessliche Erlebnisse: Von Konzerten bis Theater – bei EvenTom findest du Events, die begeistern.
       </p>
