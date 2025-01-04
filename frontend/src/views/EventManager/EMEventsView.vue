@@ -23,6 +23,7 @@ onBeforeMount(async () => {
     } else if (data.type === "ticket_purchase") {
       let event = events.value.find((event) => event.id === data.event.id);
       event.sold_tickets += Number(data.quantity);
+      ToasterService.createToasterPopUp("info", `Ticketkauf: `);
     }
   });
 

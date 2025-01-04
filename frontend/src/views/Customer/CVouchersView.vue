@@ -17,10 +17,7 @@ onBeforeMount(async () => {
 
 <template>
   <PageTitleContainer title="Deine Gutscheine" />
-  <div v-if="vouchers.length === 0" class="no-vouchers">
-    <p>Keine Gutscheine verfügbar</p>
-  </div>
-  <div class="content-container" v-else>
+  <div class="content-container">
     <CVoucherCard v-for="voucher in vouchers" :key="voucher.id" :voucher="voucher" />
   </div>
 </template>
