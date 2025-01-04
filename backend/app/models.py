@@ -139,6 +139,7 @@ class TicketPurchaseResponse(SQLModel):
     user: UserPublic
     event: EventPublic
     quantity: int
+    purchase_date: datetime
 
 
 # Voucher Models
