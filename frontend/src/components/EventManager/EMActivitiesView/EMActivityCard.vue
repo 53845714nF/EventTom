@@ -1,4 +1,5 @@
 <script setup>
+import { ref, watch } from 'vue';
 const props = defineProps({
   activity: {
     type: Object,
@@ -6,9 +7,16 @@ const props = defineProps({
   },
 });
 
-const formattedDate = props.activity.purchase_date.split(".")[0];
-console.log(`props activity: `);
-console.log(props.activity);
+const formattedDate = ref(props.activity.purchase_date.split(".")[0]);
+
+// without watch, the formattedDate would not be updated and the date from the old "first" activity would be displayed
+watch(
+  () => props,
+  (newProps, _) => {
+    formattedDate.value = ref(newProps.activity.purchase_date.split(".")[0]);
+  },
+  { deep: true }
+);
 </script>
 
 <template>

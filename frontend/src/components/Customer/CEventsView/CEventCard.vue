@@ -14,7 +14,7 @@ const props = defineProps({
 });
 
 const setEventInStore = () => ticketPurchaseStore.setEvent(props.event);
-const cardInfo = ref(CustomerService.getEventCardInfo(props.event)); // TODO: maybe needs some refactoring
+const cardInfo = ref(CustomerService.getEventCardInfo(props.event));
 
 watch(
   () => props,

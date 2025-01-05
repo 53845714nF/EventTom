@@ -44,8 +44,6 @@ export default class EventManagerService {
 
   // returns how many tickets are sold in relation to the threshold as a percentage
   static getPercentageOfTicketsSoldComparedToExpected(noTicketsSold, threshold) {
-    console.log(noTicketsSold);
-    console.log(threshold);
     return Math.abs(Math.round(((noTicketsSold - threshold) / threshold) * 100));
   }
 
