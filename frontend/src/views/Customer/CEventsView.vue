@@ -9,7 +9,6 @@ const events = ref([]);
 const websocketStore = useWebSocketStore();
 
 onMounted(() => {
-
   websocketStore.addListener((data) => {
     if (data.type === "event_create") {
       events.value.push(data.event);

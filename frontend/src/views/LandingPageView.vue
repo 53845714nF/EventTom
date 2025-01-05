@@ -7,9 +7,14 @@ import { PrimaryButtonTypes, SecondaryButtonTypes } from "@/constants/ButtonType
 <template>
   <div class="main-container">
     <div class="main-wrapper">
-      <h1>Erlebe mehr,<br> verpasse nichts.</h1>
+      <h1>
+        Erlebe mehr,<br />
+        verpasse nichts.
+      </h1>
       <p class="white margin-top-bottom">
-        Entdecke mit EvenTom die besten Events in deiner Nähe und sichere dir in wenigen Klicks deine Tickets – einfach, schnell und zuverlässig! Deine Plattform für unvergessliche Erlebnisse: Von Konzerten bis Theater – bei EvenTom findest du Events, die begeistern.
+        Entdecke mit EvenTom die besten Events in deiner Nähe und sichere dir in wenigen Klicks deine Tickets – einfach,
+        schnell und zuverlässig! Deine Plattform für unvergessliche Erlebnisse: Von Konzerten bis Theater – bei EvenTom
+        findest du Events, die begeistern.
       </p>
       <div class="button-container">
         <PrimaryButton to="/signup" text="Registrieren" :type="PrimaryButtonTypes.GREEN" />
@@ -23,19 +28,24 @@ import { PrimaryButtonTypes, SecondaryButtonTypes } from "@/constants/ButtonType
       <div class="info-card bg-customer">
         <h4>Events in Echtzeit</h4>
         <p>
-          Dank unserer Echtzeitanzeige bleibst du immer informiert und verpasst kein Event mehr! Entdecke spannende Veranstaltungen in deiner Nähe, sei auf dem neuesten Stand und sichere dir deine Tickets rechtzeitig.
+          Dank unserer Echtzeitanzeige bleibst du immer informiert und verpasst kein Event mehr! Entdecke spannende
+          Veranstaltungen in deiner Nähe, sei auf dem neuesten Stand und sichere dir deine Tickets rechtzeitig.
         </p>
       </div>
       <div class="info-card bg-event-creator">
         <h4>Eventerstellung</h4>
         <p>
-          Erstelle deine eigenen Events und starte den Ticketverkauf in wenigen Schritten! Mit EvenTom kannst du deine Veranstaltungen nicht nur verwalten, sondern auch gezielt bewerben, um dein Publikum zu erreichen und unvergessliche Erlebnisse zu schaffen.
+          Erstelle deine eigenen Events und starte den Ticketverkauf in wenigen Schritten! Mit EvenTom kannst du deine
+          Veranstaltungen nicht nur verwalten, sondern auch gezielt bewerben, um dein Publikum zu erreichen und
+          unvergessliche Erlebnisse zu schaffen.
         </p>
       </div>
       <div class="info-card bg-event-manager">
         <h4>Eventmanagement</h4>
         <p>
-          Verwalte deine Events einfach und effizient mit EvenTom – behalte jederzeit den Überblick über alle Ticketverkäufe, Teilnehmerzahlen und wichtige Veranstaltungsdetails. Unsere Plattform bietet dir alle Werkzeuge, um deine Events professionell zu organisieren, von der Planung bis zur Durchführung.
+          Verwalte deine Events einfach und effizient mit EvenTom – behalte jederzeit den Überblick über alle
+          Ticketverkäufe, Teilnehmerzahlen und wichtige Veranstaltungsdetails. Unsere Plattform bietet dir alle
+          Werkzeuge, um deine Events professionell zu organisieren, von der Planung bis zur Durchführung.
         </p>
       </div>
     </div>
@@ -88,5 +98,4 @@ import { PrimaryButtonTypes, SecondaryButtonTypes } from "@/constants/ButtonType
   border-radius: 20px;
   margin: 0px 15px;
 }
-
 </style>

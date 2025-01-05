@@ -13,7 +13,6 @@ const events = ref([]);
 const websocketStore = useWebSocketStore();
 
 onBeforeMount(async () => {
-
   websocketStore.addListener((data) => {
     if (data.type === "event_create") {
       if (data.event.manager_id === eventManagerId) {
@@ -25,7 +24,10 @@ onBeforeMount(async () => {
       console.log(data.event);
       let event = events.value.find((event) => event.id === data.event.id);
       event.sold_tickets += Number(data.quantity);
-      ToasterService.createToasterPopUp("info", `${data.user.email} hat ${data.quantity} Tickets für ${data.event.title} gekauft.`);
+      ToasterService.createToasterPopUp(
+        "info",
+        `${data.user.email} hat ${data.quantity} Tickets für ${data.event.title} gekauft.`,
+      );
     }
   });
 

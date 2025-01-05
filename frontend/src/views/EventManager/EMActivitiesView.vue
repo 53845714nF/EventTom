@@ -13,11 +13,13 @@ const limit = 50;
 const websocketStore = useWebSocketStore();
 
 onBeforeMount(async () => {
-
   websocketStore.addListener((data) => {
     if (data.type === "ticket_purchase") {
       activities.value.unshift(data); // Add new activity to the beginning of the list
-      ToasterService.createToasterPopUp("info", `Ticketkauf: ${data.user.email} hat ${data.quantity} Tickets für ${data.event.title} gekauft.`);
+      ToasterService.createToasterPopUp(
+        "info",
+        `Ticketkauf: ${data.user.email} hat ${data.quantity} Tickets für ${data.event.title} gekauft.`,
+      );
     }
   });
 

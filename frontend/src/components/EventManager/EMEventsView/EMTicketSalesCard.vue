@@ -12,15 +12,13 @@ const props = defineProps({
 const showPercentage = ref(true);
 const switchView = () => (showPercentage.value = !showPercentage.value);
 
-const percentageSold = ref(EventManagerService.getPercentageOfTicketsSold(
-  props.event.total_tickets,
-  props.event.sold_tickets,
-));
+const percentageSold = ref(
+  EventManagerService.getPercentageOfTicketsSold(props.event.total_tickets, props.event.sold_tickets),
+);
 
-const percentageComparedToExpected = ref(EventManagerService.getPercentageOfTicketsSoldComparedToExpected(
-  props.event.sold_tickets,
-  props.event.threshold,
-));
+const percentageComparedToExpected = ref(
+  EventManagerService.getPercentageOfTicketsSoldComparedToExpected(props.event.sold_tickets, props.event.threshold),
+);
 
 watch(
   () => props,
@@ -34,7 +32,7 @@ watch(
       newProps.event.threshold,
     );
   },
-  { deep: true }
+  { deep: true },
 );
 
 const highLightClass = computed(() => EventManagerService.getHighlightClass(percentageComparedToExpected.value));

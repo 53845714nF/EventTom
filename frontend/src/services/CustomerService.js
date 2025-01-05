@@ -124,11 +124,15 @@ export default class CustomerService {
 
   static getEventCardInfo(event) {
     const remainingTickets = event.total_tickets - event.sold_tickets;
-    
+
     if (remainingTickets <= 0) {
-      return {buttonText: "Ausverkauft", cssClass: "bg-grey", to: ""};
+      return { buttonText: "Ausverkauft", cssClass: "bg-grey", to: "" };
     } else {
-      return {buttonText: `Noch ${remainingTickets} Tickets`, cssClass: "bg-customer", to: "/customer/purchase_ticket"};
+      return {
+        buttonText: `Noch ${remainingTickets} Tickets`,
+        cssClass: "bg-customer",
+        to: "/customer/purchase_ticket",
+      };
     }
   }
 

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch } from "vue";
 const props = defineProps({
   activity: {
     type: Object,
@@ -15,7 +15,7 @@ watch(
   (newProps, _) => {
     formattedDate.value = ref(newProps.activity.purchase_date.split(".")[0]);
   },
-  { deep: true }
+  { deep: true },
 );
 </script>
 

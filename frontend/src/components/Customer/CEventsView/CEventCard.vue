@@ -19,11 +19,10 @@ const cardInfo = ref(CustomerService.getEventCardInfo(props.event));
 watch(
   () => props,
   (newProps, _) => {
-    cardInfo.value = CustomerService.getEventCardInfo(newProps.event)
+    cardInfo.value = CustomerService.getEventCardInfo(newProps.event);
   },
-  { deep: true }
+  { deep: true },
 );
-
 </script>
 
 <template>
