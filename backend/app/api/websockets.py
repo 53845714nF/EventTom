@@ -17,7 +17,6 @@ class ConnectionManager:
         self.active_connections.remove(websocket)
 
     async def broadcast(self, message: dict[str, Any]) -> None:
-        print(message)
         for connection in self.active_connections:
             await connection.send_json(message)
 
@@ -30,10 +29,6 @@ async def websocket_endpoint(websocket: WebSocket) -> None:
     await manager.connect(websocket)
     try:
         while True:
-            data = await websocket.receive_text()
-
-            # Arnes changes: (just for testing, can be deleted)
-            print(f"Nachricht erhalten: {data}")
-            await websocket.send_text(f"Echo: {data}")
+            await websocket.receive_text()
     except WebSocketDisconnect:
         manager.disconnect(websocket)
