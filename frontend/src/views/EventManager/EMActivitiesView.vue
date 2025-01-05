@@ -16,8 +16,10 @@ onBeforeMount(async () => {
 
   websocketStore.addListener((data) => {
     if (data.type === "ticket_purchase") {
-      activities.value.push(data.activity);
-      ToasterService.createToasterPopUp("info", `Ticketkauf: `);
+      console.log(`data:`);
+      console.log(data);
+      activities.value.push(data);
+      ToasterService.createToasterPopUp("info", `Ticketkauf: ${data.user.email} hat ${data.quantity} Tickets für ${data.event.title} gekauft.`);
     }
   });
 

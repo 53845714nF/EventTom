@@ -7,17 +7,19 @@ const props = defineProps({
 });
 
 const formattedDate = props.activity.purchase_date.split(".")[0];
+console.log(`props activity: `);
+console.log(props.activity);
 </script>
 
 <template>
   <div class="card-body">
     <p class="small-margin">
       <span>[{{ formattedDate }}] </span>
-      <span class="p-bold">{{ activity.user_email }}</span>
+      <span class="p-bold">{{ activity.user.email }}</span>
       hat
       <span class="p-bold">{{ activity.quantity }}</span>
       Tickets für
-      <span class="p-bold">{{ activity.event_title }}</span>
+      <span class="p-bold">{{ activity.event.title }}</span>
       gekauft.
     </p>
   </div>
