@@ -1,4 +1,5 @@
 <script setup>
+import { ref, watch } from "vue";
 const props = defineProps({
   activity: {
     type: Object,
@@ -6,18 +7,27 @@ const props = defineProps({
   },
 });
 
-const formattedDate = props.activity.purchase_date.split(".")[0];
+const formattedDate = ref(props.activity.purchase_date.split(".")[0]);
+
+// without watch, the formattedDate would not be updated and the date from the old "first" activity would be displayed
+watch(
+  () => props,
+  (newProps, _) => {
+    formattedDate.value = ref(newProps.activity.purchase_date.split(".")[0]);
+  },
+  { deep: true },
+);
 </script>
 
 <template>
   <div class="card-body">
     <p class="small-margin">
       <span>[{{ formattedDate }}] </span>
-      <span class="p-bold">{{ activity.user_email }}</span>
+      <span class="p-bold">{{ activity.user.email }}</span>
       hat
       <span class="p-bold">{{ activity.quantity }}</span>
       Tickets für
-      <span class="p-bold">{{ activity.event_title }}</span>
+      <span class="p-bold">{{ activity.event.title }}</span>
       gekauft.
     </p>
   </div>

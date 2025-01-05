@@ -63,11 +63,8 @@ def read_manager_ticket_purchases(
 
     ticket_purchases = [
         TicketPurchaseResponse(
-            ticket_id=ticket.ticket_id,
-            event_id=event.id,
-            event_title=event.title,
-            user_id=user.id,
-            user_email=user.email,
+            user=user,
+            event=event,
             quantity=ticket.quantity,
             purchase_date=ticket.purchase_date,
         )
@@ -138,10 +135,15 @@ async def buy_ticket(
     await manager.broadcast(
         {
             "type": "ticket_purchase",
+            "user": {"id": str(current_user.id), "email": current_user.email},
             "quantity": request.quantity,
             "event": event.model_dump(mode="json"),
+            "purchase_date": ticket.purchase_date.isoformat(),
         }
     )
     return TicketPurchaseResponse(
-        user=current_user, event=event, quantity=request.quantity
+        user=current_user,
+        event=event,
+        quantity=request.quantity,
+        purchase_date=ticket.purchase_date,
     )
