@@ -2,8 +2,6 @@ export const NavItems = {
   GUEST: {
     items: [
       { title: "Home", path: "/" },
-      { title: "About", path: "/not_implemented" },
-      { title: "Dashboard", path: "/not_implemented" },
     ],
     button: { title: "Login", path: "/login" },
   },
