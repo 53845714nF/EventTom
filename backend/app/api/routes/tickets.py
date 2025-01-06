@@ -138,6 +138,7 @@ async def buy_ticket(
             "user": {"id": str(current_user.id), "email": current_user.email},
             "quantity": request.quantity,
             "event": event.model_dump(mode="json"),
+            "purchase_date": ticket.purchase_date.isoformat(),
         }
     )
     return TicketPurchaseResponse(

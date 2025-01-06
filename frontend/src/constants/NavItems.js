@@ -1,10 +1,6 @@
 export const NavItems = {
   GUEST: {
-    items: [
-      { title: "Home", path: "/" },
-      { title: "About", path: "/not_implemented" },
-      { title: "Dashboard", path: "/not_implemented" },
-    ],
+    items: [{ title: "Home", path: "/" }],
     button: { title: "Login", path: "/login" },
   },
 
@@ -13,6 +9,7 @@ export const NavItems = {
       { title: "Events", path: "/customer/events" },
       { title: "Gutscheine", path: "/customer/vouchers" },
       { title: "Tickets", path: "/customer/tickets" },
+      { title: "Guthaben", path: "/customer/balance" },
     ],
     button: { title: "Logout", path: "/" },
   },

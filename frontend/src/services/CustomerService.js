@@ -6,6 +6,66 @@ import FormTypes from "@/constants/FormTypes";
 import router from "@/router";
 
 export default class CustomerService {
+  static proviceBalanceFormData() {
+    return {
+      amount: "0",
+      payment_method: "",
+    };
+  }
+
+  static providePaymentMethodOptions() {
+    return ["PayPal", "Kreditkarte", "Rechnung", "Bitcoin"];
+  }
+
+  static async tryTopUpBalance(balanceFormData, authStore) {
+    const validationRules = FormValidatorService.getValidationRules(FormTypes.INCREASE_BALANCE);
+    const validationError = FormValidatorService.validateForm(balanceFormData.value, validationRules);
+
+    if (validationError) {
+      ToasterService.createToasterPopUp("error", validationError);
+      return;
+    }
+
+    try {
+      const result = await CustomerService.postTopUpBalance(balanceFormData.value, authStore);
+
+      if (!result.success) {
+        ToasterService.createToasterPopUp("error", "Fehler beim Aufladen deines Guthabens");
+        return;
+      }
+
+      ToasterService.createToasterPopUp("success", "Guthaben erfolgreich aufgeladen!");
+      authStore.setBalance(result.data.balance);
+      balanceFormData.value = CustomerService.proviceBalanceFormData();
+      return;
+    } catch (error) {
+      console.error(error);
+      ToasterService.createDefaultErrorPopUp();
+    }
+  }
+
+  static async postTopUpBalance(balanceFormData, authStore) {
+    const data = {
+      amount: balanceFormData.amount,
+    };
+
+    return await axios
+      .post(
+        `/api/v1/users/me/top-up`, // TODO: use request body once available
+        data,
+        {
+          headers: AuthService.getAuthorizedHeaders(authStore),
+        },
+      )
+      .then((response) => {
+        return { success: true, data: response.data };
+      })
+      .catch((error) => {
+        console.error(error);
+        return { success: false, data: [] };
+      });
+  }
+
   // Provides an empty form structure for ticket purchases for initializing the form data in components.
   static provideTicketPurchaseFormData() {
     return {
@@ -18,36 +78,72 @@ export default class CustomerService {
   }
 
   static calculateSingleTicketPrice(event) {
-    return event.base_price * event.pay_fee;
+    const singleTicketPrice = event.base_price * event.pay_fee;
+    return singleTicketPrice;
   }
 
-  static calculateTotalTicketPurchasePrice(singleTicketPrice, ticketPurchaseFormData, appliedVoucher) {
-    let totalPrice = singleTicketPrice * ticketPurchaseFormData.ticket_count;
+  static calculateMinTicketPurchasePrice(event, ticketPurchaseFormData) {
+    const minPrice = event.base_price * ticketPurchaseFormData.ticket_count;
+    return minPrice;
+  }
+
+  static calculateTotalTicketPurchasePrice(singleTicketPrice, ticketPurchaseFormData, appliedVoucher, minPrice) {
+    let totalCost = singleTicketPrice * ticketPurchaseFormData.ticket_count;
 
     if (appliedVoucher) {
-      totalPrice -= appliedVoucher.amount;
+      totalCost -= appliedVoucher.amount;
     }
 
-    // in case discount is higher than total price
-    if (totalPrice < 0) {
-      totalPrice = 0;
+    // check that price after discount is not higher than base_price of tickets
+    if (totalCost < minPrice) {
+      return {
+        cost: minPrice,
+        info: "Info: Das Einlösen dieses Gutscheins unterschreitet den Basispreis des Tickets, weshalb nicht der komplette Betrag eingelöst werden kann.",
+      };
     }
 
-    return totalPrice;
+    return { cost: totalCost, info: "" };
+  }
+
+  static calculateBalanceAfterPurchase(currentBalance, totalCost) {
+    const balanceAfterPurchase = currentBalance - totalCost;
+    return balanceAfterPurchase;
+  }
+
+  static getBalanceAfterPurchaseHighlightClass(balance) {
+    if (balance < 0) {
+      return "highlight-red";
+    } else {
+      return "";
+    }
   }
 
   static getAppliedVoucherFromCode(ticketPurchaseFormData, availableVouchers) {
-    return availableVouchers.value.find((voucher) => voucher.title === ticketPurchaseFormData.voucher_code); // undefined if not found
+    return availableVouchers.value.find((voucher) => voucher.title === ticketPurchaseFormData.voucher_code); //TODO: fix error when no vouchers found
+  }
+
+  static getEventCardInfo(event) {
+    const remainingTickets = event.total_tickets - event.sold_tickets;
+
+    if (remainingTickets <= 0) {
+      return { buttonText: "Ausverkauft", cssClass: "bg-grey", to: "" };
+    } else {
+      return {
+        buttonText: `Noch ${remainingTickets} Tickets`,
+        cssClass: "bg-customer",
+        to: "/customer/purchase_ticket",
+      };
+    }
   }
 
   static async tryGetAllEvents() {
     const result = await CustomerService.fetchAllEvents();
 
-    if (result.success) {
-      return result.data;
-    } else {
+    if (!result.success) {
       ToasterService.createToasterPopUp("error", "Events konnten nicht geladen werden");
     }
+
+    return result.data;
   }
 
   static async fetchAllEvents() {
@@ -112,7 +208,7 @@ export default class CustomerService {
       });
   }
 
-  static async tryPurchaseTicket(ticketPurchaseFormData, event, appliedVoucher, authStore) {
+  static async tryPurchaseTicket(ticketPurchaseFormData, balanceAfterPurchase, event, appliedVoucher, authStore) {
     // validate form data
     const validationRules = FormValidatorService.getValidationRules(FormTypes.PURCHASE_TICKET);
     const validationError = FormValidatorService.validateForm(ticketPurchaseFormData, validationRules);
@@ -122,59 +218,58 @@ export default class CustomerService {
       return;
     }
 
+    // check if user has sufficient funds
+    if (balanceAfterPurchase < 0) {
+      ToasterService.createToasterPopUp("error", "Nicht genügend Guthaben.");
+      return;
+    }
+
+    // check if enough tickets are available
+    const remainingTickets = event.total_tickets - event.sold_tickets;
+    if (remainingTickets - ticketPurchaseFormData.ticket_count < 0) {
+      ToasterService.createToasterPopUp(
+        "error",
+        `Nicht genügend Tickets vorhanden. Verbleibende Tickets: ${remainingTickets}`,
+      );
+      return;
+    }
+
     try {
-      const response = await CustomerService.postPurchaseTicketData(ticketPurchaseFormData, event, authStore);
+      const response = await CustomerService.postPurchaseTicketData(
+        ticketPurchaseFormData,
+        event,
+        appliedVoucher,
+        authStore,
+      );
 
       if (!response.success) {
         ToasterService.createToasterPopUp("error", "Fehler beim Kauf des Tickets.");
         return;
       }
 
-      // delete voucher if applied
-      if (appliedVoucher) {
-        const deleteVoucherResponse = await CustomerService.deleteVoucher(appliedVoucher, authStore);
-
-        if (!deleteVoucherResponse.success) {
-          ToasterService.createToasterPopUp("error", "Gutschein konnte nicht gelöscht werden.");
-          return;
-        }
-      }
-
       ToasterService.createToasterPopUp("success", "Ticket erfolgreich gekauft");
+      authStore.setBalance(response.data.user.balance);
       router.push({ name: "CTickets" });
     } catch (error) {
       console.error("Error purchasing ticket:", error);
-      ToasterService.createToasterPopUp("error", "Ein unerwarteter Fehler ist aufgetreten.");
+      ToasterService.createDefaultErrorPopUp();
     }
   }
 
-  static async postPurchaseTicketData(ticketPurchaseFormData, event, authStore) {
-    return await axios
-      .post(
-        `/api/v1/tickets/${event.id}/buy?event_id=${event.id}&quantity=${ticketPurchaseFormData.ticket_count}`,
-        {},
-        {
-          headers: AuthService.getAuthorizedHeaders(authStore),
-        },
-      )
-      .then((response) => {
-        return { success: true, data: response.data };
-      })
-      .catch((error) => {
-        console.error("Error purchasing ticket:", error);
-        return { success: false, data: [] };
-      });
-  }
+  static async postPurchaseTicketData(ticketPurchaseFormData, event, appliedVoucher, authStore) {
+    // get id of applied voucher if exists
+    const appliedVoucherId = appliedVoucher ? appliedVoucher.id : "";
 
-  static async deleteVoucher(voucher, authStore) {
+    const data = {
+      event_id: event.id,
+      quantity: ticketPurchaseFormData.ticket_count,
+      voucher_id: appliedVoucherId,
+    };
+
     return await axios
-      .delete(
-        `/api/v1/vouchers/${voucher.id}`,
-        {},
-        {
-          headers: AuthService.getAuthorizedHeaders(authStore),
-        },
-      )
+      .post("/api/v1/tickets/buy", data, {
+        headers: AuthService.getAuthorizedHeaders(authStore),
+      })
       .then((response) => {
         return { success: true, data: response.data };
       })

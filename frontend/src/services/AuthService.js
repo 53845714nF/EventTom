@@ -25,8 +25,6 @@ export default class AuthService {
 
   // ### Handling Login and Sign Up ###
 
-  // sends a POST request to the backend with the user data
-  // Either logs in user (signUp = false) or signs up user (signUp = true)
   static async trySignUpUser(user, authStore) {
     const validationRules = FormValidatorService.getValidationRules(FormTypes.SIGNUP);
     const validationError = FormValidatorService.validateForm(user.value, validationRules);
@@ -42,10 +40,16 @@ export default class AuthService {
       return;
     }
 
-    const response = await AuthService.postSignUpData(user);
+    try {
+      const response = await AuthService.postSignUpData(user);
 
-    if (!response.success) {
-      ToasterService.createToasterPopUp("error", "Sign up failed.");
+      if (!response.success) {
+        ToasterService.createToasterPopUp("error", "Sign up failed.");
+        return;
+      }
+    } catch (error) {
+      console.error(error);
+      ToasterService.createDefaultErrorPopUp();
       return;
     }
 
@@ -62,24 +66,31 @@ export default class AuthService {
       return;
     }
 
-    const response = await AuthService.postLoginData(user);
+    try {
+      const response = await AuthService.postLoginData(user);
 
-    if (!response.success) {
-      ToasterService.createToasterPopUp("error", "Falsche Email oder Passwort.");
+      if (!response.success) {
+        ToasterService.createToasterPopUp("error", "Falsche Email oder Passwort.");
+        return;
+      }
+
+      // set accessToken first since it is needed to fetch the user info
+      authStore.setAccessToken(response.access_token);
+
+      const userInfo = await AuthService.getUserMe(authStore);
+
+      authStore.setRole(userInfo.role);
+      authStore.setId(userInfo.id);
+      authStore.setBalance(userInfo.balance);
+
+      // set the redirect path to the first item in the navItems array
+      const redirectPath = authStore.navItems.items[0].path;
+      router.push(redirectPath);
+    } catch (error) {
+      console.error(error);
+      ToasterService.createDefaultErrorPopUp();
       return;
     }
-
-    // set accessToken first since it is needed to fetch the user info
-    authStore.setAccessToken(response.access_token);
-
-    const userInfo = await AuthService.getUserMe(authStore);
-
-    authStore.setRole(userInfo.role);
-    authStore.setId(userInfo.id);
-
-    // set the redirect path to the first item in the navItems array
-    const redirectPath = authStore.navItems.items[0].path;
-    router.push(redirectPath);
   }
 
   // ### API Calls ###
@@ -161,6 +172,7 @@ export default class AuthService {
     authStore.removeAccessToken();
     authStore.setRole(Roles.GUEST);
     authStore.removeId();
+    authStore.removeBalance();
     ToasterService.createToasterPopUp("success", "Logout erfolgreich!");
   }
 

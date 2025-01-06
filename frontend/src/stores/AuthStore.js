@@ -8,6 +8,7 @@ export const useAuthStore = defineStore("role", () => {
   const role = ref(localStorage.getItem(LocalStorageKeys.USER_ROLE) || Roles.GUEST);
   const userId = ref(localStorage.getItem(LocalStorageKeys.USER_ID) || "");
   const accessToken = ref(localStorage.getItem(LocalStorageKeys.ACCESS_TOKEN) || "");
+  const balance = ref(localStorage.getItem(LocalStorageKeys.BALANCE) || "");
 
   const userAuthenticated = computed(() => !!accessToken.value);
 
@@ -51,11 +52,22 @@ export const useAuthStore = defineStore("role", () => {
     userId.value = "";
   }
 
+  function setBalance(newBalance) {
+    localStorage.setItem(LocalStorageKeys.BALANCE, newBalance);
+    balance.value = newBalance;
+  }
+
+  function removeBalance() {
+    localStorage.setItem(LocalStorageKeys.BALANCE, "");
+    balance.value = "";
+  }
+
   // you have to return every state property in order for pinia to work properly
   return {
     role,
     userId,
     accessToken,
+    balance,
     userAuthenticated,
     navItems,
     setAccessToken,
@@ -63,5 +75,7 @@ export const useAuthStore = defineStore("role", () => {
     setRole,
     setId,
     removeId,
+    setBalance,
+    removeBalance,
   };
 });

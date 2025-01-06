@@ -2,6 +2,7 @@
 import PrimaryButton from "@/components/Basic/PrimaryButton.vue";
 import CustomerService from "@/services/CustomerService";
 import { useTicketPurchaseStore } from "@/stores/TicketPurchaseStore";
+import { ref, watch } from "vue";
 
 const ticketPurchaseStore = useTicketPurchaseStore();
 
@@ -13,30 +14,37 @@ const props = defineProps({
 });
 
 const setEventInStore = () => ticketPurchaseStore.setEvent(props.event);
+const cardInfo = ref(CustomerService.getEventCardInfo(props.event));
+
+watch(
+  () => props,
+  (newProps, _) => {
+    cardInfo.value = CustomerService.getEventCardInfo(newProps.event);
+  },
+  { deep: true },
+);
 </script>
 
 <template>
-  <div class="event-card">
-    <div class="card-content-container">
-      <div class="heading-container">
+  <div :class="['event-card', cardInfo.cssClass]">
+    <div class="heading-container">
+      <div>
         <h4>{{ event.title }}</h4>
         <p>
-          Preis pro Ticket: <span class="p-bold">{{ CustomerService.calculateSingleTicketPrice(event) }}€</span>
+          Preis pro Ticket:
+          <span class="p-bold">{{ CustomerService.calculateSingleTicketPrice(event).toFixed(2) }}€</span>
         </p>
       </div>
-      <p>{{ event.description }}</p>
-      <!--TODO: maybe add Eventmanager to see who is responsible for this event?-->
-    </div>
-    <div class="button-container">
-      <!--TODO: get correct number of remaining Tickets or put "ausverkauft" in the button-->
       <PrimaryButton
         :onClick="setEventInStore"
-        :text="`Noch ${event.total_tickets - event.sold_tickets} Tickets`"
+        :text="cardInfo.buttonText"
         type="black"
         class="primary-button"
-        to="/customer/purchase_ticket"
+        :to="cardInfo.to"
       />
     </div>
+    <!--TODO: maybe add Eventmanager to see who is responsible for this event?-->
+    <p class="blocktext">{{ event.description }}</p>
   </div>
 </template>
 
@@ -45,9 +53,6 @@ const setEventInStore = () => ticketPurchaseStore.setEvent(props.event);
   margin: 25px 40px;
   border-radius: 20px;
   padding: 20px 30px;
-  background-color: var(--color-customer);
-  display: flex;
-  flex-direction: row;
 }
 
 .card-content-container {
@@ -61,12 +66,19 @@ const setEventInStore = () => ticketPurchaseStore.setEvent(props.event);
 .heading-container {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-end;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .heading-container p {
   margin: 4px 4px 4px 15px;
+}
+
+.heading-container div:first-of-type {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-end;
 }
 
 .button-container {
