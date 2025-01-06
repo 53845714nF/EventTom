@@ -4,8 +4,8 @@ resource "aws_security_group" "ec2_sg" {
   vpc_id      = aws_vpc.backend_vpc.id
 
   ingress {
-    from_port   = 8080
-    to_port     = 8080
+    from_port   = 8000
+    to_port     = 8000
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -72,8 +72,10 @@ resource "aws_instance" "web" {
   -e POSTGRES_PASSWORD="${var.database_password}" \
   --restart no \
   ghcr.io/53845714nf/eventtom/backend:latest \
-  bash scripts/prestart.sh && docker run -d \
-  --restart=yes \
+  bash scripts/prestart.sh
+  
+  docker run -d \
+  --restart="always" \
   -e DOMAIN="${var.domain}" \
   -e PROJECT_NAME="EventTom" \
   -e FRONTEND_HOST="${var.frontend_host}" \
@@ -87,7 +89,8 @@ resource "aws_instance" "web" {
   -e POSTGRES_DB="${var.database_name}" \
   -e POSTGRES_USER="${var.database_username}" \
   -e POSTGRES_PASSWORD="${var.database_password}" \
-  ghcr.io/53845714nf/eventtom/backend:latest &
+  -p 8000:8000 \
+  ghcr.io/53845714nf/eventtom/backend:latest
   EOF
 
    depends_on = [aws_db_instance.database]
