@@ -14,7 +14,6 @@ const props = defineProps({
   },
 });
 
-// TODO: better solution for this
 // navigate back if no event is provided (once browser is refreshed pinia store is reset)
 if (!props.event.title) {
   router.push({ name: "CEvents" });
@@ -23,6 +22,7 @@ if (!props.event.title) {
 const availableVouchers = ref([]);
 const ticketPurchaseFormData = ref(CustomerService.provideTicketPurchaseFormData());
 const authStore = useAuthStore();
+const showDiscountPercentage = ref(false);
 
 onBeforeMount(async () => {
   await CustomerService.tryGetAllVouchersForCustomer(authStore).then((result) => {
@@ -30,25 +30,12 @@ onBeforeMount(async () => {
   });
 });
 
-// price and balance calculations
-const singleTicketPrice = computed(() => CustomerService.calculateSingleTicketPrice(props.event));
-const minPrice = computed(() =>
-  CustomerService.calculateMinTicketPurchasePrice(props.event, ticketPurchaseFormData.value),
-);
-const totalCost = computed(() =>
-  CustomerService.calculateTotalTicketPurchasePrice(
-    singleTicketPrice.value,
-    ticketPurchaseFormData.value,
-    appliedVoucher.value,
-    minPrice.value,
-  ),
-);
-const balanceAfterPurchase = computed(() =>
-  CustomerService.calculateBalanceAfterPurchase(authStore.balance, totalCost.value.cost),
-);
-const balanceAfterPurchaseHighlightClass = computed(() =>
-  CustomerService.getBalanceAfterPurchaseHighlightClass(balanceAfterPurchase.value),
-);
+const transactionDetails = computed(() => CustomerService.getTransactionDetails(
+  props.event,
+  ticketPurchaseFormData.value,
+  appliedVoucher.value,
+  authStore.balance,
+));
 
 const appliedVoucher = computed(() =>
   CustomerService.getAppliedVoucherFromCode(ticketPurchaseFormData.value, availableVouchers),
@@ -57,11 +44,15 @@ const appliedVoucher = computed(() =>
 const tryPostTicketPurchaseFormData = async () =>
   await CustomerService.tryPurchaseTicket(
     ticketPurchaseFormData.value,
-    balanceAfterPurchase.value,
+    transactionDetails.value.balanceAfterPurchase,
     props.event,
     appliedVoucher.value,
     authStore,
   );
+
+const changeDiscountRepresentation = () => {
+  showDiscountPercentage.value = !showDiscountPercentage.value;
+}
 </script>
 
 <template>
@@ -101,15 +92,25 @@ const tryPostTicketPurchaseFormData = async () =>
 
     <hr />
 
-    <h4>{{ totalCost.cost.toFixed(2) }}€</h4>
+    <h4 v-if="appliedVoucher && !showDiscountPercentage"><s>{{ transactionDetails.totalCostExclVoucher.toFixed(2) }}€</s> {{ transactionDetails.totalCostInclVoucher.toFixed(2) }}€</h4>
+    <h4 v-else-if="appliedVoucher && showDiscountPercentage">{{ transactionDetails.totalCostInclVoucher.toFixed(2) }}€ - {{ transactionDetails.voucherDiscountPercentage }}% gespart!</h4>
+    <h4 v-else>{{ transactionDetails.totalCostInclVoucher.toFixed(2) }}€</h4>
+
     <p class="small-margin">
       {{ ticketPurchaseFormData.ticket_count }}x {{ props.event.title }} Ticket: je
-      <span class="p-bold">{{ singleTicketPrice.toFixed(2) }}€</span>
+      <span class="p-bold">{{ transactionDetails.singleTicketPrice.toFixed(2) }}€</span>
     </p>
-    <p v-if="appliedVoucher" class="small-margin">
-      1x Gutschein: <span class="p-bold">{{ appliedVoucher.title }}: -{{ appliedVoucher.amount.toFixed(2) }}€</span>
-    </p>
-    <p class="small-margin highlight-red">{{ totalCost.info }}</p>
+
+    <div v-if="appliedVoucher" class="voucher-info no-margin">
+      <p class="small-margin">
+        1x Gutschein: <span class="p-bold">{{ appliedVoucher.title }}: -{{ appliedVoucher.amount.toFixed(2) }}€</span>
+      </p>
+      <div @click="changeDiscountRepresentation" class="voucher-info-icon">
+        <i class="fa-solid fa-info white"></i>
+      </div>
+    </div>
+    <p class="small-margin highlight-red">{{ transactionDetails.voucherInfo }}</p>
+    
     <hr />
 
     <p class="small-margin">
@@ -117,7 +118,7 @@ const tryPostTicketPurchaseFormData = async () =>
     </p>
     <p class="small-margin">
       Guthaben nach dem Kauf:
-      <span :class="['p-bold', balanceAfterPurchaseHighlightClass]">{{ balanceAfterPurchase.toFixed(2) }}€</span>
+      <span :class="['p-bold', transactionDetails.balanceAfterPurchaseHighlightClass]">{{ transactionDetails.balanceAfterPurchase.toFixed(2) }}€</span>
     </p>
 
     <div class="button-container">
@@ -142,10 +143,6 @@ const tryPostTicketPurchaseFormData = async () =>
   margin-bottom: 20px;
 }
 
-.container-background p:first-of-type {
-  margin-bottom: 30px;
-}
-
 .form-container {
   display: flex;
   flex-direction: column;
@@ -157,6 +154,30 @@ hr {
   border: none;
   border-top: 1px solid var(--cp-black);
   margin: 40px 0;
+}
+
+.voucher-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.voucher-info-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 5px;
+  min-width: 20px;
+  min-height: 20px;
+  border-radius: 50%;
+  background-color: var(--cp-black);
+  font-size: 12px; /* icon size */
+}
+
+.voucher-info-icon:hover {
+  background-color: var(--cp-dark-grey);
+  cursor: pointer;
 }
 
 .button-container {
