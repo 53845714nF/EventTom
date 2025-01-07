@@ -87,7 +87,7 @@ export default class AdminService {
     };
 
     return await axios
-      .post("/api/v1/users/", data, {
+      .post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/users/`, data, {
         headers: AuthService.getAuthorizedHeaders(authStore),
       })
       .then(() => {
@@ -111,7 +111,7 @@ export default class AdminService {
 
   static async getAllUsers(authStore) {
     return axios
-      .get("/api/v1/users/", {
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/users/`, {
         headers: AuthService.getAuthorizedHeaders(authStore),
       })
       .then((response) => {
@@ -141,7 +141,7 @@ export default class AdminService {
 
   static async deleteUser(user, authStore) {
     return await axios
-      .delete(`/api/v1/users/${user.id}`, {
+      .delete(`${import.meta.env.VITE_BACKEND_URL}/api/v1/users/${user.id}`, {
         headers: AuthService.getAuthorizedHeaders(authStore),
       })
       .then(() => {
@@ -180,7 +180,7 @@ export default class AdminService {
     };
 
     return axios
-      .post("/api/v1/vouchers/", data, {
+      .post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/vouchers/`, data, {
         headers: AuthService.getAuthorizedHeaders(authStore),
       })
       .then(() => {

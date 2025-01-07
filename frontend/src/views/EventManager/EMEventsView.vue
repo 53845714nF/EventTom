@@ -21,7 +21,6 @@ onBeforeMount(async () => {
     } else if (data.type === "event_delete") {
       events.value = events.value.filter((event) => event.id !== data.event.id);
     } else if (data.type === "ticket_purchase") {
-      console.log(data.event);
       let event = events.value.find((event) => event.id === data.event.id);
       event.sold_tickets += Number(data.quantity);
       ToasterService.createToasterPopUp(

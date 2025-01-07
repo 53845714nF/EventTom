@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import WebSocketService from "@/services/WebSocketService";
 
 export const useWebSocketStore = defineStore("webSocket", () => {
-  const webSocketService = new WebSocketService("ws://localhost:8000/api/v1/ws");
+  const webSocketService = new WebSocketService(`${import.meta.env.VITE_WEBSOCKET_URL}/api/v1/ws`);
   webSocketService.connect();
 
   return {

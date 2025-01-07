@@ -23,7 +23,7 @@ export default class EventManagerService {
 
   static async fetchEventsForEventManager(eventManagerId, authStore) {
     return await axios
-      .get(`/api/v1/events/manager/${eventManagerId}`, {
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/events/manager/${eventManagerId}`, {
         headers: AuthService.getAuthorizedHeaders(authStore),
       })
       .then((response) => {
@@ -84,7 +84,7 @@ export default class EventManagerService {
 
   static async fetchRecentActivities(limit, authStore) {
     return await axios
-      .get(`/api/v1/tickets/activities?limit=${limit}`, {
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/tickets/activities?limit=${limit}`, {
         headers: AuthService.getAuthorizedHeaders(authStore),
       })
       .then((response) => {

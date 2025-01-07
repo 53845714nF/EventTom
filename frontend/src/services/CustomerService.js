@@ -51,7 +51,7 @@ export default class CustomerService {
 
     return await axios
       .post(
-        `/api/v1/users/me/top-up`, // TODO: use request body once available
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/me/top-up`, // TODO: use request body once available
         data,
         {
           headers: AuthService.getAuthorizedHeaders(authStore),
@@ -148,7 +148,7 @@ export default class CustomerService {
 
   static async fetchAllEvents() {
     return await axios
-      .get("/api/v1/events/", {
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/events/`, {
         headers: AuthService.getBasicHeaders(),
       })
       .then((response) => {
@@ -172,7 +172,7 @@ export default class CustomerService {
 
   static async fetchAllVouchersForCustomer(authStore) {
     return await axios
-      .get("/api/v1/vouchers/me", {
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/vouchers/me`, {
         headers: AuthService.getAuthorizedHeaders(authStore),
       })
       .then((response) => {
@@ -196,7 +196,7 @@ export default class CustomerService {
 
   static async fetchAllTicketsForCustomer(authStore) {
     return await axios
-      .get("/api/v1/tickets/my-tickets", {
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/tickets/my-tickets`, {
         headers: AuthService.getAuthorizedHeaders(authStore),
       })
       .then((response) => {
@@ -267,7 +267,7 @@ export default class CustomerService {
     };
 
     return await axios
-      .post("/api/v1/tickets/buy", data, {
+      .post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/tickets/buy`, data, {
         headers: AuthService.getAuthorizedHeaders(authStore),
       })
       .then((response) => {
