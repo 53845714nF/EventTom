@@ -30,12 +30,14 @@ onBeforeMount(async () => {
   });
 });
 
-const transactionDetails = computed(() => CustomerService.getTransactionDetails(
-  props.event,
-  ticketPurchaseFormData.value,
-  appliedVoucher.value,
-  authStore.balance,
-));
+const transactionDetails = computed(() =>
+  CustomerService.getTransactionDetails(
+    props.event,
+    ticketPurchaseFormData.value,
+    appliedVoucher.value,
+    authStore.balance,
+  ),
+);
 
 const appliedVoucher = computed(() =>
   CustomerService.getAppliedVoucherFromCode(ticketPurchaseFormData.value, availableVouchers),
@@ -52,7 +54,7 @@ const tryPostTicketPurchaseFormData = async () =>
 
 const changeDiscountRepresentation = () => {
   showDiscountPercentage.value = !showDiscountPercentage.value;
-}
+};
 </script>
 
 <template>
@@ -92,8 +94,14 @@ const changeDiscountRepresentation = () => {
 
     <hr />
 
-    <h4 v-if="appliedVoucher && !showDiscountPercentage"><s>{{ transactionDetails.totalCostExclVoucher.toFixed(2) }}€</s> {{ transactionDetails.totalCostInclVoucher.toFixed(2) }}€</h4>
-    <h4 v-else-if="appliedVoucher && showDiscountPercentage">{{ transactionDetails.totalCostInclVoucher.toFixed(2) }}€ - {{ transactionDetails.voucherDiscountPercentage }}% gespart!</h4>
+    <h4 v-if="appliedVoucher && !showDiscountPercentage">
+      <s>{{ transactionDetails.totalCostExclVoucher.toFixed(2) }}€</s>
+      {{ transactionDetails.totalCostInclVoucher.toFixed(2) }}€
+    </h4>
+    <h4 v-else-if="appliedVoucher && showDiscountPercentage">
+      {{ transactionDetails.totalCostInclVoucher.toFixed(2) }}€ - {{ transactionDetails.voucherDiscountPercentage }}%
+      gespart!
+    </h4>
     <h4 v-else>{{ transactionDetails.totalCostInclVoucher.toFixed(2) }}€</h4>
 
     <p class="small-margin">
@@ -110,7 +118,7 @@ const changeDiscountRepresentation = () => {
       </div>
     </div>
     <p class="small-margin highlight-red">{{ transactionDetails.voucherInfo }}</p>
-    
+
     <hr />
 
     <p class="small-margin">
@@ -118,7 +126,9 @@ const changeDiscountRepresentation = () => {
     </p>
     <p class="small-margin">
       Guthaben nach dem Kauf:
-      <span :class="['p-bold', transactionDetails.balanceAfterPurchaseHighlightClass]">{{ transactionDetails.balanceAfterPurchase.toFixed(2) }}€</span>
+      <span :class="['p-bold', transactionDetails.balanceAfterPurchaseHighlightClass]"
+        >{{ transactionDetails.balanceAfterPurchase.toFixed(2) }}€</span
+      >
     </p>
 
     <div class="button-container">

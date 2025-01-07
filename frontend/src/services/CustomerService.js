@@ -87,26 +87,24 @@ export default class CustomerService {
       balanceAfterPurchase: 0,
       balanceAfterPurchaseHighlightClass: "",
       voucherDiscountPercentage: 0,
-    }
+    };
   }
 
   static getTransactionDetails(event, ticketPurchaseFormData, appliedVoucher, balance) {
-
     let transactionDetails = CustomerService.getEmptyTransactionDetails();
 
     // single ticket price
     transactionDetails.singleTicketPrice = CustomerService.calculateSingleTicketPrice(event);
-    
-    // min price 
+
+    // min price
     transactionDetails.minPrice = CustomerService.calculateMinTicketPurchasePrice(event, ticketPurchaseFormData);
-    
+
     // get total cost incl voucher
     transactionDetails.totalCostInclVoucher = CustomerService.calculateTotalTicketPurchasePrice(
       transactionDetails.singleTicketPrice,
       ticketPurchaseFormData,
       appliedVoucher,
-      transactionDetails.minPrice
-    )
+    );
 
     // get total cost excl voucher
     if (appliedVoucher) {
@@ -116,21 +114,29 @@ export default class CustomerService {
     // check that price after discount is not higher than base_price of tickets
     if (transactionDetails.totalCostInclVoucher < transactionDetails.minPrice) {
       transactionDetails.totalCostInclVoucher = transactionDetails.minPrice;
-      transactionDetails.voucherInfo = "Info: Das Einlösen dieses Gutscheins unterschreitet den Basispreis des Tickets, weshalb nicht der komplette Betrag eingelöst werden kann.";
+      transactionDetails.voucherInfo =
+        "Info: Das Einlösen dieses Gutscheins unterschreitet den Basispreis des Tickets, weshalb nicht der komplette Betrag eingelöst werden kann.";
     }
-    
+
     // voucher discount percentage
     if (appliedVoucher) {
-      transactionDetails.voucherDiscountPercentage = Math.round(((transactionDetails.totalCostExclVoucher - transactionDetails.totalCostInclVoucher) / transactionDetails.totalCostExclVoucher) * 100);
+      transactionDetails.voucherDiscountPercentage = Math.round(
+        ((transactionDetails.totalCostExclVoucher - transactionDetails.totalCostInclVoucher) /
+          transactionDetails.totalCostExclVoucher) *
+          100,
+      );
     }
 
     // balance after purchase
-    transactionDetails.balanceAfterPurchase = CustomerService.calculateBalanceAfterPurchase(balance, transactionDetails.totalCostInclVoucher);
-    
+    transactionDetails.balanceAfterPurchase = CustomerService.calculateBalanceAfterPurchase(
+      balance,
+      transactionDetails.totalCostInclVoucher,
+    );
+
     // balance after purchase highlight class
-    transactionDetails.balanceAfterPurchaseHighlightClass = CustomerService.getBalanceAfterPurchaseHighlightClass(transactionDetails.balanceAfterPurchase);
-
-
+    transactionDetails.balanceAfterPurchaseHighlightClass = CustomerService.getBalanceAfterPurchaseHighlightClass(
+      transactionDetails.balanceAfterPurchase,
+    );
 
     return transactionDetails;
   }
@@ -145,7 +151,7 @@ export default class CustomerService {
     return minPrice;
   }
 
-  static calculateTotalTicketPurchasePrice(singleTicketPrice, ticketPurchaseFormData, appliedVoucher, minPrice) {
+  static calculateTotalTicketPurchasePrice(singleTicketPrice, ticketPurchaseFormData, appliedVoucher) {
     let totalCost = singleTicketPrice * ticketPurchaseFormData.ticket_count;
 
     if (appliedVoucher) {
