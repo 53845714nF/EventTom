@@ -134,10 +134,9 @@ export default class FormValidatorService {
             FormValidatorService.rules.largerThan(0, "Anzahl Tickets muss größer als 0 sein."),
           ],
           threshold: [
-            // TODO: Threshold darf nicht größer als die Anzahl der Tickets sein
-            FormValidatorService.rules.isRequired("Threshold darf nicht leer sein."),
-            FormValidatorService.rules.isNumeric("Threshold muss eine Zahl sein."),
-            FormValidatorService.rules.largerOrEqualThan(0, "Threshold muss größer gleich 0 sein."),
+            FormValidatorService.rules.isRequired("Erwartete Ticketverkäufe darf nicht leer sein."),
+            FormValidatorService.rules.isNumeric("Erwartete Ticketverkäufe muss eine Zahl sein."),
+            FormValidatorService.rules.largerOrEqualThan(0, "Erwartete Ticketverkäufe muss größer gleich 0 sein."),
           ],
           event_manager_email: [FormValidatorService.rules.isRequired("Event Manager darf nicht leer sein.")],
         };

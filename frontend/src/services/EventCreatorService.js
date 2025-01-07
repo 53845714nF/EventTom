@@ -58,7 +58,7 @@ export default class EventCreatorService {
     }
 
     if (Number(event.value.total_tickets) < Number(event.value.threshold)) {
-      ToasterService.createToasterPopUp("error", "Threshold darf nicht größer als die Anzahl der Tickets sein.");
+      ToasterService.createToasterPopUp("error", "Erwartete Ticketverkäufe darf nicht größer als die Anzahl der Tickets sein.");
       return;
     }
 
