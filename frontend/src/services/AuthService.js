@@ -106,7 +106,7 @@ export default class AuthService {
 
     // send api request of type application/x-www-form-urlencoded
     return await axios
-      .post("/api/v1/login/access-token", data, {
+      .post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/login/access-token`, data, {
         headers: {
           accept: "application/json",
           "Content-Type": "application/x-www-form-urlencoded",
@@ -130,7 +130,7 @@ export default class AuthService {
 
     // send api request of type application/x-www-form-urlencoded
     return await axios
-      .post("/api/v1/users/signup", data, AuthService.getBasicConfig())
+      .post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/users/signup`, data, AuthService.getBasicConfig())
       .then(() => {
         return { success: true };
       })
@@ -142,7 +142,7 @@ export default class AuthService {
 
   static async getUserMe(store) {
     return await axios
-      .get("/api/v1/users/me", AuthService.getAuthorizedConfig(store))
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/users/me`, AuthService.getAuthorizedConfig(store))
       .then((response) => {
         return response.data;
       })
@@ -154,7 +154,7 @@ export default class AuthService {
 
   static async testAccessToken(store) {
     await axios
-      .post("/api/v1/login/test-token", {}, AuthService.getAuthorizedConfig(store))
+      .post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/login/test-token`, {}, AuthService.getAuthorizedConfig(store))
       .then(() => {
         ToasterService.createToasterPopUp("success", `Token valid. Role: ${store.role}`);
       })

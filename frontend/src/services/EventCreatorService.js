@@ -32,7 +32,7 @@ export default class EventCreatorService {
 
   static async getAllEventManagers(authStore) {
     return await axios
-      .get("/api/v1/users/manager", {
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/users/manager`, {
         headers: AuthService.getAuthorizedHeaders(authStore),
         params: {
           skip: 0,
@@ -58,7 +58,10 @@ export default class EventCreatorService {
     }
 
     if (Number(event.value.total_tickets) < Number(event.value.threshold)) {
-      ToasterService.createToasterPopUp("error", "Threshold darf nicht größer als die Anzahl der Tickets sein.");
+      ToasterService.createToasterPopUp(
+        "error",
+        "Erwartete Ticketverkäufe darf nicht größer als die Anzahl der Tickets sein.",
+      );
       return;
     }
 
@@ -83,7 +86,7 @@ export default class EventCreatorService {
     };
 
     return await axios
-      .post("/api/v1/events/", data, {
+      .post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/events/`, data, {
         headers: AuthService.getAuthorizedHeaders(authStore),
       })
       .then(() => {
@@ -98,7 +101,7 @@ export default class EventCreatorService {
 
   static async getEventsForEventCreator(eventCreatorId, authStore) {
     return await axios
-      .get(`/api/v1/events/creator/${eventCreatorId}`, {
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/events/creator/${eventCreatorId}`, {
         headers: AuthService.getBasicHeaders(authStore.accessToken),
       })
       .then((response) => {
@@ -123,7 +126,7 @@ export default class EventCreatorService {
 
   static async deleteEvent(event, authStore) {
     return await axios
-      .delete(`/api/v1/events/${event.id}`, {
+      .delete(`${import.meta.env.VITE_BACKEND_URL}/api/v1/events/${event.id}`, {
         headers: AuthService.getAuthorizedHeaders(authStore),
       })
       .then(() => {

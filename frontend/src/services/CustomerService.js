@@ -51,7 +51,7 @@ export default class CustomerService {
 
     return await axios
       .post(
-        `/api/v1/users/me/top-up`, // TODO: use request body once available
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/me/top-up`, // TODO: use request body once available
         data,
         {
           headers: AuthService.getAuthorizedHeaders(authStore),
@@ -77,6 +77,70 @@ export default class CustomerService {
     };
   }
 
+  static getEmptyTransactionDetails() {
+    return {
+      singleTicketPrice: 0,
+      minPrice: 0,
+      totalCostInclVoucher: 0,
+      totalCostExclVoucher: 0,
+      voucherInfo: "",
+      balanceAfterPurchase: 0,
+      balanceAfterPurchaseHighlightClass: "",
+      voucherDiscountPercentage: 0,
+    };
+  }
+
+  static getTransactionDetails(event, ticketPurchaseFormData, appliedVoucher, balance) {
+    let transactionDetails = CustomerService.getEmptyTransactionDetails();
+
+    // single ticket price
+    transactionDetails.singleTicketPrice = CustomerService.calculateSingleTicketPrice(event);
+
+    // min price
+    transactionDetails.minPrice = CustomerService.calculateMinTicketPurchasePrice(event, ticketPurchaseFormData);
+
+    // get total cost incl voucher
+    transactionDetails.totalCostInclVoucher = CustomerService.calculateTotalTicketPurchasePrice(
+      transactionDetails.singleTicketPrice,
+      ticketPurchaseFormData,
+      appliedVoucher,
+    );
+
+    // get total cost excl voucher
+    if (appliedVoucher) {
+      transactionDetails.totalCostExclVoucher = transactionDetails.totalCostInclVoucher + appliedVoucher.amount;
+    }
+
+    // check that price after discount is not higher than base_price of tickets
+    if (transactionDetails.totalCostInclVoucher < transactionDetails.minPrice) {
+      transactionDetails.totalCostInclVoucher = transactionDetails.minPrice;
+      transactionDetails.voucherInfo =
+        "Info: Das Einlösen dieses Gutscheins unterschreitet den Basispreis des Tickets, weshalb nicht der komplette Betrag eingelöst werden kann.";
+    }
+
+    // voucher discount percentage
+    if (appliedVoucher) {
+      transactionDetails.voucherDiscountPercentage = Math.round(
+        ((transactionDetails.totalCostExclVoucher - transactionDetails.totalCostInclVoucher) /
+          transactionDetails.totalCostExclVoucher) *
+          100,
+      );
+    }
+
+    // balance after purchase
+    transactionDetails.balanceAfterPurchase = CustomerService.calculateBalanceAfterPurchase(
+      balance,
+      transactionDetails.totalCostInclVoucher,
+    );
+
+    // balance after purchase highlight class
+    transactionDetails.balanceAfterPurchaseHighlightClass = CustomerService.getBalanceAfterPurchaseHighlightClass(
+      transactionDetails.balanceAfterPurchase,
+    );
+
+    return transactionDetails;
+  }
+
   static calculateSingleTicketPrice(event) {
     const singleTicketPrice = event.base_price * event.pay_fee;
     return singleTicketPrice;
@@ -87,22 +151,14 @@ export default class CustomerService {
     return minPrice;
   }
 
-  static calculateTotalTicketPurchasePrice(singleTicketPrice, ticketPurchaseFormData, appliedVoucher, minPrice) {
+  static calculateTotalTicketPurchasePrice(singleTicketPrice, ticketPurchaseFormData, appliedVoucher) {
     let totalCost = singleTicketPrice * ticketPurchaseFormData.ticket_count;
 
     if (appliedVoucher) {
       totalCost -= appliedVoucher.amount;
     }
 
-    // check that price after discount is not higher than base_price of tickets
-    if (totalCost < minPrice) {
-      return {
-        cost: minPrice,
-        info: "Info: Das Einlösen dieses Gutscheins unterschreitet den Basispreis des Tickets, weshalb nicht der komplette Betrag eingelöst werden kann.",
-      };
-    }
-
-    return { cost: totalCost, info: "" };
+    return totalCost;
   }
 
   static calculateBalanceAfterPurchase(currentBalance, totalCost) {
@@ -148,7 +204,7 @@ export default class CustomerService {
 
   static async fetchAllEvents() {
     return await axios
-      .get("/api/v1/events/", {
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/events/`, {
         headers: AuthService.getBasicHeaders(),
       })
       .then((response) => {
@@ -172,7 +228,7 @@ export default class CustomerService {
 
   static async fetchAllVouchersForCustomer(authStore) {
     return await axios
-      .get("/api/v1/vouchers/me", {
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/vouchers/me`, {
         headers: AuthService.getAuthorizedHeaders(authStore),
       })
       .then((response) => {
@@ -196,7 +252,7 @@ export default class CustomerService {
 
   static async fetchAllTicketsForCustomer(authStore) {
     return await axios
-      .get("/api/v1/tickets/my-tickets", {
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/tickets/my-tickets`, {
         headers: AuthService.getAuthorizedHeaders(authStore),
       })
       .then((response) => {
@@ -267,7 +323,7 @@ export default class CustomerService {
     };
 
     return await axios
-      .post("/api/v1/tickets/buy", data, {
+      .post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/tickets/buy`, data, {
         headers: AuthService.getAuthorizedHeaders(authStore),
       })
       .then((response) => {
