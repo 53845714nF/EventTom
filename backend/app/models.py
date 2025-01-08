@@ -1,81 +1,54 @@
+from datetime import datetime
 from enum import Enum
 from uuid import UUID, uuid4
 
 from pydantic import EmailStr
-from sqlmodel import Field, Relationship, SQLModel
+from sqlmodel import Field, SQLModel, func
 
-
-#
 # User Models
-#
-class UserType(str, Enum):
-    EMPLOYEE = "employee"
-    CUSTOMER = "customer"
 
 
-class EmployeeRole(str, Enum):
+class Role(str, Enum):
     EVENTCREATOR = "eventcreator"
     EVENTMANAGER = "eventmanager"
     ADMIN = "admin"
+    CUSTOMER = "customer"
 
 
 class UserBase(SQLModel):
     full_name: str | None = Field(default=None, max_length=255)
     email: EmailStr = Field(unique=True, index=True, max_length=255)
-    is_active: bool = True
-    user_type: UserType
+    balance: float = Field(default=0.0)
+    is_active: bool = Field(default=True)
+    role: Role = Field()
 
 
 class User(UserBase, table=True):
     id: UUID = Field(default_factory=uuid4, primary_key=True)
-    hashed_password: str
+    hashed_password: str = Field()
 
-    # Discriminator column für den Benutzertyp
-    user_type: UserType = Field(default=None)
 
-    # Employee specific fields
-    role: EmployeeRole | None = Field(default=None)
+class UserPublic(UserBase):
+    id: UUID
 
-    # Customer specific fields
-    vouchers: list["Voucher"] | None = Relationship(
-        back_populates="owner",
-        sa_relationship_kwargs={
-            "primaryjoin": "and_(User.id==Voucher.owner_id, User.user_type=='customer')"
-        },
-    )
+
+class UsersPublic(SQLModel):
+    data: list[UserPublic]
+    count: int
 
 
 class UserCreate(SQLModel):
     full_name: str | None = Field(default=None, max_length=255)
-    email: EmailStr = Field(unique=True, index=True, max_length=255)
+    email: EmailStr = Field(max_length=255)
     password: str = Field(min_length=8, max_length=40)
-
-
-class EmployeeCreate(UserCreate):
-    user_type: UserType = UserType.EMPLOYEE
-    role: EmployeeRole | None = Field(default=None)
-
-
-class CustomerCreate(UserCreate):
-    user_type: UserType = UserType.CUSTOMER
+    role: Role | None = Field(default=None)
 
 
 class UserUpdate(SQLModel):
     full_name: str | None = Field(default=None, max_length=255)
     email: EmailStr | None = Field(default=None, max_length=255)
     password: str | None = Field(default=None, min_length=8, max_length=40)
-    user_type: UserType = Field(default=None)
-    role: EmployeeRole | None | None = Field(default=None)
-
-
-class UserPublic(UserBase):
-    id: UUID
-    role: EmployeeRole | None = Field(default=None)
-
-
-class UsersPublic(SQLModel):
-    data: list[UserPublic]
-    count: int
+    role: Role | None = Field(default=None)
 
 
 class UserUpdateMe(SQLModel):
@@ -88,24 +61,27 @@ class UpdatePassword(SQLModel):
     new_password: str = Field(min_length=8, max_length=40)
 
 
-#
+class TopUpRequest(SQLModel):
+    amount: float
+
+
 # Event Models
-#
+
+
 class EventBase(SQLModel):
     title: str = Field(min_length=1, max_length=255)
-    description: str | None = Field(default=None, max_length=255)
-    count: int
+    description: str | None = Field(default=None, max_length=1024)
     threshold: int
     base_price: float
     pay_fee: float
+    total_tickets: int = Field(default=0)
+    sold_tickets: int = Field(default=0)
 
 
-# Properties to receive on event creation
 class EventCreate(EventBase):
     manager_id: UUID = Field(foreign_key="user.id")
 
 
-# Properties to receive on event update
 class EventUpdate(EventBase):
     title: str | None = Field(default=None, min_length=1, max_length=255)  # type: ignore
     manager_id: UUID | None = Field(default=None)
@@ -117,14 +93,14 @@ class Event(EventBase, table=True):
     creator_id: UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
 
 
-# Singel Event must be Public
 class EventPublic(EventBase):
     id: UUID
     title: str
     description: str | None
-    count: int
     base_price: float
     pay_fee: float
+    total_tickets: int
+    sold_tickets: int
 
 
 class EventsPublic(SQLModel):
@@ -132,40 +108,89 @@ class EventsPublic(SQLModel):
     count: int
 
 
-#
+# Ticket Models
+
+
+class Ticket(SQLModel, table=True):
+    ticket_id: UUID = Field(default_factory=uuid4, primary_key=True)
+    event_id: UUID = Field(foreign_key="event.id", nullable=False, ondelete="CASCADE")
+    user_id: UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
+    quantity: int = Field(default=1)
+    purchase_date: datetime = Field(default=func.now())
+
+
+class TicketWithEvent(SQLModel):
+    ticket_id: UUID
+    event_id: UUID
+    event_title: str
+    event_description: str
+    user_id: UUID
+    quantity: int
+    purchase_date: datetime
+
+
+class TicketPurchaseRequest(SQLModel):
+    event_id: UUID
+    quantity: int
+    voucher_id: str | None = None
+
+
+class TicketPurchaseResponse(SQLModel):
+    user: UserPublic
+    event: EventPublic
+    quantity: int
+    purchase_date: datetime
+
+
 # Voucher Models
-#
+
+
 class VoucherBase(SQLModel):
-    amount: float
+    amount: float = Field()
+    title: str = Field(min_length=1, max_length=255)
+
+
+class Voucher(VoucherBase, table=True):
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    owner_id: UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
 
 
 class VoucherCreate(VoucherBase):
     owner_id: UUID
 
 
-class VoucherUpdate(EventBase):
-    amount: float
+class VoucherUpdate(VoucherBase):
+    owner_id: UUID
 
 
-class Voucher(VoucherBase, table=True):
-    id: UUID = Field(default_factory=uuid4, primary_key=True)
-    owner_id: UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
-    owner: User | None = Relationship(back_populates="vouchers")
-    amount: float
+class VoucherPublic(VoucherBase):
+    id: UUID
+    owner_id: UUID
+
+
+class VouchersPublic(SQLModel):
+    data: list[VoucherPublic]
+    count: int
 
 
 # Generic message
+
+
 class Message(SQLModel):
     message: str
 
 
 # JSON payload containing access token
+
+
 class Token(SQLModel):
     access_token: str
     token_type: str = "bearer"
 
 
 # Contents of JWT token
+
+
 class TokenPayload(SQLModel):
     sub: str | None = None
 

@@ -62,6 +62,7 @@ export function createAuthStoreLoggedOut() {
   return {
     role: Roles.GUEST,
     accessToken: "",
+    id: "",
     userAuthenticated: false,
     navItems: NavItems.GUEST,
     setAccessToken: vi.fn(function (newToken) {
@@ -73,15 +74,23 @@ export function createAuthStoreLoggedOut() {
     setRole: vi.fn(function (newRole) {
       this.role = newRole;
     }),
+    setId: vi.fn(function (newId) {
+      this.id = newId;
+    }),
+    removeId: vi.fn(function () {
+      this.setId("");
+    }),
   };
 }
 
 export function createAuthStoreLoggedInUser() {
   return {
     role: Roles.CUSTOMER,
+    id: "1234-5678-1357",
     accessToken: "validToken",
     userAuthenticated: true,
     navItems: NavItems.CUSTOMER,
+    balance: "",
     setAccessToken: vi.fn(function (newToken) {
       this.accessToken = newToken;
     }),
@@ -90,6 +99,18 @@ export function createAuthStoreLoggedInUser() {
     }),
     setRole: vi.fn(function (newRole) {
       this.role = newRole;
+    }),
+    setId: vi.fn(function (newId) {
+      this.id = newId;
+    }),
+    removeId: vi.fn(function () {
+      this.setId("");
+    }),
+    setBalance: vi.fn(function (newBalance) {
+      this.balance = newBalance;
+    }),
+    removeBalance: vi.fn(function () {
+      this.setBalance("");
     }),
   };
 }

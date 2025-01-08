@@ -5,14 +5,15 @@ from fastapi import APIRouter, HTTPException
 from sqlmodel import func, select
 
 from app.api.deps import CurrentUser, SessionDep
+from app.api.websockets import manager
 from app.models import (
-    EmployeeRole,
     Event,
     EventCreate,
     EventPublic,
     EventsPublic,
     EventUpdate,
     Message,
+    Role,
     User,
 )
 
@@ -62,11 +63,6 @@ def read_event_by_manager(
     )
     events = session.exec(statement).all()
 
-    if not events:
-        raise HTTPException(
-            status_code=404, detail=f"No events found for manager {manager_id}"
-        )
-
     return EventsPublic(data=events, count=count)
 
 
@@ -87,49 +83,46 @@ def read_event_by_creator(
     )
     events = session.exec(statement).all()
 
-    if not events:
-        raise HTTPException(
-            status_code=404, detail=f"No events found for manager {creator_id}"
-        )
-
     return EventsPublic(data=events, count=count)
 
 
 @router.post("/", response_model=EventPublic)
-def create_event(
+async def create_event(
     *, session: SessionDep, current_user: CurrentUser, event_in: EventCreate
 ) -> Any:
     """
     Create new event.
     """
 
-    if current_user.role == EmployeeRole.EVENTCREATOR:
+    if not (current_user.role == Role.EVENTCREATOR or current_user.role == Role.ADMIN):
         raise HTTPException(
-            status_code=400, detail="Not enough permissions to create events"
+            status_code=403, detail="Not enough permissions to create events"
         )
 
-    # Get the Event Manger event is intended.
     selected_user = session.get(User, event_in.manager_id)
 
     if selected_user is None:
         raise HTTPException(
-            status_code=400, detail="The selected Event Manager dose not exsit."
+            status_code=400, detail="The selected Event Manager does not exist"
         )
 
-    if not (selected_user.role == EmployeeRole.EVENTMANAGER):
+    if not (selected_user.role == Role.EVENTMANAGER):
         raise HTTPException(
-            status_code=400, detail="The selected user is not an event manager."
+            status_code=400, detail="The selected user is not an Event Manager"
         )
 
     event = Event.model_validate(event_in, update={"creator_id": current_user.id})
     session.add(event)
     session.commit()
     session.refresh(event)
+    await manager.broadcast(
+        {"type": "event_create", "event": event.model_dump(mode="json")}
+    )
     return event
 
 
 @router.put("/{id}", response_model=EventPublic)
-def update_event(
+async def update_event(
     *,
     session: SessionDep,
     current_user: CurrentUser,
@@ -144,8 +137,8 @@ def update_event(
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
 
-    if not (current_user.id == event.manager_id) or (
-        current_user.id == event.creator_id
+    if not (
+        (current_user.id == event.manager_id) or (current_user.id == event.creator_id)
     ):
         raise HTTPException(
             status_code=400,
@@ -157,11 +150,14 @@ def update_event(
     session.add(event)
     session.commit()
     session.refresh(event)
+    await manager.broadcast(
+        {"type": "event_update", "event": event.model_dump(mode="json")}
+    )
     return event
 
 
 @router.delete("/{id}")
-def delete_event(
+async def delete_event(
     session: SessionDep, current_user: CurrentUser, id: uuid.UUID
 ) -> Message:
     """
@@ -171,8 +167,8 @@ def delete_event(
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
 
-    if not (current_user.id == event.manager_id) or (
-        current_user.id == event.creator_id
+    if not (
+        (current_user.id == event.manager_id) or (current_user.id == event.creator_id)
     ):
         raise HTTPException(
             status_code=400,
@@ -180,4 +176,7 @@ def delete_event(
         )
     session.delete(event)
     session.commit()
+    await manager.broadcast(
+        {"type": "event_delete", "event": event.model_dump(mode="json")}
+    )
     return Message(message="Event deleted successfully")

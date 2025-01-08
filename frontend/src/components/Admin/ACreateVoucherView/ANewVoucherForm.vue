@@ -11,13 +11,15 @@ const voucher = ref(AdminService.provideEmptyVoucher());
 const users = ref([]);
 
 onBeforeMount(async () => {
-  AdminService.getAllUsers(authStore).then((options) => {
+  await AdminService.tryGetAllUsers(authStore).then((options) => {
     users.value = options;
   });
 });
 
-const ownerEmailOptions = computed(() => users.value.map((owner) => owner.email));
+const ownerEmailOptions = computed(() => AdminService.provideVoucherOwnerEmailOptions(users.value));
 
+// compute the correct user_id for the selected email
+// selecting the user_id itself would not be beneficial since it is too complex
 watch(
   () => voucher.value.owner_email,
   (newEmail) => {
@@ -25,14 +27,20 @@ watch(
   },
 );
 
-const tryPostVoucher = () => AdminService.tryPostNewVoucher(voucher, authStore);
+const tryPostVoucher = async () => await AdminService.tryPostNewVoucher(voucher, authStore);
 </script>
 
 <template>
   <div class="form-background">
     <div class="form-container">
       <FormInput v-model="voucher.amount" title="Betrag (€)" placeholder="Betrag" type="number" />
-      <FormInput v-model="voucher.code" title="Gutscheincode" placeholder="Gutscheincode" type="text" />
+      <FormInput
+        v-model="voucher.code_name"
+        title="Gutscheincode"
+        placeholder="Gutscheincode"
+        type="text"
+        maxlength="255"
+      />
       <FormInput
         v-model="voucher.owner_email"
         title="Kunden Email"

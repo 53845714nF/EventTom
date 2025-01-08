@@ -19,4 +19,8 @@ export default class ToasterService {
         ToasterService.toaster.info(message);
     }
   }
+
+  static createDefaultErrorPopUp() {
+    ToasterService.toaster.error("Ein unbekannter Fehler ist aufgetreten.");
+  }
 }

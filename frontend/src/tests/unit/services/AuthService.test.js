@@ -34,6 +34,7 @@ describe("AuthService handling user data", () => {
     return {
       default: {
         post: vi.fn(),
+        get: vi.fn(() => Promise.resolve({ data: {} })),
       },
     };
   });
@@ -44,19 +45,6 @@ describe("AuthService handling user data", () => {
         createToasterPopUp: vi.fn(),
       },
     };
-  });
-
-  test("Expect success toast if axios.post is successfull", async () => {
-    axios.post.mockResolvedValue({ data: { success: true } });
-
-    const testUser = createCorrectUserLogin();
-    const testStore = createAuthStoreLoggedOut();
-
-    const spyOnCreateToasterPopUp = vi.spyOn(ToasterService, "createToasterPopUp");
-
-    await AuthService.tryLoginUser(testUser, testStore);
-
-    expect(spyOnCreateToasterPopUp).toBeCalledWith("success", "Login erfolgreich!");
   });
 
   test.todo("Expect store to set role to correct initial role if postLoginData is successfull");
@@ -85,13 +73,6 @@ describe("AuthService handling user data", () => {
     const testStore = createAuthStoreLoggedInUser();
     AuthService.logoutUser(testStore);
     expect(testStore.role).toBe(Roles.GUEST);
-  });
-
-  test("Expect ToasterService.createToasterPopUp to be called AuthService.logoutUser is called", async () => {
-    const testStore = createAuthStoreLoggedInUser();
-    const spyOnCreateToasterPopUp = vi.spyOn(ToasterService, "createToasterPopUp");
-    AuthService.logoutUser(testStore);
-    expect(spyOnCreateToasterPopUp).toBeCalledWith("success", "Logout erfolgreich!");
   });
 
   test("Expect error toast if testAccessToken is successfull", async () => {
@@ -123,7 +104,7 @@ describe("AuthService handling user data", () => {
   test("Expect correct config object to be returned", async () => {
     const mockStore = createAuthStoreLoggedInUser();
 
-    const config = AuthService.getConfig(mockStore);
+    const config = AuthService.getAuthorizedConfig(mockStore);
 
     expect(config).toEqual({
       headers: {

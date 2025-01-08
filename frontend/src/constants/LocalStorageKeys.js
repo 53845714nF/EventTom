@@ -1,4 +1,6 @@
 export const LocalStorageKeys = {
   ACCESS_TOKEN: "access_token",
-  USER_ROLE: "role",
+  USER_ROLE: "user_role",
+  USER_ID: "user_id",
+  BALANCE: "balance",
 };
