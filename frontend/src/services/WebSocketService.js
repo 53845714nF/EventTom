@@ -9,19 +9,13 @@ export default class WebSocketService {
 
   connect() {
     if (this.socket && (this.socket.readyState === WebSocket.OPEN || this.socket.readyState === WebSocket.CONNECTING)) {
-      console.log("WebSocket ist bereits verbunden oder wird gerade verbunden.");
       return;
     }
 
     this.socket = new WebSocket(this.url);
 
-    this.socket.onopen = () => {
-      console.log("WebSocket connected!");
-    };
-
     this.socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log("websocket received message:", data);
       this.listeners.forEach((callback) => callback(data));
     };
 
@@ -30,9 +24,7 @@ export default class WebSocketService {
     };
 
     this.socket.onclose = () => {
-      console.log("websocket closed!");
       if (this.shouldReconnect) {
-        console.log("websocket trying to reconnect...");
         setTimeout(() => this.connect(), this.reconnectInterval);
       }
     };
