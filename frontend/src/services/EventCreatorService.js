@@ -1,8 +1,7 @@
 import ToasterService from "./ToasterService";
 import FormValidatorService from "./FormValidatorService";
 import FormTypes from "@/constants/FormTypes";
-import axios from "axios";
-import AuthService from "./AuthService";
+import { authorizedApiClient } from "@/api/apiClient";
 
 export default class EventCreatorService {
   static provideEmptyEvent() {
@@ -31,9 +30,8 @@ export default class EventCreatorService {
   }
 
   static async getAllEventManagers(authStore) {
-    return await axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/users/manager`, {
-        headers: AuthService.getAuthorizedHeaders(authStore),
+    return await authorizedApiClient
+      .get(`/api/v1/users/manager`, {
         params: {
           skip: 0,
           limit: 100,
@@ -85,10 +83,8 @@ export default class EventCreatorService {
       manager_id: event.value.event_manager_id,
     };
 
-    return await axios
-      .post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/events/`, data, {
-        headers: AuthService.getAuthorizedHeaders(authStore),
-      })
+    return await authorizedApiClient
+      .post(`/api/v1/events/`, data)
       .then(() => {
         return { success: true };
       })
@@ -100,10 +96,8 @@ export default class EventCreatorService {
   }
 
   static async getEventsForEventCreator(eventCreatorId, authStore) {
-    return await axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/events/creator/${eventCreatorId}`, {
-        headers: AuthService.getBasicHeaders(authStore.accessToken),
-      })
+    return await authorizedApiClient
+      .get(`/api/v1/events/creator/${eventCreatorId}`)
       .then((response) => {
         return response.data;
       })
@@ -125,10 +119,8 @@ export default class EventCreatorService {
   }
 
   static async deleteEvent(event, authStore) {
-    return await axios
-      .delete(`${import.meta.env.VITE_BACKEND_URL}/api/v1/events/${event.id}`, {
-        headers: AuthService.getAuthorizedHeaders(authStore),
-      })
+    return await authorizedApiClient
+      .delete(`/api/v1/events/${event.id}`)
       .then(() => {
         return { success: true };
       })

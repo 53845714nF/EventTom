@@ -1,6 +1,5 @@
-import AuthService from "./AuthService";
-import axios from "axios";
 import ToasterService from "./ToasterService";
+import { authorizedApiClient } from "@/api/apiClient";
 
 export default class EventManagerService {
   // ### EMEventsView.vue
@@ -22,10 +21,8 @@ export default class EventManagerService {
   }
 
   static async fetchEventsForEventManager(eventManagerId, authStore) {
-    return await axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/events/manager/${eventManagerId}`, {
-        headers: AuthService.getAuthorizedHeaders(authStore),
-      })
+    return await authorizedApiClient
+      .get(`/api/v1/events/manager/${eventManagerId}`)
       .then((response) => {
         return { success: true, data: response.data.data };
       })
@@ -83,10 +80,8 @@ export default class EventManagerService {
   }
 
   static async fetchRecentActivities(limit, authStore) {
-    return await axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/tickets/activities?limit=${limit}`, {
-        headers: AuthService.getAuthorizedHeaders(authStore),
-      })
+    return await authorizedApiClient
+      .get(`/api/v1/tickets/activities?limit=${limit}`)
       .then((response) => {
         return { success: true, data: response.data };
       })
