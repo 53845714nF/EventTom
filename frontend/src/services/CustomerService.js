@@ -1,8 +1,9 @@
+import AuthService from "./AuthService";
 import ToasterService from "./ToasterService";
+import axios from "axios";
 import FormValidatorService from "./FormValidatorService";
 import FormTypes from "@/constants/FormTypes";
 import router from "@/router";
-import { authorizedApiClient } from "@/api/apiClient";
 
 export default class CustomerService {
   static proviceBalanceFormData() {
@@ -48,8 +49,14 @@ export default class CustomerService {
       amount: balanceFormData.amount,
     };
 
-    return await authorizedApiClient
-      .post(`/api/v1/users/me/top-up`, data)
+    return await axios
+      .post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/me/top-up`, // TODO: use request body once available
+        data,
+        {
+          headers: AuthService.getAuthorizedHeaders(authStore),
+        },
+      )
       .then((response) => {
         return { success: true, data: response.data };
       })
@@ -196,8 +203,10 @@ export default class CustomerService {
   }
 
   static async fetchAllEvents() {
-    return await authorizedApiClient
-      .get(`/api/v1/events/`)
+    return await axios
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/events/`, {
+        headers: AuthService.getBasicHeaders(),
+      })
       .then((response) => {
         return { success: true, data: response.data };
       })
@@ -218,8 +227,10 @@ export default class CustomerService {
   }
 
   static async fetchAllVouchersForCustomer(authStore) {
-    return await authorizedApiClient
-      .get(`/api/v1/vouchers/me`)
+    return await axios
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/vouchers/me`, {
+        headers: AuthService.getAuthorizedHeaders(authStore),
+      })
       .then((response) => {
         return { success: true, data: response.data };
       })
@@ -240,8 +251,10 @@ export default class CustomerService {
   }
 
   static async fetchAllTicketsForCustomer(authStore) {
-    return await authorizedApiClient
-      .get(`/api/v1/tickets/my-tickets`)
+    return await axios
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/tickets/my-tickets`, {
+        headers: AuthService.getAuthorizedHeaders(authStore),
+      })
       .then((response) => {
         return { success: true, data: response.data };
       })
@@ -309,8 +322,10 @@ export default class CustomerService {
       voucher_id: appliedVoucherId,
     };
 
-    return await authorizedApiClient
-      .post(`/api/v1/tickets/buy`, data)
+    return await axios
+      .post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/tickets/buy`, data, {
+        headers: AuthService.getAuthorizedHeaders(authStore),
+      })
       .then((response) => {
         return { success: true, data: response.data };
       })

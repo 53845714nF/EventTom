@@ -1,9 +1,9 @@
+import axios from "axios";
 import ToasterService from "./ToasterService";
 import router from "@/router";
 import { Roles } from "@/constants/Roles";
 import FormValidatorService from "./FormValidatorService";
 import FormTypes from "@/constants/FormTypes";
-import { authorizedApiClient, apiClient, loginApiClient } from "@/api/apiClient";
 
 export default class AuthService {
   // provides an empty user object to bind to the AuthForm
@@ -105,8 +105,13 @@ export default class AuthService {
     data.append("client_secret", "string");
 
     // send api request of type application/x-www-form-urlencoded
-    return await loginApiClient
-      .post('/api/v1/login/access-token', data)
+    return await axios
+      .post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/login/access-token`, data, {
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      })
       .then((response) => {
         return { success: true, access_token: response.data.access_token };
       })
@@ -124,8 +129,8 @@ export default class AuthService {
     };
 
     // send api request of type application/x-www-form-urlencoded
-    return await apiClient
-      .post(`/api/v1/users/signup`, data)
+    return await axios
+      .post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/users/signup`, data, AuthService.getBasicConfig())
       .then(() => {
         return { success: true };
       })
@@ -136,8 +141,8 @@ export default class AuthService {
   }
 
   static async getUserMe(store) {
-    return await authorizedApiClient
-      .get(`/api/v1/users/me`)
+    return await axios
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/users/me`, AuthService.getAuthorizedConfig(store))
       .then((response) => {
         return response.data;
       })
@@ -148,8 +153,8 @@ export default class AuthService {
   }
 
   static async testAccessToken(store) {
-    await authorizedApiClient
-      .post(`/api/v1/login/test-token`, {})
+    await axios
+      .post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/login/test-token`, {}, AuthService.getAuthorizedConfig(store))
       .then(() => {
         ToasterService.createToasterPopUp("success", `Token valid. Role: ${store.role}`);
       })

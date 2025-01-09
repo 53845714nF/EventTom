@@ -4,7 +4,6 @@ import ToasterService from "./ToasterService";
 import axios from "axios";
 import FormValidatorService from "./FormValidatorService";
 import FormTypes from "@/constants/FormTypes";
-import { authorizedApiClient } from "@/api/apiClient";
 
 export default class AdminService {
   static provideEmptyUser() {
@@ -87,8 +86,10 @@ export default class AdminService {
       password: user.value.password,
     };
 
-    return await authorizedApiClient
-      .post('/api/v1/users/', data)
+    return await axios
+      .post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/users/`, data, {
+        headers: AuthService.getAuthorizedHeaders(authStore),
+      })
       .then(() => {
         return { success: true };
       })
@@ -109,11 +110,11 @@ export default class AdminService {
   }
 
   static async getAllUsers(authStore) {
-    console.log('getAllUsers()')
-    return authorizedApiClient
-      .get('api/v1/users')
+    return axios
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/users/`, {
+        headers: AuthService.getAuthorizedHeaders(authStore),
+      })
       .then((response) => {
-        console.log(response)
         return { success: true, data: response.data.data };
       })
       .catch((error) => {
@@ -139,8 +140,10 @@ export default class AdminService {
   }
 
   static async deleteUser(user, authStore) {
-    return await authorizedApiClient
-      .delete(`/api/v1/users/${user.id}`)
+    return await axios
+      .delete(`${import.meta.env.VITE_BACKEND_URL}/api/v1/users/${user.id}`, {
+        headers: AuthService.getAuthorizedHeaders(authStore),
+      })
       .then(() => {
         return { success: true };
       })
@@ -176,8 +179,10 @@ export default class AdminService {
       owner_id: voucher.value.owner_id,
     };
 
-    return authorizedApiClient
-    .post('/api/v1/vouchers/', data)
+    return axios
+      .post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/vouchers/`, data, {
+        headers: AuthService.getAuthorizedHeaders(authStore),
+      })
       .then(() => {
         return { success: true };
       })

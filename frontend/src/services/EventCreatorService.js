@@ -1,7 +1,8 @@
 import ToasterService from "./ToasterService";
 import FormValidatorService from "./FormValidatorService";
 import FormTypes from "@/constants/FormTypes";
-import { authorizedApiClient } from "@/api/apiClient";
+import axios from "axios";
+import AuthService from "./AuthService";
 
 export default class EventCreatorService {
   static provideEmptyEvent() {
@@ -30,8 +31,9 @@ export default class EventCreatorService {
   }
 
   static async getAllEventManagers(authStore) {
-    return await authorizedApiClient
-      .get(`/api/v1/users/manager`, {
+    return await axios
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/users/manager`, {
+        headers: AuthService.getAuthorizedHeaders(authStore),
         params: {
           skip: 0,
           limit: 100,
@@ -83,8 +85,10 @@ export default class EventCreatorService {
       manager_id: event.value.event_manager_id,
     };
 
-    return await authorizedApiClient
-      .post(`/api/v1/events/`, data)
+    return await axios
+      .post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/events/`, data, {
+        headers: AuthService.getAuthorizedHeaders(authStore),
+      })
       .then(() => {
         return { success: true };
       })
@@ -96,8 +100,10 @@ export default class EventCreatorService {
   }
 
   static async getEventsForEventCreator(eventCreatorId, authStore) {
-    return await authorizedApiClient
-      .get(`/api/v1/events/creator/${eventCreatorId}`)
+    return await axios
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/events/creator/${eventCreatorId}`, {
+        headers: AuthService.getBasicHeaders(authStore.accessToken),
+      })
       .then((response) => {
         return response.data;
       })
@@ -119,8 +125,10 @@ export default class EventCreatorService {
   }
 
   static async deleteEvent(event, authStore) {
-    return await authorizedApiClient
-      .delete(`/api/v1/events/${event.id}`)
+    return await axios
+      .delete(`${import.meta.env.VITE_BACKEND_URL}/api/v1/events/${event.id}`, {
+        headers: AuthService.getAuthorizedHeaders(authStore),
+      })
       .then(() => {
         return { success: true };
       })
