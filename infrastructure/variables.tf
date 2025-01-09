@@ -5,12 +5,12 @@ variable "domain" {
 
 variable "frontend_host" {
   type      = string
-  default = "http://localhost:5173"
+  default = "http://frontend-event-tom.s3-website-us-east-1.amazonaws.com"
 }
 
 variable "backend_cors_origins" {
   type      = string
-  default = "http://localhost,http://localhost:5173,https://localhost,https://localhost:5173"
+  default = "http://localhost,http://localhost:5173,https://localhost,https://localhost:5173,http://frontend-event-tom.s3-website-us-east-1.amazonaws.com"
 }
 
 variable "secret_key" {
