@@ -53,6 +53,9 @@ resource "aws_instance" "web" {
     Name = "Webserver ${each.key}"
   }
 
+  # Install Docker
+  # Setup Database
+  # Run App
   user_data = <<-EOF
   #!/bin/bash
   apt-get update -y && apt upgrade -y && apt install docker.io -y
