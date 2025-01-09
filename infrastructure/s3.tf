@@ -7,7 +7,7 @@ resource "null_resource" "frontend_build" {
   provisioner "local-exec" {
     command = <<-EOT
       cd ../frontend
-      echo "VITE_BACKEND_URL=${aws_lb.main.dns_name}" > .env.production
+      echo "VITE_BACKEND_URL='http://${aws_lb.main.dns_name}'\nVITE_WEBSOCKET_URL='ws://${aws_lb.main.dns_name}'" > .env.production
       npm install
       npm run build
     EOT
@@ -18,6 +18,7 @@ resource "null_resource" "frontend_build" {
 
 resource "aws_s3_bucket" "frontend" {
   bucket = "frontend-event-tom"
+  depends_on = [null_resource.frontend_build]
 }
 
 resource "aws_s3_bucket_website_configuration" "frontend" {
@@ -25,6 +26,16 @@ resource "aws_s3_bucket_website_configuration" "frontend" {
   index_document {
     suffix = "index.html"
   }
+  depends_on = [null_resource.frontend_build]
+}
+
+# S3 Rechte ich hab keine Ahnung, Terrafom geht nur mit
+resource "aws_s3_bucket_public_access_block" "frontend" {
+  bucket = aws_s3_bucket.frontend.id
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
 }
 
 resource "aws_s3_bucket_policy" "frontend" {
@@ -39,6 +50,7 @@ resource "aws_s3_bucket_policy" "frontend" {
       Resource  = "${aws_s3_bucket.frontend.arn}/*"
     }]
   })
+  depends_on = [null_resource.frontend_build]
 }
 
 resource "aws_s3_object" "frontend_files" {
@@ -55,6 +67,8 @@ resource "aws_s3_object" "frontend_files" {
     "png"  = "image/png",
     "jpg"  = "image/jpeg",
     "svg"  = "image/svg+xml"
+    "ttf"  = "font/ttf"
+    "ico"  = "image/x-icon"
   }, split(".", each.value)[length(split(".", each.value)) - 1], "application/octet-stream")
   
   depends_on = [null_resource.frontend_build]
