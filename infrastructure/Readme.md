@@ -22,3 +22,10 @@ set -x AWS_SESSION_TOKEN {Token}
 ```bash 
 terraform plan -target=network.tf
 ```
+
+
+```bash
+terraform apply -auto-approve
+```
+
+First run faile with S3 errors. Try next run wich will run.
