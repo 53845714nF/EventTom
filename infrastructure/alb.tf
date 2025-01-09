@@ -46,16 +46,11 @@ resource "aws_lb_target_group" "main" {
 }
 
 # Target Group Anhänge für EC2 Instanzen
-resource "aws_lb_target_group_attachment" "web_1" {
-  target_group_arn = aws_lb_target_group.main.arn
-  target_id        = aws_instance.web["web1"].id
-  port             = 8000
-}
-
-resource "aws_lb_target_group_attachment" "web_2" {
-  target_group_arn = aws_lb_target_group.main.arn
-  target_id        = aws_instance.web["web2"].id
-  port             = 8000
+resource "aws_lb_target_group_attachment" "web" {
+  for_each          = var.web_instances
+  target_group_arn  = aws_lb_target_group.main.arn
+  target_id         = aws_instance.web[each.key].id
+  port              = 8000
 }
 
 # ALB Listener
@@ -71,5 +66,5 @@ resource "aws_lb_listener" "front_end" {
 }
 
 output "alb_endpoint" {
-  value = "${aws_lb.main.dns_name}"
+  value = "http://${aws_lb.main.dns_name}"
 }
