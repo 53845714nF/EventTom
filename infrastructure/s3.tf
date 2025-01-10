@@ -17,7 +17,7 @@ resource "null_resource" "frontend_build" {
 }
 
 resource "aws_s3_bucket" "frontend" {
-  bucket = "frontend-event-tom"
+  bucket     = "frontend-event-tom"
   depends_on = [null_resource.frontend_build]
 }
 
@@ -31,7 +31,7 @@ resource "aws_s3_bucket_website_configuration" "frontend" {
 
 # S3 Rechte ich hab keine Ahnung, Terrafom geht nur mit
 resource "aws_s3_bucket_public_access_block" "frontend" {
-  bucket = aws_s3_bucket.frontend.id
+  bucket                  = aws_s3_bucket.frontend.id
   block_public_acls       = false
   block_public_policy     = false
   ignore_public_acls      = false
@@ -55,7 +55,7 @@ resource "aws_s3_bucket_policy" "frontend" {
 
 resource "aws_s3_object" "frontend_files" {
   for_each = fileset("../frontend/dist", "**/*")
-  
+
   bucket = aws_s3_bucket.frontend.id
   key    = each.value
   source = "../frontend/dist/${each.value}"
@@ -70,7 +70,7 @@ resource "aws_s3_object" "frontend_files" {
     "ttf"  = "font/ttf"
     "ico"  = "image/x-icon"
   }, split(".", each.value)[length(split(".", each.value)) - 1], "application/octet-stream")
-  
+
   depends_on = [null_resource.frontend_build]
 }
 

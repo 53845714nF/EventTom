@@ -10,7 +10,7 @@ resource "aws_security_group" "ec2_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-   ingress {
+  ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
@@ -27,7 +27,7 @@ resource "aws_security_group" "ec2_sg" {
 }
 
 resource "aws_key_pair" "ssh_key_web" {
-  key_name = "ssh_key_web"
+  key_name   = "ssh_key_web"
   public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJiql7d0CSa2ZPbjOdANj40oyBHgbPpbrO/pPkjUy5ua"
 }
 
@@ -42,12 +42,12 @@ variable "web_instances" {
 resource "aws_instance" "web" {
   for_each = var.web_instances
 
-  ami                    = "ami-0e2c8caa4b6378d8c"  # Ubuntu
+  ami                    = "ami-0e2c8caa4b6378d8c" # Ubuntu
   instance_type          = "t3.micro"
   subnet_id              = aws_subnet.public_subnet.id
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
   private_ip             = each.value
-  key_name = aws_key_pair.ssh_key_web.key_name
+  key_name               = aws_key_pair.ssh_key_web.key_name
 
   tags = {
     Name = "Webserver ${each.key}"
@@ -96,10 +96,10 @@ resource "aws_instance" "web" {
   ghcr.io/53845714nf/eventtom/backend:latest
   EOF
 
-   depends_on = [aws_db_instance.database]
+  depends_on = [aws_db_instance.database]
 }
 
 
 output "db_endpoint" {
-  value = "${element(split(":", aws_db_instance.database.endpoint), 0)}"
+  value = element(split(":", aws_db_instance.database.endpoint), 0)
 }
