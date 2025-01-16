@@ -57,9 +57,8 @@ resource "aws_s3_object" "frontend_files" {
   for_each = fileset("../frontend/dist", "**/*")
 
   bucket = aws_s3_bucket.frontend.id
-  key    = each.value
-  source = "../frontend/dist/${each.value}"
-  etag   = filemd5("../frontend/dist/${each.value}")
+  key    = each.key
+  source = "../frontend/dist/${each.key}"
   content_type = lookup({
     "html" = "text/html",
     "css"  = "text/css",
@@ -69,7 +68,7 @@ resource "aws_s3_object" "frontend_files" {
     "svg"  = "image/svg+xml"
     "ttf"  = "font/ttf"
     "ico"  = "image/x-icon"
-  }, split(".", each.value)[length(split(".", each.value)) - 1], "application/octet-stream")
+  }, split(".", each.key)[length(split(".", each.key)) - 1], "application/octet-stream")
 
   depends_on = [null_resource.frontend_build]
 }
