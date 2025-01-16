@@ -8,8 +8,8 @@ resource "null_resource" "frontend_build" {
     command = <<-EOT
       cd ../frontend
       echo "VITE_BACKEND_URL='http://${aws_lb.main.dns_name}'\nVITE_WEBSOCKET_URL='ws://${aws_lb.main.dns_name}'" > .env.production
-      npm install
-      npm run build
+      npm install && npm run build || exit 1
+      test -d dist || exit 1
     EOT
   }
 
@@ -29,7 +29,7 @@ resource "aws_s3_bucket_website_configuration" "frontend" {
   depends_on = [null_resource.frontend_build]
 }
 
-# S3 Rechte ich hab keine Ahnung, Terrafom geht nur mit
+# S3 Rechte, wird gebarucht zum hochladen
 resource "aws_s3_bucket_public_access_block" "frontend" {
   bucket                  = aws_s3_bucket.frontend.id
   block_public_acls       = false
@@ -50,7 +50,7 @@ resource "aws_s3_bucket_policy" "frontend" {
       Resource  = "${aws_s3_bucket.frontend.arn}/*"
     }]
   })
-  depends_on = [null_resource.frontend_build]
+  depends_on = [aws_s3_bucket.frontend]
 }
 
 resource "aws_s3_object" "frontend_files" {
