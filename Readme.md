@@ -90,3 +90,5 @@ ruff format app
 ```
 
 ## 🖥️ Infrastructure
+
+Kurze Doku unter: [Infrastructure Doku](https://github.com/53845714nF/EventTom/wiki/Cloud-Computing:-Entwicklung-und-Betrieb)
