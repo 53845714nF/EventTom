@@ -50,7 +50,7 @@ resource "aws_s3_bucket_policy" "frontend" {
       Resource  = "${aws_s3_bucket.frontend.arn}/*"
     }]
   })
-  depends_on = [aws_s3_bucket.frontend]
+  depends_on = [aws_s3_bucket.frontend, aws_s3_bucket_public_access_block.frontend]
 }
 
 resource "aws_s3_object" "frontend_files" {
@@ -70,7 +70,7 @@ resource "aws_s3_object" "frontend_files" {
     "ico"  = "image/x-icon"
   }, split(".", each.key)[length(split(".", each.key)) - 1], "application/octet-stream")
 
-  depends_on = [null_resource.frontend_build]
+  depends_on = [null_resource.frontend_build, aws_s3_bucket_policy.frontend]
 }
 
 output "s3_url" {
