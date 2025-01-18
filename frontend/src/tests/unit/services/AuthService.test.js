@@ -47,8 +47,6 @@ describe("AuthService handling user data", () => {
     };
   });
 
-  test.todo("Expect store to set role to correct initial role if postLoginData is successfull");
-
   test("Expect error toast if postLoginData is not successfull", async () => {
     axios.post.mockRejectedValue({ data: { success: false } });
 
