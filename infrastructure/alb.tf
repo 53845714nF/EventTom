@@ -23,7 +23,7 @@ resource "aws_lb" "main" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_sg.id]
-  subnets            = [aws_subnet.public_subnet.id, aws_subnet.public_subnet_b.id]
+  subnets            = [aws_subnet.public_subnet.id, aws_subnet.private_alb_subnet.id]
 
   depends_on = [ aws_internet_gateway.backend_vpc_gateway, aws_instance.web ]
 }

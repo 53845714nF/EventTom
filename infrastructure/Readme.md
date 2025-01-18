@@ -20,7 +20,7 @@ set -x AWS_SESSION_TOKEN {Token}
 ## Set up App
 
 ```bash 
-terraform apply -target=null_resource.frontend_build -target=aws_nat_gateway.aws_nat_gateway -target=aws_eip.nat_gateway_eip -target=aws_nat_gateway.backend -target=aws_route_table.public_route_table -target=aws_route_table_association.backend_route_table_association -auto-approve
+terraform apply -target=null_resource.frontend_build -target=aws_route_table.public_route_table -target=aws_route_table_association.backend_route_table_association -auto-approve
 terraform apply -auto-approve
 ```
 
