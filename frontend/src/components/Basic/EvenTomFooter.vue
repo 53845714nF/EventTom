@@ -2,7 +2,7 @@
 
 <template>
   <footer>
-    <p class="p-large light">2024 EvenTom</p>
+    <p class="p-large light">2025 EvenTom</p>
     <div class="footer-container">
       <p class="light footer-element">Kontakt</p>
       <p class="light footer-element">About</p>
