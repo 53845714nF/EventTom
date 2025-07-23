@@ -1,26 +1,29 @@
-import { createToaster } from "@meforma/vue-toaster";
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 export default class ToasterService {
-  static toaster = createToaster({
-    duration: 2000,
-    position: "bottom",
-    maxToasts: 3,
-  });
+  static toastConfig = {
+    autoClose: 2000,
+    position: toast.POSITION.BOTTOM_CENTER,
+    limit: 3,
+  };
 
   static createToasterPopUp(type, message) {
+    const options = this.toastConfig;
+    
     switch (type) {
       case "error":
-        ToasterService.toaster.error(message);
+        toast.error(message, options);
         break;
       case "success":
-        ToasterService.toaster.success(message);
+        toast.success(message, options);
         break;
       default:
-        ToasterService.toaster.info(message);
+        toast.info(message, options);
     }
   }
 
   static createDefaultErrorPopUp() {
-    ToasterService.toaster.error("Ein unbekannter Fehler ist aufgetreten.");
+    toast.error("Ein unbekannter Fehler ist aufgetreten.", this.toastConfig);
   }
 }

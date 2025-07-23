@@ -1,38 +1,53 @@
-import { vi, describe, test } from "vitest";
+import { vi, describe, test, beforeEach } from "vitest";
 import ToasterService from "@/services/ToasterService";
 import { expect } from "vitest";
 
 describe("ToasterService", () => {
-  vi.mock("@meforma/vue-toaster", () => {
-    return {
-      createToaster: vi.fn(() => {
-        return {
-          duration: 2000,
-          position: "bottom",
-          maxToasts: 3,
-          error: vi.fn(),
-          success: vi.fn(),
-          info: vi.fn(),
-        };
-      }),
+  let mockToast;
+
+  beforeEach(() => {
+    // Mock für vue3-toastify
+    mockToast = {
+      error: vi.fn(),
+      success: vi.fn(),
+      info: vi.fn(),
+      POSITION: {
+        BOTTOM_CENTER: "bottom-center"
+      }
     };
+
+    vi.mock("vue3-toastify", () => ({
+      toast: mockToast
+    }));
   });
 
-  test("Expect Toasterservice.toaster to be created on startup", async () => {
-    expect(ToasterService.toaster.duration).toBe(2000);
-    expect(ToasterService.toaster.position).toBe("bottom");
-    expect(ToasterService.toaster.maxToasts).toBe(3);
+  test("Expect ToasterService.toastConfig to have correct default values", async () => {
+    expect(ToasterService.toastConfig.autoClose).toBe(2000);
+    expect(ToasterService.toastConfig.position).toBe("bottom-center");
+    expect(ToasterService.toastConfig.limit).toBe(3);
   });
 
-  test("Expect ToasterService.toaster.error to be called if type error is specified", async () => {
-    const spyError = vi.spyOn(ToasterService.toaster, "error");
+  test("Expect toast.error to be called if type error is specified", async () => {
     ToasterService.createToasterPopUp("error", "Error message");
-    expect(spyError).toHaveBeenCalledTimes(1);
+    expect(mockToast.error).toHaveBeenCalledTimes(1);
+    expect(mockToast.error).toHaveBeenCalledWith("Error message", ToasterService.toastConfig);
   });
 
-  test("Expect ToasterService.toaster.info to be called if no type is specified", async () => {
-    const spyInfo = vi.spyOn(ToasterService.toaster, "info");
+  test("Expect toast.success to be called if type success is specified", async () => {
+    ToasterService.createToasterPopUp("success", "Success message");
+    expect(mockToast.success).toHaveBeenCalledTimes(1);
+    expect(mockToast.success).toHaveBeenCalledWith("Success message", ToasterService.toastConfig);
+  });
+
+  test("Expect toast.info to be called if no type is specified", async () => {
     ToasterService.createToasterPopUp("", "Message without type");
-    expect(spyInfo).toHaveBeenCalledTimes(1);
+    expect(mockToast.info).toHaveBeenCalledTimes(1);
+    expect(mockToast.info).toHaveBeenCalledWith("Message without type", ToasterService.toastConfig);
+  });
+
+  test("Expect toast.error to be called for default error popup", async () => {
+    ToasterService.createDefaultErrorPopUp();
+    expect(mockToast.error).toHaveBeenCalledTimes(1);
+    expect(mockToast.error).toHaveBeenCalledWith("Ein unbekannter Fehler ist aufgetreten.", ToasterService.toastConfig);
   });
 });
